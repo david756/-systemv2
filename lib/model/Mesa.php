@@ -13,7 +13,7 @@ class Mesa {
    /**
     * Metodo constructor de la clase Mesa
     * @param type $idMesa
-    * @param type $nombre
+    * @param type $descripcion
     */
     function Mesa($idMesa = "def", $descripcion = "def") {
         $this->idMesa = $idMesa;
@@ -24,29 +24,50 @@ class Mesa {
      * @param type $id
      * @return Mesa
      */    
-    function getMesa($id){
-        include "database.php";
+    function getMesa(){
+        require_once "database.php";
         $pdo = Database::connect();
         $query = "select * from mesas where id=?";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(1, $id);
+        $stmt->bindParam(1, $this->idMesa);
         $stmt->execute();
-        $result = $stmt->fetch();
-        Database::disconnect();               
-        return $result;
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect(); 
+        $resultado= New Mesa($result['id'], $result['descripcion']);
+        return $resultado;
     }
     /**
      * Metodo devuelve un array con la lista de todas las mesas
      * @return Array <Mesa>
      */
     function getMesas() {
-        include "database.php";
+        require_once "database.php";
         $pdo = Database::connect();
         $query = "select * from mesas";
         $result = $pdo->query($query);
         Database::disconnect();
         return $result;
     }
+      /**
+      * Metodo que verifica si se han hecho atenciones en la mesa
+       * True: solo si hay atenciones en la mesa
+       * False: solo si no hay atenciones en la mesa
+      */
+     function mesaAtenciones(){         
+        require_once "database.php";
+        $estado=true;
+        $pdo = Database::connect();
+        $query = "select * from mesas m inner join atenciones a on m.id=a.fk_mesa where m.id=".$this->idMesa;
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        Database::disconnect();
+        //si no hay atenciones en la mesa , estado =false        
+        if (empty($result)) {
+            $estado=false;
+        }
+        return $estado;         
+     }
     
     /**
      * Metodo que almacena la mesa en la base de datos
@@ -78,20 +99,19 @@ class Mesa {
      * @return string Resultado
      */
     function updateMesa() {
-       if (!mesaAtenciones()) {
+      
+       if (!$this->mesaAtenciones()) {
             try {
-                 include "database.php";
+                 require_once "database.php";
                  $pdo = Database::connect();
-
-                 $query = "update mesas set nombre = ? where id =".$this->idMesa;
+                 $query = "update mesas set descripcion = ? where id =".$this->idMesa;
                  $stmt = $pdo->prepare($query);
                  $stmt->bindParam(1, $this->descripcion);
-                 $resultado=$stmt->execute();
                  Database::disconnect();
-                         if ($resultado) {                        
+                         if ($stmt->execute()){                        
                              return "exito";
                          } else {
-                             return "*1* Error al tratar de actualizar Mesa:  ".$resultado;
+                             return "*1* Error al tratar de actualizar Mesa";
                          }            
              } catch (Exception $e) {
                  echo "*2* Error al tratar de actualizar Mesa: " . $e->getMessage();
@@ -106,21 +126,18 @@ class Mesa {
      * @return string Resultado
      */
     function deleteMesa() {  
-        if (!mesaAtenciones()) {
+        if (!$this->mesaAtenciones()) {
             try {
-            include "database.php";
-          
-            $pdo = Database::connect();
-            
-                    $query = "delete from mesas where id =?where id =".$this->idMesa;
+            require_once "database.php";          
+                    $pdo = Database::connect();            
+                    $query = "delete from mesas where id =?";
                     $stmt = $pdo->prepare($query);
                     $stmt->bindParam(1, $this->idMesa);
-                    $resultado=$stmt->execute();
                     Database::disconnect();
-                    if ($resultado) {                        
+                    if ($stmt->execute()){                        
                         return "exito";
                     } else {
-                        return "*1* Error al tratar de eliminar Mesa:  ".$resultado;
+                        return "*1* Error al tratar de eliminar Mesa";
                     } 
             } catch (Exception $e) {
                 echo "*2* Error al tratar de eliminar Mesa:  " . $e->getMessage();
@@ -130,22 +147,6 @@ class Mesa {
             return "*3* Error al tratar de eliminar Mesa: La mesa ya tiene atenciones registradas";
         }
     }
-     /**
-      * Metodo que verifica si se han hecho atenciones en la mesa
-      */
-     function mesaAtenciones(){         
-        include "database.php";
-        $estado=true;
-        $pdo = Database::connect();
-        $query = "select * from mesas m inner join atenciones a on m.id=a.fk_mesa where m.id=".$this->idMesa;
-        $result = $pdo->query($query);
-        Database::disconnect();
-        //si no hay atenciones en la mesa , estado =false
-        if (empty($result)) {
-            $estado=false;
-        }
-        return $estado;         
-     }
         
     /**
      * Metodo que obtiene el id de una mesa
@@ -158,7 +159,7 @@ class Mesa {
      * que obtiene el nombre de una mesa
      * @return String
      */
-    function getNombre() {
+    function getDescripcion() {
         return $this->descripcion;
     }
     /**
@@ -170,10 +171,10 @@ class Mesa {
     }
     /**
      * Metodo setNombre de la clase Mesa
-     * @param type $nombre
+     * @param type $descripcion
      */
-    function setNombre($nombre) {
-        $this->descripcion = $nombre;
+    function setDescripcion($descripcion) {
+        $this->descripcion = $descripcion;
     }
 
 }
