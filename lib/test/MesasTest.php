@@ -2,7 +2,7 @@
         include "../model/Mesa.php";
 
         //creando una nueva mesa
-        $mesa = new Mesa(null,"mesa Prueba 1");    
+        $categoria = new Mesa(null,"mesa Prueba 1");    
         
         /*
          * llamado a funciones
