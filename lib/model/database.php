@@ -5,13 +5,10 @@
         private static $dbHost = 'localhost' ;
         private static $dbUsername = 'root';
         private static $dbUserPassword = '';
-
         private static $cont  = null;
-
         public function __construct() {
             die('Init function is not allowed');
         }
-
         public static function connect()
         {
            // One connection through whole application
@@ -23,12 +20,11 @@
             }
             catch(PDOException $e)
             {
-              die($e->getMessage()); 
+              die("*1* Error al intentar conectarse a la base de datos : ".$e->getMessage()); 
             }
            }
            return self::$cont;
         }
-
         public static function disconnect()
         {
             self::$cont = null;
