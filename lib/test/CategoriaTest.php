@@ -8,13 +8,13 @@
          * llamado a funciones
          */
         
-        /*
-        agregar($categoria);
-        consultar(3);
-        consultarAll();
-        actualizar(7, "categoria .. actualizada");
-        eliminar(20);
-        */
+        
+        //agregar($categoria);
+        //consultar(6);
+        //consultarAll();
+        actualizar(1, "sapos Rellenos");
+       // eliminar(3);
+        
         
         /*
          * Agregar categoria a la base de datos
@@ -34,7 +34,7 @@
             $categoriaConsulta= new Categoria($id);
             $categoria=$categoriaConsulta->getCategoria();
             echo 'categoria consultada id: '.$categoria->getIdCategoria().'<br>';
-            echo 'categoria consultada nombre: '.$categoria->getDescripcion().'<br>';
+            echo 'categoria consultada nombre: '.$categoria->getNombre().'<br>';
         }
         
         

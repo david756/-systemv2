@@ -8,13 +8,13 @@
          * llamado a funciones
          */
         
-        /*
-        agregar($usuario);
-        consultar(3);
-        consultarAll();
-        actualizar(7, "nombre","apellido","usuario","contrasena","genero","telefono");
-        eliminar(20);
-        */
+        
+        //agregar($usuario);
+        //consultar(117);
+        //consultarAll();
+        //actualizar(117, "nombre2","apellido2","usuario2","contrasena2","genero2","telefono2","def");
+        eliminar(110);
+      
         
         /*
          * Agregar usuario a la base de datos
@@ -30,12 +30,13 @@
          * Consultar el usuario agregado
          */
         function consultar($id){
-            echo("<br>***Consultar la usuario agregada***<br>");
+            echo("<br>***Consultar el usuario agregada***<br>");
             $usuarioConsulta= new Usuario($id);
             $usuario=$usuarioConsulta->getUsuario();
             echo 'usuario consultado id: '.$usuario->getIdUsuario().'<br>';
             echo 'usuario consultado nombre: '.$usuario->getNombre().'<br>';
-            echo 'usuario consultado nombre: '.$usuario->getPrivilegios().'<br>';
+            echo 'usuario consultado apellido: '.$usuario->getApellido().'<br>';
+            echo 'usuario consultado privilegio: '.$usuario->getPrivilegios().'<br>';
         }
         
         
@@ -55,9 +56,9 @@
         /*
          * Actualizar un usuario
          */
-        function actualizar($id,$nombre,$apellido,$usuario,$contraseña,$genero,$telefono,$privilegios){
+        function actualizar($id,$nombre,$apellido,$usuario,$contrasena,$genero,$telefono,$privilegios){
             echo("<br>***Actrualizar la usuario***<br>");
-            $usuariosActualizar= new Usuario($id,$nombre,$apellido,$usuario,$contraseña,$genero,$telefono,$privilegios);
+            $usuariosActualizar= new Usuario($id,$nombre,$apellido,$usuario,$contrasena,$genero,$telefono,$privilegios);
             $resultado=$usuariosActualizar->updateUsuario();
             echo $resultado;            
         }
