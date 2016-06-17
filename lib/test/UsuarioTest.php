@@ -2,20 +2,27 @@
         include "../model/Usuario.php";
 
         //creando un nuevo usuario
-        $usuario = new Usuario(null,"nombre","apellido","usuario","contrasena","genero","telefono"); 
+        $usuario = new Usuario(null,"nombre","apellido","usuario","pass","genero","telefono"); 
         
         /*
          * llamado a funciones
-         */
-        
-        
+         */      
+       // $privilegios=array(1,2,2,2,2);
+        //$usuario->setPrivilegios($privilegios);
         //agregar($usuario);
-        //consultar(117);
+        consultar(132);
         //consultarAll();
-        //actualizar(117, "nombre2","apellido2","usuario2","contrasena2","genero2","telefono2","def");
-        eliminar(110);
-      
+        //actualizar(132, "nombre2","apellido2","usuario2","cont2","genero2","telefono2","def");
+        //eliminar(119);
+        //searchPriv(132);
         
+        /*Crear Privilegios*/
+        // $usuarioConsulta= new Usuario(132);
+        //$user=$usuarioConsulta->getUsuario();
+        //createPriv($user,$privilegios);
+        
+        
+              
         /*
          * Agregar usuario a la base de datos
          */
@@ -25,7 +32,6 @@
             echo 'usuario creado id: '.$id.'<br>';
         }
         
-
         /*
          * Consultar el usuario agregado
          */
@@ -36,7 +42,9 @@
             echo 'usuario consultado id: '.$usuario->getIdUsuario().'<br>';
             echo 'usuario consultado nombre: '.$usuario->getNombre().'<br>';
             echo 'usuario consultado apellido: '.$usuario->getApellido().'<br>';
-            echo 'usuario consultado privilegio: '.$usuario->getPrivilegios().'<br>';
+            echo 'usuario consultado privilegio: ';
+            print_r($usuario->getPrivilegios());
+            
         }
         
         
@@ -71,6 +79,24 @@
             $usuariosEliminar= new Usuario($id);
             $resultado=$usuariosEliminar->deleteUsuario();
             echo $resultado;
+        }
+        
+        function searchPriv($id){
+            echo("<br>***consultar privilegios***<br>");
+            $usuarioconsultar= new Usuario($id);
+            $privilegiosArray=$usuarioconsultar->searchPrivilegios($id);
+            print_r($privilegiosArray);
+        }
+        
+        function createPriv($usuario,$privilegios){
+           $estado= $usuario->createPrivilegios($privilegios);
+           if ($estado==1) {
+               echo "exito";
+           }
+           else {
+               echo $estado;
+           }
+           
         }
 
 ?>
