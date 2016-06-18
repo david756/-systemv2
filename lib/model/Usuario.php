@@ -128,7 +128,6 @@ class Usuario {
      */
     function createPrivilegios($privilegios){
         $estado=false;
-        print_r($privilegios);
         if (is_null($privilegios)||$privilegios=="def") {
             $this->privilegios="def";
             return 1;
@@ -217,14 +216,16 @@ class Usuario {
             $stmt->bindParam(5, $this->genero);
             $stmt->bindParam(6, $this->telefono);                        
             $resultado=$stmt->execute();
-            $id = $pdo->lastInsertId();
-            $this->idUsuario=$id;
+            $this->idUsuario = $pdo->lastInsertId();
+            
+            $usuario=new Usuario($this->idUsuario,$this->nombre,$this->apellido,
+                    $this->usuario,$this->clave,$this->genero,$this->telefono,$this->privilegios);
             Database::disconnect();
             
             if ($resultado) {
                 $priv=$this->createPrivilegios($this->privilegios);
                 if($priv==1) {                    
-                    return $id; 
+                    return $usuario; 
                 } else {
                     $this->deleteUsuario();
                     return "*1* Error al tratar de crear Usuario: Error Privilegios ";                    

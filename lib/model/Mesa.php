@@ -81,10 +81,11 @@ class Mesa {
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->descripcion);
             $resultado=$stmt->execute();
-            $id = $pdo->lastInsertId();
+            $this->idMesa = $pdo->lastInsertId();
+            $mesa=new Mesa($this->idMesa,$this->descripcion);
             Database::disconnect();
             if ($resultado) {
-                return $id;
+                return $mesa;
             } else {
                 return "*1* Error al tratar de crear Mesa:  ".$resultado;
             }           

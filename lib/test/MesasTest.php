@@ -2,15 +2,15 @@
         include "../model/Mesa.php";
 
         //creando una nueva mesa
-        $categoria = new Mesa(null,"mesa Prueba 1");    
+        $mesa = new Mesa(null,"mesa Prueba 1");    
         
         /*
          * llamado a funciones
          */
         
-        /*
-        agregar($mesa);
-        consultar(3);
+        
+        //agregar($mesa);
+        /*consultar(3);
         consultarAll();
         actualizar(7, "mesa .. actualizada");
         eliminar(20);
@@ -21,8 +21,8 @@
          */
         function agregar($m){
             echo("<br>***Agregando mesas a la base de datos***<br>");
-            $id=$m->createMesa();
-            echo 'mesa creada id: '.$id.'<br>';
+            $mesa=$m->createMesa();
+            echo 'mesa creada id: '.$mesa->getIdMesa().'<br>';
         }
         
 

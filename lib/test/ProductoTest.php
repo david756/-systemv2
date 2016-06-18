@@ -1,28 +1,30 @@
 ﻿<?php
         include "../model/Producto.php";
+        include "../model/Categoria.php";
 
-        //creando un nuevo producto
-        $producto = new Producto(null,"nombre","valor","descripcion","categoria"); 
         
+        //creando un nuevo producto
+        $categoria = new Categoria(1,"categoria Prueba 1");
+        //$categoria=$categoria->createCategoria();
+       // $producto = new Producto(null,"nombre",10,"descripcion",$categoria); 
+               
         /*
          * llamado a funciones
          */
-        
-        /*
-        agregar($producto);
-        consultar(3);
-        consultarAll();
-        actualizar(7,"nombre","valor","descripcion","categoria");
-        eliminar(20);
-        */
-        
+
+        //agregar($producto);
+        //consultar(13);
+        //consultarAll();
+        //actualizar(20,"nombre2",20,"descripcion2",$categoria);
+        //eliminar(10);
+
         /*
          * Agregar producto a la base de datos
          */
-        function agregar($u){
+        function agregar($p){
             echo("<br>***Agregando productos a la base de datos***<br>");
-            $id=$u->createProducto();
-            echo 'producto creado id: '.$id.'<br>';
+            $producto=$p->createProducto();
+            echo 'producto creado id: '.$producto->getIdProducto().'<br>';
         }
         
 

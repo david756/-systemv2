@@ -76,10 +76,11 @@ class Categoria {
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->nombre);
             $resultado=$stmt->execute();
-            $id = $pdo->lastInsertId();
+            $this->idCategoria = $pdo->lastInsertId();
+            $categoria=new Categoria($this->idCategoria,$this->nombre);
             Database::disconnect();
             if ($resultado) {
-                return $id;
+                return $categoria;
             } else {
                 return "*1* Error al tratar de crear Categoria:  ".$resultado;
             }           

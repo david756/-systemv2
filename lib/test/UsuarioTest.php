@@ -7,17 +7,17 @@
         /*
          * llamado a funciones
          */      
-       // $privilegios=array(1,2,2,2,2);
+        $privilegios=array(1,2,3,4,1);
         //$usuario->setPrivilegios($privilegios);
-        //agregar($usuario);
-        consultar(132);
+        //$user=agregar($usuario);
+        //consultar(132);
         //consultarAll();
         //actualizar(132, "nombre2","apellido2","usuario2","cont2","genero2","telefono2","def");
         //eliminar(119);
         //searchPriv(132);
         
         /*Crear Privilegios*/
-        // $usuarioConsulta= new Usuario(132);
+        //$usuarioConsulta= new Usuario(136);
         //$user=$usuarioConsulta->getUsuario();
         //createPriv($user,$privilegios);
         
@@ -28,8 +28,8 @@
          */
         function agregar($u){
             echo("<br>***Agregando usuarios a la base de datos***<br>");
-            $id=$u->createUsuario();
-            echo 'usuario creado id: '.$id.'<br>';
+            $usuario=$u->createUsuario();
+            echo 'usuario creado id: '.$usuario->getIdUsuario().'<br>';
         }
         
         /*
@@ -84,7 +84,7 @@
         function searchPriv($id){
             echo("<br>***consultar privilegios***<br>");
             $usuarioconsultar= new Usuario($id);
-            $privilegiosArray=$usuarioconsultar->searchPrivilegios($id);
+            $privilegiosArray=$usuarioconsultar->searchPrivilegios();
             print_r($privilegiosArray);
         }
         

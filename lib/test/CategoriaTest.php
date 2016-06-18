@@ -21,8 +21,8 @@
          */
         function agregar($c){
             echo("<br>***Agregando categorias a la base de datos***<br>");
-            $id=$c->createCategoria();
-            echo 'categoria creada id: '.$id.'<br>';
+            $categoria=$c->createCategoria();
+            echo 'categoria creada id: '.$categoria->getIdCategoria().'<br>';
         }
         
 
