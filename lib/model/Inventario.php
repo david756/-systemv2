@@ -282,6 +282,4 @@ class Inventario {
         $this->accion = $accion;
     }
 
-
-
 }

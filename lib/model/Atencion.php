@@ -180,59 +180,111 @@ class Atencion {
             return "*3* Error al tratar de eliminar Atencion: La atencion tiene productos registrados";
         }
     }
-    
+    /**
+     * Metodo get id de la atencion
+     * @return idAtencion
+     */
     function getIdAtencion() {
         return $this->idAtencion;
     }
-
+    
+    /**
+     * Metodo get descripcion de la atencion
+     * @return descripcionEstado
+     */
     function getDescripcionEstado() {
         return $this->descripcionEstado;
     }
-
+    /**
+     * Metodo get descuento de la atencion
+     * @return descuento
+     */
     function getDescuento() {
         return $this->descuento;
     }
+    
+    /**
+     * Metodo get cajero de la atencion
+     * @return cajero
+     */
 
     function getCajero() {
         return $this->cajero;
     }
+    
+    /**
+     * Metodo get mesa de la atencion
+     * @return mesa
+     */
 
     function getMesa() {
         return $this->mesa;
     }
-
+    
+    /**
+     * Metodo get Hora Pago de la atencion
+     * @return horaPago
+     */
     function getHoraPago() {
         return $this->horaPago;
     }
-
+    
+    /**
+     * Metodo get estado de la atencion
+     * @return estado
+     */
     function getEstado() {
         return $this->estado;
     }
-
+    /**
+     * Metodo Set id de la atencion
+     * @param type $idAtencion
+     */
     function setIdAtencion($idAtencion) {
         $this->idAtencion = $idAtencion;
     }
-
+    /**
+     * Metodo Set descripcion de la atencion
+     * @param type $descripcionEstado
+     */
     function setDescripcionEstado($descripcionEstado) {
         $this->descripcionEstado = $descripcionEstado;
     }
-
+    /**
+     * Metodo Set descuento de la atencion
+     * @param type $descuento
+     */
     function setDescuento($descuento) {
         $this->descuento = $descuento;
     }
-
+    /**
+     * Metodo Set cajero de la atencion
+     * @param type $cajero
+     */
     function setCajero($cajero) {
         $this->cajero = $cajero;
     }
-
+    
+    /**
+     * Metodo Set mesa de la atencion
+     * @param type $mesa
+     */
     function setMesa($mesa) {
         $this->mesa = $mesa;
     }
-
+    
+    /**
+     * Metodo Set hora de pago de la atencion
+     * @param type $horaPago
+     */
     function setHoraPago($horaPago) {
         $this->horaPago = $horaPago;
     }
-
+     
+    /**
+     * Metodo Set estado de la atencion
+     * @param type $estado
+     */
     function setEstado($estado) {
         $this->estado = $estado;
     }

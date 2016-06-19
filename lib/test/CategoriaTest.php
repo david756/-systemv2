@@ -64,7 +64,7 @@
         /*
          * Eliminar una categoria
          */
-        function bajar($id){
+        function eliminar($id){
             echo("<br>***eliminar la categoria***<br>");
             $categoriasEliminar= new Categoria($id);
             $resultado=$categoriasEliminar->deleteCategoria();

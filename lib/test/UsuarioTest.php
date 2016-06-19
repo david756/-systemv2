@@ -74,7 +74,7 @@
         /*
          * Eliminar un usuario
          */
-        function bajar($id){
+        function eliminar($id){
             echo("<br>***eliminar la usuario***<br>");
             $usuariosEliminar= new Usuario($id);
             $resultado=$usuariosEliminar->deleteUsuario();
