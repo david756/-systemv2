@@ -38,7 +38,8 @@ class Inventario {
      * @param type $descripcion
      * @param type $accion
      */
-    function Inventario($idInventario, $producto, $user, $fecha, $cantidad, $proveedor, $costo, $descripcion, $accion) {
+    function Inventario($idInventario, $producto, $user, $fecha, $cantidad,
+            $proveedor, $costo, $descripcion, $accion) {
        $this->idInventario = $idInventario;
        $this->producto = $producto;
        $this->user = $user;
@@ -64,7 +65,9 @@ class Inventario {
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         Database::disconnect(); 
-        $resultado= New Inventario($result['id'], $result['descripcion']);
+        $resultado= New Inventario($result['id'], $result['fk_producto'], $result['fk_empleado'],
+                $result['fecha'], $result['cantidad'], $result['proveedor'],
+                $result['costo'], $result['descripcion'], $result['fk_accion']);
         return $resultado;
     }
     /**
@@ -79,39 +82,26 @@ class Inventario {
         Database::disconnect();
         return $result;
     }
-      /**
-      * Metodo que verifica si se han hecho atenciones en la inventario
-       * True: solo si hay atenciones en la inventario
-       * False: solo si no hay atenciones en la inventario
-      */
-     function inventarioAtenciones(){         
-        require_once "database.php";
-        $estado=true;
-        $pdo = Database::connect();
-        $query = "select * from inventarios m inner join atenciones a "
-                . "on m.id=a.fk_inventario where m.id=".$this->idInventario;
-        $stmt = $pdo->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetch();
-        Database::disconnect();
-        //si no hay atenciones en la inventario , estado =false        
-        if (empty($result)) {
-            $estado=false;
-        }
-        return $estado;         
-     }
     
     /**
      * Metodo que almacena la inventario en la base de datos
      * @return id de la inventario creada
      */
-    function createInventario() {
+    function agregarInventario() {
         try {
             require_once "database.php";
             $pdo = Database::connect();
-            $query = "insert into inventarios set descripcion = ?";
+            $query = "insert into inventarios set fecha = ?,cantidad = ?,proveedor = ?,"
+                    . "costo = ?,fk_producto = ?,fk_accion = ?,fk_empleado = ?,";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(1, $this->descripcion);
+            $stmt->bindParam(1, $this->fecha);
+            $stmt->bindParam(1, $this->cantidad);
+            $stmt->bindParam(1, $this->proveedor);
+            $stmt->bindParam(1, $this->costo);
+            $stmt->bindParam(1, $this->producto->getIdProducto());
+            $stmt->bindParam(1, $this->accion->getIdAccion());
+            $stmt->bindParam(1, $this->user->getIdUsuario());
+            
             $resultado=$stmt->execute();
             $this->idInventario = $pdo->lastInsertId();
             $inventario=new Inventario($this->idInventario,$this->descripcion);
@@ -128,37 +118,10 @@ class Inventario {
     }
     
     /**
-     * Metodo que actualiza la inventario en la base de datos
-     * @return string Resultado
-     */
-    function updateInventario() {
-      
-       if (!$this->inventarioAtenciones()) {
-            try {
-                 require_once "database.php";
-                 $pdo = Database::connect();
-                 $query = "update inventarios set descripcion = ? where id =".$this->idInventario;
-                 $stmt = $pdo->prepare($query);
-                 $stmt->bindParam(1, $this->descripcion);
-                 Database::disconnect();
-                         if ($stmt->execute()){                        
-                             return "exito";
-                         } else {
-                             return "*1* Error al tratar de actualizar Inventario";
-                         }            
-             } catch (Exception $e) {
-                 echo "*2* Error al tratar de actualizar Inventario: " . $e->getMessage();
-             }
-       }
-        else {
-            return "*3* Error al tratar de eliminar Inventario: La inventario ya tiene atenciones registradas";
-        }
-    }
-    /**
      * Metodo que Elimina la inventario de la base de datos
      * @return string Resultado
      */
-    function deleteInventario() {  
+    function eliminarInventario() {  
         if (!$this->inventarioAtenciones()) {
             try {
             require_once "database.php";          
