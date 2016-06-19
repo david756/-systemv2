@@ -64,7 +64,7 @@
         /*
          * Eliminar una mesa
          */
-        function eliminar($id){
+        function bajar($id){
             echo("<br>***eliminar la mesa***<br>");
             $mesasEliminar= new Mesa($id);
             $resultado=$mesasEliminar->deleteMesa();

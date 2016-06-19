@@ -66,7 +66,7 @@
         /*
          * Eliminar un producto
          */
-        function eliminar($id){
+        function bajar($id){
             echo("<br>***eliminar la producto***<br>");
             $productosEliminar= new Producto($id);
             $resultado=$productosEliminar->deleteProducto();

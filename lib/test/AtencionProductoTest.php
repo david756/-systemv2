@@ -67,7 +67,7 @@
         /*
          * Eliminar un atencionProducto
          */
-        function eliminar($id){
+        function bajar($id){
             echo("<br>***eliminar la atencionProducto***<br>");
             $atencionProductosEliminar= new AtencionProducto($id);
             $resultado=$atencionProductosEliminar->deleteAtencionProducto();

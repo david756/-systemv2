@@ -1,28 +1,38 @@
 ﻿<?php
         include "../model/Inventario.php";
+        include "../model/Usuario.php";
+        include "../model/Producto.php";
 
+        $producto = new Producto(2);
+        $usuario = new Usuario(113); 
+        
+        $producto = $producto->getProducto();
+        $usuario = $usuario->getUsuario();
+        $fecha= date('Y-m-d H:i:s');
+        
+        
         //creando un nuevo inventario
-        $inventario = new Inventario(null,"producto","usuario","fecha","cantidad","proveedor","costo","descripcion","accion"); 
+        $inventario = new Inventario(null,$producto,$usuario,$fecha,5,"proveedor",2500,"descripcion"); 
+        
         
         /*
          * llamado a funciones
          */
         
-        /*
-        agregar($inventario);
-        consultar(3);
-        consultarAll();
-        actualizar(7, "producto","usuario","fecha","cantidad","proveedor","costo","descripcion","accion");
-        eliminar(20);
-        */
+        
+       //agregar($inventario);
+       // consultar(3);
+       //consultarAll();
+       bajar($inventario);
+        
         
         /*
          * Agregar inventario a la base de datos
          */
         function agregar($i){
             echo("<br>***Agregando inventarios a la base de datos***<br>");
-            $id=$i->createInventario();
-            echo 'inventario creado id: '.$id.'<br>';
+            $inventario=$i->agregarInventario();
+            echo 'inventario creado id: '.$inventario->getIdInventario().'<br>';
         }
         
 
@@ -47,28 +57,17 @@
             $inventariosConsulta= new Inventario();
             $consulta=$inventariosConsulta->getInventarios();
             foreach ($consulta as $inventario) {
-                print $inventario['id'] . "-" . $inventario['producto'] ."<br/>";
+                print $inventario['id'] . "-" . $inventario['fk_producto'] ."<br/>";
             }           
-        }
-        
-        /*
-         * Actualizar un inventario
-         */
-        function actualizar($id,$producto,$usuario,$fecha,$cantidad,$proveedor,$costo,$descripcion,$accion){
-            echo("<br>***Actrualizar la inventario***<br>");
-            $inventariosActualizar= new Inventario($id,$producto,$usuario,$fecha,$cantidad,$proveedor,$costo,$descripcion,$accion);
-            $resultado=$inventariosActualizar->updateInventario();
-            echo $resultado;            
         }
         
         /*
          * Eliminar un inventario
          */
-        function eliminar($id){
+        function bajar($inventario){
             echo("<br>***eliminar la inventario***<br>");
-            $inventariosEliminar= new Inventario($id);
-            $resultado=$inventariosEliminar->deleteInventario();
-            echo $resultado;
+            $resultado=$inventario->bajarInventario();
+            echo $resultado->getIdInventario();
         }
 
 ?>

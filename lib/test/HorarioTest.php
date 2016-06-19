@@ -66,7 +66,7 @@
         /*
          * Eliminar un horario
          */
-        function eliminar($id){
+        function bajar($id){
             echo("<br>***eliminar la horario***<br>");
             $horariosEliminar= new Horario($id);
             $resultado=$horariosEliminar->deleteHorario();

@@ -38,8 +38,8 @@ class Inventario {
      * @param type $descripcion
      * @param type $accion
      */
-    function Inventario($idInventario, $producto, $user, $fecha, $cantidad,
-            $proveedor, $costo, $descripcion, $accion) {
+    function Inventario($idInventario="def", $producto="def", $user="def", $fecha="def", $cantidad="def",
+            $proveedor="def", $costo="def", $descripcion="def", $accion="def") {
        $this->idInventario = $idInventario;
        $this->producto = $producto;
        $this->user = $user;
@@ -92,19 +92,21 @@ class Inventario {
             require_once "database.php";
             $pdo = Database::connect();
             $query = "insert into inventarios set fecha = ?,cantidad = ?,proveedor = ?,"
-                    . "costo = ?,fk_producto = ?,fk_accion = ?,fk_empleado = ?,";
+                    . "costo = ?,descripcion= ?,fk_producto = ?,fk_accion = 1,fk_empleado = ?";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->fecha);
-            $stmt->bindParam(1, $this->cantidad);
-            $stmt->bindParam(1, $this->proveedor);
-            $stmt->bindParam(1, $this->costo);
-            $stmt->bindParam(1, $this->producto->getIdProducto());
-            $stmt->bindParam(1, $this->accion->getIdAccion());
-            $stmt->bindParam(1, $this->user->getIdUsuario());
+            $stmt->bindParam(2, $this->cantidad);
+            $stmt->bindParam(3, $this->proveedor);
+            $stmt->bindParam(4, $this->costo);
+            $stmt->bindParam(5, $this->descripcion);
+            $stmt->bindParam(6, $this->producto->getIdProducto());
+            $stmt->bindParam(7, $this->user->getIdUsuario());
             
             $resultado=$stmt->execute();
             $this->idInventario = $pdo->lastInsertId();
-            $inventario=new Inventario($this->idInventario,$this->descripcion);
+            $inventario=new Inventario($this->idInventario,
+                    $this->producto->getIdProducto(),$this->user->getIdUsuario(),
+                    $this->fecha,$this->cantidad,$this->proveedor,$this->costo,$this->descripcion,$this->accion);
             Database::disconnect();
             if ($resultado) {
                 return $inventario;
@@ -121,26 +123,33 @@ class Inventario {
      * Metodo que Elimina la inventario de la base de datos
      * @return string Resultado
      */
-    function eliminarInventario() {  
-        if (!$this->inventarioAtenciones()) {
-            try {
-            require_once "database.php";          
-                    $pdo = Database::connect();            
-                    $query = "delete from inventarios where id =?";
-                    $stmt = $pdo->prepare($query);
-                    $stmt->bindParam(1, $this->idInventario);
-                    Database::disconnect();
-                    if ($stmt->execute()){                        
-                        return "exito";
-                    } else {
-                        return "*1* Error al tratar de eliminar Inventario";
-                    } 
-            } catch (Exception $e) {
-                echo "*2* Error al tratar de eliminar Inventario:  " . $e->getMessage();
-            }
-        }
-        else {
-            return "*3* Error al tratar de eliminar Inventario: La inventario ya tiene atenciones registradas";
+    function bajarInventario() {  
+        try {
+            require_once "database.php";
+            $pdo = Database::connect();
+            $query = "insert into inventarios set fecha = ?,cantidad = ?,"
+                    . "descripcion = ?,fk_producto = ?,fk_accion=2,fk_empleado = ?";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(1, $this->fecha);
+            $stmt->bindParam(2, $this->cantidad);
+            $stmt->bindParam(3, $this->descripcion);
+            $stmt->bindParam(4, $this->producto->getIdProducto());
+            $stmt->bindParam(5, $this->user->getIdUsuario());
+            
+            $resultado=$stmt->execute();
+            $this->idInventario = $pdo->lastInsertId();
+            $inventario=new Inventario($this->idInventario,
+                    $this->producto->getIdProducto(),$this->user->getIdUsuario(),
+                    $this->fecha,$this->cantidad,null,null,$this->descripcion,$this->accion);
+            Database::disconnect();
+            if ($resultado) {
+                return $inventario;
+            } else {
+                return "*1* Error al tratar de eliminar Inventario:  ".$resultado;
+            }           
+            
+        } catch (Exception $e) {
+            echo "*2* Error al tratar de eliminar Inventario:  " . $e->getMessage();
         }
     }
         
