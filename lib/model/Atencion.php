@@ -47,14 +47,14 @@ class Atencion {
     function getAtencion(){
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select * from atencions where id=?";
+        $query = "select * from atenciones where id=?";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->idAtencion);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         Database::disconnect(); 
         $resultado= New Atencion($result['id'], $result['descripcion_estado'], $result['fk_cajero'], $result['fk_mesa']
-                , $result['horaPago'], $result['estado']);
+                , $result['horaPago'], $result['fk_estado']);
         return $resultado;
     }
     /**

@@ -1,30 +1,40 @@
 <?php
         include "../model/AtencionProducto.php";
-
+        include "../model/Producto.php";
+        include "../model/Usuario.php";
+        include "../model/Atencion.php";
+        
+        $producto=new Producto(10);
+        $producto=$producto->getProducto();
+        $usuario=new Usuario(113);
+        $usuario=$usuario->getUsuario();
+        $atencion=new Atencion(991970);
+        $atencion=$atencion->getAtencion();
+        $fecha= date('Y-m-d H:i:s');
+        
         //creando un nuevo atencionProducto
-        $atencionProducto = new AtencionProducto(null,"producto","atencion","usuario","valor","horaPedido","cantidad",
-                "anexos","horaPreparacion","horaDespacho","descuento","estado"); 
+        $atencionProducto = new AtencionProducto(null,$producto,$atencion,$usuario,3000,$fecha,1,
+                "anexos del producto",$fecha,$fecha,1,$usuario); 
         
         /*
          * llamado a funciones
          */
-        
-        /*
-        agregar($atencionProducto);
-        consultar(3);
-        consultarAll();
-        actualizar(7, "producto","atencion","usuario","valor","horaPedido","cantidad",
-                "anexos","horaPreparacion","horaDespacho","descuento","estado");
-        eliminar(20);
-        */
+
+        //agregar($atencionProducto);
+        consultar(99737944);
+        //consultarAll();
+        //actualizar(7, "producto","atencion","usuario","valor","horaPedido","cantidad",
+        //        "anexos","horaPreparacion","horaDespacho","descuento","estado");
+        //eliminar(20);
+
         
         /*
          * Agregar atencionProducto a la base de datos
          */
         function agregar($ap){
             echo("<br>***Agregando atencionProductos a la base de datos***<br>");
-            $id=$ap->createAtencionProducto();
-            echo 'atencionProducto creado id: '.$id.'<br>';
+            $estado=$ap->createAtencionProducto();
+            echo 'atencionProducto creado estado: '.$estado.'<br>';
         }
         
 
@@ -37,6 +47,9 @@
             $atencionProducto=$atencionProductoConsulta->getAtencionProducto();
             echo 'atencionProducto consultado id: '.$atencionProducto->getIdAtencionProducto().'<br>';
             echo 'atencionProducto consultado producto: '.$atencionProducto->getProducto().'<br>';
+            echo 'atencionProducto consultado empleado: '.$atencionProducto->getUsuario().'<br>';
+            
+            
         }
                 
         /*
@@ -67,7 +80,7 @@
         /*
          * Eliminar un atencionProducto
          */
-        function bajar($id){
+        function eliminar($id){
             echo("<br>***eliminar la atencionProducto***<br>");
             $atencionProductosEliminar= new AtencionProducto($id);
             $resultado=$atencionProductosEliminar->deleteAtencionProducto();
