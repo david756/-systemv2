@@ -4,11 +4,11 @@
         include "../model/Usuario.php";
         include "../model/Atencion.php";
         
-        $producto=new Producto(10);
+        $producto=new Producto(3);
         $producto=$producto->getProducto();
-        $usuario=new Usuario(113);
+        $usuario=new Usuario(110);
         $usuario=$usuario->getUsuario();
-        $atencion=new Atencion(991970);
+        $atencion=new Atencion(991974);
         $atencion=$atencion->getAtencion();
         $fecha= date('Y-m-d H:i:s');
         
@@ -21,11 +21,11 @@
          */
 
         //agregar($atencionProducto);
-        consultar(99737944);
+        //consultar(99737902);
         //consultarAll();
-        //actualizar(7, "producto","atencion","usuario","valor","horaPedido","cantidad",
-        //        "anexos","horaPreparacion","horaDespacho","descuento","estado");
-        //eliminar(20);
+        actualizar(99737912,$producto,$atencion,$usuario,7000,$fecha,null,
+                "anexos editados",$fecha,$fecha,3,$usuario);
+        //eliminar(997379002);
 
         
         /*
@@ -45,9 +45,20 @@
             echo("<br>***Consultar la atencionProducto agregada***<br>");
             $atencionProductoConsulta= new AtencionProducto($id);
             $atencionProducto=$atencionProductoConsulta->getAtencionProducto();
-            echo 'atencionProducto consultado id: '.$atencionProducto->getIdAtencionProducto().'<br>';
-            echo 'atencionProducto consultado producto: '.$atencionProducto->getProducto().'<br>';
-            echo 'atencionProducto consultado empleado: '.$atencionProducto->getUsuario().'<br>';
+            
+            echo 'id: '.$atencionProducto->getIdAtencionProducto().'<br>';
+            echo 'producto: '.$atencionProducto->getProducto().'<br>';
+            echo 'mesero: '.$atencionProducto->getUsuario().'<br>';
+            echo 'atencion: '.$atencionProducto->getAtencion().'<br>';
+            echo 'hora pedido: '.$atencionProducto->getHoraPedido().'<br>';
+            echo 'hora preparacion: '.$atencionProducto->getHoraPreparacion().'<br>';
+            echo 'hora despacho: '.$atencionProducto->getHoraDespacho().'<br>';
+            echo 'cantidad: '.$atencionProducto->getCantidad().'<br>';
+            echo 'anexos: '.$atencionProducto->getAnexos().'<br>';
+            echo 'estado: '.$atencionProducto->getEstado().'<br>';
+            echo 'cocinero: '.$atencionProducto->getCocinero().'<br>';
+            
+            
             
             
         }
@@ -61,7 +72,8 @@
             $atencionProductosConsulta= new AtencionProducto();
             $consulta=$atencionProductosConsulta->getAtencionProductos();
             foreach ($consulta as $atencionProducto) {
-                print $atencionProducto['id'] . "-" . $atencionProducto['fk_producto'] ."<br/>";
+                print $atencionProducto['ap_id'] . "-" . $atencionProducto['ap_valor'] ."<br/>";
+                print $atencionProducto['ea_fk_empleado'] . "-" . $atencionProducto['ap_hora_despacho'] ."<br/>";
             }           
         }
         
@@ -69,10 +81,10 @@
          * Actualizar un atencionProducto
          */
         function actualizar($id,$producto,$atencion,$usuario,$valor,$horaPedido,$cantidad,$anexos,
-                $horaPreparacion,$horaDespacho,$descuento,$estado){
+                $horaPreparacion,$horaDespacho,$estado,$cocinero){
             echo("<br>***Actrualizar la atencionProducto***<br>");
             $atencionProductosActualizar= new AtencionProducto($id,$producto,$atencion,$usuario,$valor,$horaPedido,$cantidad,$anexos,
-                    $horaPreparacion,$horaDespacho,$descuento,$estado);
+                    $horaPreparacion,$horaDespacho,$estado,$cocinero);
             $resultado=$atencionProductosActualizar->updateAtencionProducto();
             echo $resultado;            
         }

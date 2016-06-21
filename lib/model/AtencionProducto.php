@@ -61,25 +61,32 @@ class AtencionProducto {
                 . " ap_fk_atencion,ap.fk_producto ap_fk_producto,ap.fk_estadoProd"
                 . " ap_fk_estadoProd,ap.fk_cocinero ap_fk_cocinero,"
                 . "ea.id ea_id,ea.fk_empleado ea_fk_empleado,ea.fk_aten_prod ea_fk_aten_prod "
-                . "from aten_prod ap left join empl_atencion ea on ap.id=ea.fk_empleado where ap.id=?";
+                . "from aten_prod ap left join empl_atencion ea on ap.id=ea.fk_aten_prod where ap.id=?";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->idAtencionProducto);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         Database::disconnect(); 
         $resultado= New AtencionProducto($result['ap_id'], $result['ap_fk_producto'], $result['ap_fk_atencion'], $result['ea_fk_empleado']
-                , $result['ap_valor'], $result['ap_hora_pedido'], null, $result['ap_anexos'], $result['ap_hora_preparacion'], $result['ap_hora_despacho']
+                , $result['ap_valor'], $result['ap_hora_pedido'],1, $result['ap_anexos'], $result['ap_hora_preparacion'], $result['ap_hora_despacho']
                 , $result['ap_fk_estadoProd'], $result['ap_fk_cocinero']);
         return $resultado;
     }
     /**
      * Metodo devuelve un array con la lista de todas las atencionProductos
-     * @return Array <AtencionProducto>
+     * @return Array <AtencionProducto>.
+     * ap : atenProd, ea : empl_Aten
+     * return ap_id , ap_valor , ap_anexos ea.fk_empleado.
      */
     function getAtencionProductos() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select * from aten_prod ap left join empl_atencion ea on ap.id=ea.fk_empleado";
+        $query = "select  ap.id ap_id ,ap.valor ap_valor,ap.anexos ap_anexos,ap.hora_pedido ap_hora_pedido,ap.hora_preparacion ap_hora_preparacion,ap.hora_despacho"
+                . " ap_hora_despacho,ap.descuento ap_descuento,ap.fk_atencion"
+                . " ap_fk_atencion,ap.fk_producto ap_fk_producto,ap.fk_estadoProd"
+                . " ap_fk_estadoProd,ap.fk_cocinero ap_fk_cocinero,"
+                . "ea.id ea_id,ea.fk_empleado ea_fk_empleado,ea.fk_aten_prod ea_fk_aten_prod "
+                . "from aten_prod ap left join empl_atencion ea on ap.id=ea.fk_aten_prod ";
         $result = $pdo->query($query);
         Database::disconnect();
         return $result;
@@ -159,15 +166,19 @@ class AtencionProducto {
             try {
                  require_once "database.php";
                  $pdo = Database::connect();
-                 $query = "update aten_prod set descripcion_estado = ?,descuento = ?,fk_estado = ?,fk_mesa = ?,"
-                    . "fk_cajero = ?,horaPago = ? where id =".$this->idAtencionProducto;
+                 $query = "update aten_prod set valor = ?,anexos = ?,hora_pedido = ?,hora_preparacion = ?,"
+                        . "hora_despacho = ?,fk_atencion = ?,fk_producto = ?,fk_cocinero=?,fk_estadoProd = ?"
+                         . " where id =".$this->idAtencionProducto;
                  $stmt = $pdo->prepare($query);
-                 $stmt->bindParam(1, $this->descripcionEstado);
-                 $stmt->bindParam(2, $this->descuento);
-                 $stmt->bindParam(3, $this->estado);
-                 $stmt->bindParam(4, $this->mesa->getIdMesa());
-                 $stmt->bindParam(5, $this->cajero->getIdUsuario());
-                 $stmt->bindParam(6, $this->horaPago); 
+                 $stmt->bindParam(1, $this->valor);
+                 $stmt->bindParam(2, $this->anexos);
+                 $stmt->bindParam(3, $this->horaPedido);
+                 $stmt->bindParam(4, $this->horaPreparacion);
+                 $stmt->bindParam(5, $this->horaDespacho);
+                 $stmt->bindParam(6, $this->atencion->getIdAtencion()); 
+                 $stmt->bindParam(7, $this->producto->getIdProducto());
+                 $stmt->bindParam(8, $this->cocinero->getIdUsuario());
+                 $stmt->bindParam(9, $this->estado);
         
                  Database::disconnect();
                          if ($stmt->execute()){                        
