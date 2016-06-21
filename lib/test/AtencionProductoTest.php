@@ -8,7 +8,7 @@
         $producto=$producto->getProducto();
         $usuario=new Usuario(110);
         $usuario=$usuario->getUsuario();
-        $atencion=new Atencion(991974);
+        $atencion=new Atencion(991975);
         $atencion=$atencion->getAtencion();
         $fecha= date('Y-m-d H:i:s');
         
@@ -23,7 +23,7 @@
         //agregar($atencionProducto);
         //consultar(99737902);
         //consultarAll();
-        actualizar(99737912,$producto,$atencion,$usuario,7000,$fecha,null,
+        actualizar(99737945,$producto,$atencion,$usuario,7000,$fecha,null,
                 "anexos editados",$fecha,$fecha,3,$usuario);
         //eliminar(997379002);
 

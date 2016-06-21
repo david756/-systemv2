@@ -22,9 +22,7 @@ class Inventario {
     //Nombre de la inventario
     private $descripcion;
     //Nombre de la inventario
-    private $accion;
-    
-    
+    private $accion; 
     
    /**
     * Metodo constructor de la clase Inventario 
@@ -38,8 +36,9 @@ class Inventario {
      * @param type $descripcion
      * @param type $accion
      */
-    function Inventario($idInventario="def", $producto="def", $user="def", $fecha="def", $cantidad="def",
-            $proveedor="def", $costo="def", $descripcion="def", $accion="def") {
+    function Inventario($idInventario="def", $producto="def", $user="def", 
+            $fecha="def", $cantidad="def",$proveedor="def", $costo="def", 
+            $descripcion="def", $accion="def") {
        $this->idInventario = $idInventario;
        $this->producto = $producto;
        $this->user = $user;
