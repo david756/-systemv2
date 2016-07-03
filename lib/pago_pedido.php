@@ -23,6 +23,7 @@
   <style type="text/css">
       @media screen {         
        #factura { display: none; }
+       #informe { display: none; }
       }       
     </style>
     <script type="text/javascript">
@@ -196,7 +197,7 @@
                                   <a class="btn btn-app" data-toggle="modal" data-target="#ModalCortesia">
                                     <i class="fa fa-gift"></i> Cortesia
                                   </a>
-                                  <a class="btn btn-app" href="javascript:imprSelec('factura')" >
+                                  <a class="btn btn-app" href="javascript:imprSelec('informe')" >
                                     <span class="badge bg-orange fa fa-check"></span>
                                     <i class="fa fa-print"></i> Imprimir
                                   </a>
@@ -325,100 +326,205 @@
                     </div>
                     <!-- /modal descuento -->
 
-                    <!-- /factura -->
+                    <!-- /factura de venta-->
                     <section id="factura" class="content invoice">
-                    <!-- info row -->
-                    <div class="row invoice-info">
-                      <div class="col-sm-12 invoice-col" align="center">
-                        <h2>Nombre del restaurante</h2>
-                        <address>
-                                        <strong>Regimen comun</strong>
-                                        <br>Cra 13 Norte 12-35
-                                        <br>Armenia , Quindio
-                                        <br>(57) 7356985
-                                        <br>contacto@nombre.com
-                                    </address>
-                      </div>
-                      <!-- /.col -->
-                      <div class="col-sm-12 invoice-col">
-                        <b>Factura de venta  #007612</b>
-                        <br>
-                        <br>
-                        <b>Cajero:</b> JuanDavid
-                        <br>
-                        <b>Fecha:</b> 2 noviembre 2016
-                        <br>
-                        <b>hora:</b> 12:15 pm
-                        <br><hr>
-                      </div>
-                      <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-                    <!-- Table row -->
-                    <div class="row">
-                      <div class="col-xs-12 table">
-                        <table class="table table-striped">
-                          <thead>
-                            <tr>
-                              <th style="width: 10%">Cant</th>
-                              <th style="width: 50%">Producto</th>
-                              <th style="width: 20%">valor</th>
-                              <th style="width: 20%">Subtotal</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>1</td>
-                              <td>Nombre del producto</td>
-                              <td>$25.000</td>
-                              <td>$35.000</td>
-                            </tr>
-                            <tr>
-                              <td>2</td>
-                              <td>nombreso</td>
-                              <td>$55.000</td>
-                              <td>$135.000</td>
-                            </tr>
-                            <tr>
-                              <td>7</td>
-                              <td>Product</td>
-                              <td>$12.000</td>
-                              <td>$189.000</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-                    <div class="row">                     
-                      <!-- /.col -->
-                      <div class="col-xs-12">
-                        <!-- /.col -->
-                      <div class="col-sm-12 invoice-col">
-                        <br>
-                        <br>
-                        <b>Subtotal: $250.030</b>
-                        <br>
-                        <br>
-                        <b>Impuesto (9.3%):</b> $10.534
-                        <br>
-                        <b>Descuento:</b> $5.880
-                        <br>
-                        <b>Total:</b> $265.024
-                        <br><hr>
-                      </div>
-                      <!-- /.col -->
-                      </div>
-                      <div class="col-sm-12 invoice-col" align="center">
-                         <hr><strong>Factura electronica Sistema Manitl</strong>
-                         <br>www.mantil.com
-                      </div>
-                      <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
+                              <!-- info row -->
+                              <div class="row invoice-info">
+                                    <div class="col-sm-12 invoice-col" align="center">
+                                        <h2>Nombre establecimiento</h2>
+                                        <address>
+                                                        <strong>Regimen comun</strong>
+                                                        <br>Nit 7852145-8                                       
+                                                        <br> Cra 13 Norte 12-35
+                                                        <br>Armenia , Quindio
+                                                        <br>(57) 7356985
+                                                        <br>contacto@nombre.com                                        
+                                         </address>
+                                      </div>
+                                      <!-- /.col -->
+                                      <div class="col-sm-12 invoice-col">
+                                          <br>
+                                          <b>Factura de venta  #007612</b>
+                                          <br>
+                                          <br>
+                                          <b>Cajero:</b> JuanDavid
+                                          <br>
+                                          <b>Fecha:</b> 2 noviembre 2016
+                                          <br>
+                                          <b>hora:</b> 12:15 pm
+                                          <br><hr>
+                                      </div>
+                                      <!-- /.col -->
+                              </div>
+                              <!-- /.row -->
+                              <!-- Table row -->
+                              <div class="row">
+                                    <div class="col-xs-12 table">
+                                          <table class="table table-striped">
+                                            <thead>
+                                              <tr>
+                                                <th style="width: 10%">Cant</th>
+                                                <th style="width: 50%">Producto</th>
+                                                <th style="width: 20%">valor</th>
+                                                <th style="width: 20%">Subtotal</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                                <td>1</td>
+                                                <td>Nombre del producto</td>
+                                                <td>$25.000</td>
+                                                <td>$35.000</td>
+                                              </tr>
+                                              <tr>
+                                                <td>2</td>
+                                                <td>nombreso</td>
+                                                <td>$55.000</td>
+                                                <td>$135.000</td>
+                                              </tr>
+                                              <tr>
+                                                <td>7</td>
+                                                <td>Product</td>
+                                                <td>$12.000</td>
+                                                <td>$189.000</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                    </div>
+                                    <!-- /.col -->
+                              </div>
+                              <!-- /.row -->
+                              <div class="row">
+                                  <!-- /.col -->
+                                <div class="col-sm-12 invoice-col">
+                                    <br>
+                                    <br>
+                                    <b>Subtotal:</b> $250.030
+                                    <br>
+                                    <b>Descuento:</b> $5.880
+                                    <br><br>
+                                    <b>TOTAL NETO: $265.024</b>
+                                    <br><br><hr>
+                                </div>
+                                <!-- /.col -->
+                              </div>
+
+                              <div class="row">
+                                    <div class="col-xs-12 table">
+                                      <table class="table table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th style="width: 20%">% Imp.</th>
+                                            <th style="width: 40%">Compra</th>
+                                            <th style="width: 20%">Base</th>
+                                            <th style="width: 20%">Imp.Consumo</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td>8.0 %</td>
+                                            <td>$32.000</td>
+                                            <td>$31.200</td>
+                                            <td>$1.800</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                              </div>
+
+                              <div class="col-sm-12 invoice-col" align="center">
+                                <hr>Res DIAN : 10000056870  2015/10/25  <br>                              
+                                Rango 2000 hasta 7000 <br>
+                                <strong>Sistema Manitl www.mantil.com</strong>
+                              </div>
                   </section>
                   <!-- /factura -->
+
+
+                  <!-- / informe de cuenta-->
+                    <section id="informe" class="content invoice">
+                              <!-- info row -->
+                              <div class="row invoice-info">
+                                    <div class="col-sm-12 invoice-col" align="center">
+                                        <h2>Nombre establecimiento</h2>
+                                        <address>
+                                                        <strong>Su cuenta</strong>
+                                                        <br>Este ticket no remplaza la 
+                                                        factura de venta. Recuerde exigir 
+                                                        su factura al realizar el pago del pedido.                                  
+                                                                                            
+                                         </address>
+                                    </div>
+                                      <!-- /.col -->
+                                      <div class="col-sm-12 invoice-col">
+                                          <br>
+                                          <b>Id de pedido: 007612</b>
+                                          <br>
+                                          <b>Mesa:</b> Mesa 5
+                                          <br>
+                                          <br><hr>
+                                      </div>
+                                      <!-- /.col -->
+                              </div>
+                              <!-- /.row -->
+                              <!-- Table row -->
+                              <div class="row">
+                                    <div class="col-xs-12 table">
+                                          <table class="table table-striped">
+                                            <thead>
+                                              <tr>
+                                                <th style="width: 10%">Cant</th>
+                                                <th style="width: 50%">Producto</th>
+                                                <th style="width: 20%">valor</th>
+                                                <th style="width: 20%">Subtotal</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                                <td>1</td>
+                                                <td>Nombre del producto</td>
+                                                <td>$25.000</td>
+                                                <td>$35.000</td>
+                                              </tr>
+                                              <tr>
+                                                <td>2</td>
+                                                <td>nombreso</td>
+                                                <td>$55.000</td>
+                                                <td>$135.000</td>
+                                              </tr>
+                                              <tr>
+                                                <td>7</td>
+                                                <td>Product</td>
+                                                <td>$12.000</td>
+                                                <td>$189.000</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                    </div>
+                                    <!-- /.col -->
+                              </div>
+                              <!-- /.row -->
+                              <div class="row">
+                                  <!-- /.col -->
+                                <div class="col-sm-12 invoice-col">
+                                    <br>
+                                    <br>
+                                    <b>Subtotal:</b> $250.030
+                                    <br>
+                                    <b>Descuento:</b> $5.880
+                                    <br><br>
+                                    <b>TOTAL NETO: $265.024</b>
+                                    <br><br>
+                                </div>
+                                <!-- /.col -->
+                              </div>
+
+                              <div class="col-sm-12 invoice-col" align="center">
+                                <hr>
+                                <strong>Sistema Manitl www.mantil.com</strong>
+                              </div>
+                  </section>
+                  <!-- /informe -->
 
 
                 </div>
