@@ -54,7 +54,7 @@
         <div class="x_content">
           <div class="page-title">
             <div class="title_left">
-              <h3>Caja</h3>
+              <h3>Cuentas abiertas</h3>
             </div>
           </div>
           <div class="clearfix"></div>
@@ -63,11 +63,14 @@
                   <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                       <div class="x_title">
-                        <h2>Lista de pedidos en espera </h2>
+                        <h2>Pedidos no pagos </h2>
                         <div class="clearfix"></div>
                       </div>
 
                       <div class="x_content">
+                        <p class="text-muted font-13 m-b-30">
+                          Lista de pedidos que aun no han sido tarifados.
+                        </p>
                         <p class="text-muted font-13 m-b-30">
                           Opciones:
                         </p>
@@ -79,9 +82,7 @@
                               <th>Mesa</th>
                               <th>Total</th>
                               <th>Estado</th>
-                              <th>Cajero</th>
                               <th>Hora Inicio</th>
-                              <th>Hora Pago</th>
                               <th>Accion</th>
                             </tr>
                           </thead>
@@ -90,9 +91,7 @@
                               <td>Mesa 2</td>
                               <td>25000</td>
                               <td>pedido</td>
-                              <td>juan</td>
-                              <td>12:12 Pm</td>
-                              <td>Aun no ! </td>
+                              <td>12:12 Pm , 22-feb-2016</td>
                               <td>
                                 <button type="button" class="btn btn-success btn-xs">Pagar</button>
                                 <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
@@ -102,9 +101,7 @@
                               <td>Mesa 2</td>
                               <td>25000</td>
                               <td>pedido</td>
-                              <td>juan</td>
-                              <td>12:12 Pm</td>
-                              <td>Aun no ! </td>
+                              <td>12:12 Pm , 22-feb-2016</td>
                               <td>
                                 <button type="button" class="btn btn-success btn-xs">Pagar</button>
                                 <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
@@ -114,9 +111,7 @@
                               <td>Mesa 2</td>
                               <td>25000</td>
                               <td>pedido</td>
-                              <td>juan</td>
-                              <td>12:12 Pm</td>
-                              <td>Aun no ! </td>
+                              <td>12:12 Pm , 22-feb-2016</td>
                               <td>
                                 <button type="button" class="btn btn-success btn-xs">Pagar</button>
                                 <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
@@ -126,11 +121,9 @@
                               <td>Mesa 2</td>
                               <td>25000</td>
                               <td>pedido</td>
-                              <td>juan</td>
-                              <td>12:12 Pm</td>
-                              <td>Aun no ! </td>
+                              <td>12:12 Pm , 22-feb-2016</td>
                               <td>
-                                <button type="button" class="btn btn-success btn-xs">Detalle</button>
+                                <button type="button" class="btn btn-success btn-xs">Pagar</button>
                                 <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
                               </td>
                             </tr>
@@ -138,9 +131,7 @@
                               <td>Mesa 2</td>
                               <td>25000</td>
                               <td>pedido</td>
-                              <td>juan</td>
-                              <td>12:12 Pm</td>
-                              <td>Aun no ! </td>
+                              <td>12:12 Pm , 22-feb-2016</td>
                               <td>
                                 <button type="button" class="btn btn-success btn-xs">Pagar</button>
                                 <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>

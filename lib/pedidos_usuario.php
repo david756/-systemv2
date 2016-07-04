@@ -54,7 +54,7 @@
         <div class="x_content">
           <div class="page-title">
             <div class="title_left">
-              <h3>Caja</h3>
+              <h3>Sus pedidos</h3>
             </div>
           </div>
           <div class="clearfix"></div>
@@ -63,11 +63,14 @@
                   <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                       <div class="x_title">
-                        <h2>Lista de pedidos en espera </h2>
+                        <h2>Pedidos </h2>
                         <div class="clearfix"></div>
                       </div>
 
                       <div class="x_content">
+                        <p class="text-muted font-13 m-b-30">
+                          Lista de los pedidos que ha realizado.
+                        </p>
                         <p class="text-muted font-13 m-b-30">
                           Opciones:
                         </p>
@@ -82,7 +85,7 @@
                               <th>Cajero</th>
                               <th>Hora Inicio</th>
                               <th>Hora Pago</th>
-                              <th>Accion</th>
+                              <th>Detalle</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -94,8 +97,7 @@
                               <td>12:12 Pm</td>
                               <td>Aun no ! </td>
                               <td>
-                                <button type="button" class="btn btn-success btn-xs">Pagar</button>
-                                <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
+                                <button type="button" class="btn btn-success btn-xs">detalle</button>
                               </td>
                             </tr>
                             <tr>
@@ -106,8 +108,7 @@
                               <td>12:12 Pm</td>
                               <td>Aun no ! </td>
                               <td>
-                                <button type="button" class="btn btn-success btn-xs">Pagar</button>
-                                <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
+                                <button type="button" class="btn btn-success btn-xs">detalle</button>
                               </td>
                             </tr>
                             <tr>
@@ -118,8 +119,7 @@
                               <td>12:12 Pm</td>
                               <td>Aun no ! </td>
                               <td>
-                                <button type="button" class="btn btn-success btn-xs">Pagar</button>
-                                <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
+                                <button type="button" class="btn btn-success btn-xs">detalle</button>
                               </td>
                             </tr>
                             <tr>
@@ -130,8 +130,7 @@
                               <td>12:12 Pm</td>
                               <td>Aun no ! </td>
                               <td>
-                                <button type="button" class="btn btn-success btn-xs">Detalle</button>
-                                <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
+                                <button type="button" class="btn btn-success btn-xs">detalle</button>
                               </td>
                             </tr>
                             <tr>
@@ -142,8 +141,7 @@
                               <td>12:12 Pm</td>
                               <td>Aun no ! </td>
                               <td>
-                                <button type="button" class="btn btn-success btn-xs">Pagar</button>
-                                <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
+                                <button type="button" class="btn btn-success btn-xs">detalle</button>
                               </td>
                             </tr>
 
