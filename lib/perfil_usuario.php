@@ -77,8 +77,8 @@
                               </li>
                             </ul>
 
-                            <a class="btn btn-success" data-toggle="modal" data-target="#ModalPerfil"><i class="fa fa-edit m-right-xs"></i>Editar Perfil</a>
-                            <a class="btn btn-default"  data-toggle="modal" data-target="#ModalClave"><i class="fa fa-edit m-right-xs"></i>Cambiar contraseña</a>
+                            <a class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalPerfil"><i class="fa fa-edit m-right-xs"></i>Editar Perfil</a>
+                            <a class="btn btn-default btn-sm"  data-toggle="modal" data-target="#ModalClave"><i class="fa fa-edit m-right-xs"></i>Cambiar contraseña</a><hr>
                             <br />
 
                             <!-- start skills -->
@@ -107,37 +107,47 @@
 
                             <div class="" role="tabpanel" data-example-id="togglable-tabs">
                               <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Actividad Reciente</a>
+                                <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Notificaciones</a>
                                 </li>
                               </ul>
                               <div id="myTabContent" class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                                <br><button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#ModalNuevoMsj"><i class="fa fa-bell"></i> Nueva Notificación</button><hr>
                                   <!-- start recent activity -->
-                                  <ul class="messages">
-                                    <li>
-                                      <img src="images/usuario.png" class="avatar" alt="Avatar">
-                                      <div class="message_date">
-                                        <h3 class="date text-info">24</h3>
-                                        <p class="month">May</p>
-                                      </div>
+                                  <ul class="messages list-unstyled top_profiles scroll-view">
+                                    <li class="media event">
+                                      <a class="pull-left border-aero profile_thumb">
+                                        <i class="fa fa-user green"></i>
+                                      </a>
                                       <div class="message_wrapper">
-                                        <h4 class="heading">Usuario 1</h4>
+                                        <b>Usuario 1</b>
+                                        <p> <small>20-octubre-2016  12:02 pm</small></p>
                                         <h5>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth.</h5>
                                         <br />
                                       </div>
                                     </li>
-                                    <li>
-                                      <img src="images/usuario.png" class="avatar" alt="Avatar">
-                                      <div class="message_date">
-                                        <h3 class="date text-error">21</h3>
-                                        <p class="month">May</p>
-                                      </div>
+                                    <li class="media event">
+                                      <a class="pull-left border-aero profile_thumb">
+                                        <i class="fa fa-user green"></i>
+                                      </a>
                                       <div class="message_wrapper">
-                                        <h4 class="heading">Usuario 2</h4>
+                                        <b>Usuario 1</b>
+                                        <p> <small>20-octubre-2016  12:02 pm</small></p>
                                         <h5>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth.</h5>
                                         <br />
                                       </div>
-                                    </li>                                    
+                                    </li>
+                                    <li class="media event">
+                                      <a class="pull-left border-aero profile_thumb">
+                                        <i class="fa fa-user green"></i>
+                                      </a>
+                                      <div class="message_wrapper">
+                                        <b>Usuario 1</b>
+                                        <p> <small>20-octubre-2016  12:02 pm</small></p>
+                                        <h5>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth.</h5>
+                                        <br />
+                                      </div>
+                                    </li>                                   
                                   </ul>
                                   <!-- end recent activity -->
                                 </div>
@@ -153,30 +163,29 @@
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                               </button>
-                              <h4 class="modal-title" id="myModalLabel2">Editar Perfil</h4>
+                              <h4 class="modal-title" id="myModalLabel2">Cambiar su información de Perfil</h4>
                             </div>
-                            <div class="body">
-                            <br>
-                            <form class="form-horizontal form-label-left">
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Nombre</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text" class="form-control" placeholder="Nombre">
+                            <div class="modal-body">  
+                               <form class="form-horizontal form-label-left">
+                                      <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Nombre</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                          <input type="text" class="form-control" value="David Felipe" placeholder="Nombre">
+                                        </div>
+                                      </div>                                     
+                                      <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Apellido</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                          <input type="text" class="form-control" value="Hernandez" placeholder="Apellidos">
+                                        </div>
                                       </div>
-                                    </div> 
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Apellido</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text" class="form-control" placeholder="Apellidos">
+                                      <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Telefono</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                          <input type="text" class="form-control" value="3113142928" placeholder="telefono">
+                                        </div>
                                       </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Telefono</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text" class="form-control" placeholder="Telefono">
-                                      </div>
-                                    </div> 
-                            </form>
+                                </form>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -228,6 +237,48 @@
                         </div>
                     </div>
                     <!-- /modal editar clave  -->
+
+                    <!-- /modal nueva notificacion -->
+                    <div class="modal fade bs-example-modal-lg" id="ModalNuevoMsj" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                          <div class="modal-content" align="center">
+
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                              </button>
+                              <h4 class="modal-title" id="myModalLabel2">Nuevo Mensaje</h4>
+                            </div>
+                            <div class="modal-body">
+                            <form class="form-horizontal form-label-left">
+                                  <div class="form-group">
+                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Destino: </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                          <select class="form-control">
+                                            <option>Todos</option>
+                                            <option>Option one</option>
+                                            <option>Option two</option>
+                                            <option>Option three</option>
+                                            <option>Option four</option>
+                                          </select>
+                                        </div>
+                                    </div><br>
+                                  <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Notificación <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                          <textarea class="form-control" rows="3" placeholder='Escriba aqui el mensaje'></textarea>
+                                        </div>
+                                    </div>
+                            </form><br>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                              <button type="button" class="btn btn-success">Enviar</button>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <!-- /modal nueva notificacione  -->
 
                 <!-- /x_content End dv -->
               </div>
