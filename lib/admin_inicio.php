@@ -23,6 +23,7 @@
   <link href="css/icheck/flat/green.css" rel="stylesheet" />
   <link href="css/floatexamples.css" rel="stylesheet" type="text/css" />
 
+
   <script src="js/jquery.min.js"></script>
   <script src="js/nprogress.js"></script>
 
@@ -147,21 +148,297 @@
       <!-- page content -->
       <div class="right_col" role="main">
 
-        <div class="row">
+          <div class="row top_tiles">
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+              <div class="tile-stats">
+                <div class="icon"><i class="fa fa-edit"></i>
+                </div>
+                <div class="count">17</div>
+
+                <h3>Pedidos Hoy</h3>
+                <p>Ordenes facturadas el dia de hoy.</p>
+              </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+              <div class="tile-stats">
+                <div class="icon"><i class="fa fa-th"></i>
+                </div>
+                <div class="count">08</div>
+
+                <h3>Mesas Ocupadas</h3>
+                <p>Mesas que registran atenciones.</p>
+              </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+              <div class="tile-stats">
+                <div class="icon"><i class="fa fa-male"></i>
+                </div>
+                <div class="count">03</div>
+
+                <h3>Meseros Activos</h3>
+                <p>Meseros que registraron hoy.</p>
+              </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+              <div class="tile-stats">
+                <div class="icon"><i class="fa fa-usd"></i>
+                </div>
+                <div class="count">178900</div>
+
+                <h3>Total ingresos</h3>
+                <p>ingresos totales de ventas.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="dashboard_graph x_panel">
+                <div class="row x_title">
+                  <div class="col-md-6">
+                    <h3>Actividad diaria <small> ultimos dias</small></h3>
+                  </div>
+                </div>
+                <div class="x_content">
+                  <div class="demo-container" style="height:250px">
+                    <div id="placeholder3xx3" class="demo-placeholder" style="width: 100%; height:250px;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+
+
+          <div class="col-md-4 col-sm-4 col-xs-12 bg-white">
+          <div class="x_panel tile fixed_height_320 overflow_hidden">
+                <div class="x_title">
+                <h2>Productos <small>ult.7 dias</small></h2>                
+                <div class="clearfix"></div>
+              </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-6">
+                  <div>
+                    <p>Producto 1</p>
+                    <div class="">
+                      <div class="progress progress_sm" style="width: 100%;">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="58"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p>Producto 2</p>
+                    <div class="">
+                      <div class="progress progress_sm" style="width: 100%;">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="20"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-6">
+                  <div>
+                    <p>Producto 3</p>
+                    <div class="">
+                      <div class="progress progress_sm" style="width: 100%;">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="10"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p>Producto 4</p>
+                    <div class="">
+                      <div class="progress progress_sm" style="width: 100%;">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="5"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+           </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12">
+            <div class="x_panel tile fixed_height_320 overflow_hidden">
+              <div class="x_title">
+                <h2>Mesero <small>ult.7 dias</small> </h2>                
+                <div class="clearfix"></div>
+              </div>
+              <div class="x_content">
+
+                <table class="" style="width:100%">
+                  <tr>
+                    <th style="width:37%;">
+                      <p>Top 5</p>
+                    </th>
+                    <th>
+                      <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                        <p class="">Usuario</p>
+                      </div>
+                      <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <p class="">Prog</p>
+                      </div>
+                    </th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <canvas id="canvas1" height="140" width="140" style="margin: 15px 10px 10px 0"></canvas>
+                    </td>
+                    <td>
+                      <table class="tile_info">
+                        <tr>
+                          <td>
+                            <p><i class="fa fa-square blue"></i>Juan</p>
+                          </td>
+                          <td>30%</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p><i class="fa fa-square green"></i>Pipe</p>
+                          </td>
+                          <td>10%</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p><i class="fa fa-square purple"></i>Ana</p>
+                          </td>
+                          <td>20%</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p><i class="fa fa-square aero"></i>Maria</p>
+                          </td>
+                          <td>15%</td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p><i class="fa fa-square red"></i>Yesica</p>
+                          </td>
+                          <td>30%</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+
+         <div class="col-md-4 col-sm-4 col-xs-12 bg-white">
+          <div class="x_panel tile fixed_height_320 overflow_hidden">
+                <div class="x_title">
+                <h2>Categorias <small>ult.7 dias</small></h2>                
+                <div class="clearfix"></div>
+              </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-6">
+                  <div>
+                    <p>Categoria 1</p>
+                    <div class="">
+                      <div class="progress progress_sm" style="width: 100%;">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="60"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p>Categoria 2</p>
+                    <div class="">
+                      <div class="progress progress_sm" style="width: 100%;">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="20"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-6">
+                  <div>
+                    <p>Categoria 3</p>
+                    <div class="">
+                      <div class="progress progress_sm" style="width: 100%;">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="10"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <p>Categoria 4</p>
+                    <div class="">
+                      <div class="progress progress_sm" style="width: 100%;">
+                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="10"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+           </div>
+            <div class="clearfix"></div><br>
+           <div class="row">
           <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="dashboard_graph">
+            <div class="dashboard_graph x_panel">
 
               <div class="row x_title">
                 <div class="col-md-6">
-                  <h3>Empty <small>no content</small></h3>
-                </div>
-                <div class="col-md-6">
-
+                  <h3>Actividad<small>Ultima semana</small></h3>
                 </div>
               </div>
+              <div class="col-md-4 col-sm-4 col-xs-12 widget_tally_box">
+                <div class="x_content">
+                  <h4>Ingresos</h4>
+                  <div id="graph_bar" style="width:100%; height:200px;"></div>
 
-              <div class="col-md-12 col-sm-12 col-xs-12">
-                ...
+                  <div class="col-xs-12 bg-white progress_summary">
+
+                    <div class="row">
+                      <div class="progress_title">
+                        <span class="left">Escudor Wireless 1.0</span>
+                        <div class="clearfix"></div>
+                      </div>
+                      <div class="col-xs-8">
+                        <div class="progress progress_sm">
+                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="89"></div>
+                        </div>
+                      </div>
+                      <div class="col-xs-2 more_info">
+                        <span>89%</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="progress_title">
+                        <span class="left">Mobile Access</span>
+                        <div class="clearfix"></div>
+                      </div>
+                      <div class="col-xs-8">
+                        <div class="progress progress_sm">
+                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="79"></div>
+                        </div>
+                      </div>
+                      <div class="col-xs-2 more_info">
+                        <span>79%</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="progress_title">
+                        <span class="left">WAN access users</span>
+                        <div class="clearfix"></div>
+                      </div>
+                      <div class="col-xs-8">
+                        <div class="progress progress_sm">
+                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="69"></div>
+                        </div>
+                      </div>
+                      <div class="col-xs-2 more_info">
+                        <span>69%</span>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+            </div>
+              <div class="col-md-8 col-sm-8 col-xs-12">
+                <h5>Ingresos vs Ordenes</h5><br>
+                <div id="placeholder33" style="height: 260px; display: none" class="demo-placeholder"></div>
+                <div style="width: 100%;">
+                  <div id="canvas_dahs" class="demo-placeholder" style="width: 100%; height:400px;"></div>
+                </div>
               </div>
 
               <div class="clearfix"></div>
@@ -169,10 +446,15 @@
           </div>
 
         </div>
-        <br />       
-       <!-- footer content -->
+        <br />
+
+        </div>
+        <!-- footer content -->
         <?php include 'footer.php'; ?>
         <!-- /footer content -->
+
+      </div>      
+       
       </div>
       <!-- /page content -->
 
@@ -180,7 +462,7 @@
 
   </div>
 
-  <div id="custom_notifications" class="custom-notifications dsp_none">
+    <div id="custom_notifications" class="custom-notifications dsp_none">
     <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
     </ul>
     <div class="clearfix"></div>
@@ -189,21 +471,25 @@
 
   <script src="js/bootstrap.min.js"></script>
 
-  <!-- gauge js -->
-  <script type="text/javascript" src="js/gauge/gauge.min.js"></script>
-  <script type="text/javascript" src="js/gauge/gauge_demo.js"></script>
-  <!-- chart js -->
-  <script src="js/chartjs/chart.min.js"></script>
   <!-- bootstrap progress js -->
   <script src="js/progressbar/bootstrap-progressbar.min.js"></script>
   <script src="js/nicescroll/jquery.nicescroll.min.js"></script>
   <!-- icheck -->
   <script src="js/icheck/icheck.min.js"></script>
+  <!-- gauge js -->
+  <script type="text/javascript" src="js/gauge/gauge.min.js"></script>
+  <script type="text/javascript" src="js/gauge/gauge_demo.js"></script>
   <!-- daterangepicker -->
   <script type="text/javascript" src="js/moment/moment.min.js"></script>
   <script type="text/javascript" src="js/datepicker/daterangepicker.js"></script>
+  <!-- chart js -->
+  <script src="js/chartjs/chart.min.js"></script>
+  <!-- sparkline -->
+  <script src="js/sparkline/jquery.sparkline.min.js"></script>
 
   <script src="js/custom.js"></script>
+  <!-- skycons -->
+  <script src="js/skycons/skycons.min.js"></script>
 
   <!-- flot js -->
   <!--[if lte IE 8]><script type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
@@ -216,6 +502,213 @@
   <script type="text/javascript" src="js/flot/jquery.flot.stack.js"></script>
   <script type="text/javascript" src="js/flot/curvedLines.js"></script>
   <script type="text/javascript" src="js/flot/jquery.flot.resize.js"></script>
+  <!-- pace -->
+  <script src="js/pace/pace.min.js"></script>
+  <!-- flot -->
+
+  <script>
+    //random data
+    var d1 = [
+      [0, 1],
+      [1, 9],
+      [2, 6],
+      [3, 10],
+      [4, 5],
+      [5, 17],
+      [6, 6],
+      [7, 10],
+      [8, 7],
+      [9, 11],
+      [10, 35],
+      [11, 9],
+      [12, 12],
+      [13, 5],
+      [14, 3],
+      [15, 4],
+      [16, 9]
+    ];
+
+    //flot options
+    var options = {
+      series: {
+        curvedLines: {
+          apply: true,
+          active: true,
+          monotonicFit: true
+        }
+      },
+      colors: ["#26B99A"],
+      grid: {
+        borderWidth: {
+          top: 0,
+          right: 0,
+          bottom: 1,
+          left: 1
+        },
+        borderColor: {
+          bottom: "#7F8790",
+          left: "#7F8790"
+        }
+      }
+    };
+    var plot = $.plot($("#placeholder3xx3"), [{
+      label: "Pedidos",
+      data: d1,
+      lines: {
+        fillColor: "rgba(150, 202, 89, 0.12)"
+      }, //#96CA59 rgba(150, 202, 89, 0.42)
+      points: {
+        fillColor: "#fff"
+      }
+    }], options);
+  </script>
+  <!-- /flot -->
+  <!--  -->
+  <script>
+    $('document').ready(function() {
+      $(".sparkline_one").sparkline([2, 4, 3, 4, 5, 4, 5, 4, 3, 4, 5, 6, 7, 5, 4, 3, 5, 6], {
+        type: 'bar',
+        height: '40',
+        barWidth: 9,
+        colorMap: {
+          '7': '#a1a1a1'
+        },
+        barSpacing: 2,
+        barColor: '#26B99A'
+      });
+
+      $(".sparkline_two").sparkline([2, 4, 3, 4, 5, 4, 5, 4, 3, 4, 5, 6, 7, 5, 4, 3, 5, 6], {
+        type: 'line',
+        width: '200',
+        height: '40',
+        lineColor: '#26B99A',
+        fillColor: 'rgba(223, 223, 223, 0.57)',
+        lineWidth: 2,
+        spotColor: '#26B99A',
+        minSpotColor: '#26B99A'
+      });
+
+      Chart.defaults.global.legend = {
+        enabled: false
+      };
+
+      var data = {
+        labels: [
+          "Maria",
+          "Ana",
+          "Yesica",
+          "Pipe",
+          "Juan"
+        ],
+        datasets: [{
+          data: [15, 20, 30, 10, 30],
+          backgroundColor: [
+            "#BDC3C7",
+            "#9B59B6",
+            "#455C73",
+            "#26B99A",
+            "#3498DB"
+          ],
+          hoverBackgroundColor: [
+            "#CFD4D8",
+            "#B370CF",
+            "#34495E",
+            "#36CAAB",
+            "#49A9EA"
+          ]
+
+        }]
+      };
+
+      var canvasDoughnut = new Chart(document.getElementById("canvas1"), {
+        type: 'doughnut',
+        tooltipFillColor: "rgba(51, 51, 51, 0.55)",
+        data: data
+      });
+    });
+  </script>
+  <!-- -->
+  
+  <!-- moris js -->
+  <script src="js/moris/raphael-min.js"></script>
+  <script src="js/moris/morris.min.js"></script>
+  <script>
+    $(function() {
+      var day_data = [{
+        "period": "Dom",
+        "Hours worked": 400000
+      }, {
+        "period": "Lun",
+        "Hours worked": 250000
+      }, {
+        "period": "Mar",
+        "Hours worked": 960000
+      }, {
+        "period": "Mie",
+        "Hours worked": 325000
+      }, {
+        "period": "Jue",
+        "Hours worked": 265000
+      }, {
+        "period": "Vie",
+        "Hours worked": 265000
+      }, {
+        "period": "Sab",
+        "Hours worked": 314000
+      }];
+      Morris.Bar({
+        element: 'graph_bar',
+        data: day_data,
+        hideHover: 'always',
+        xkey: 'period',
+        barColors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
+        ykeys: ['Hours worked', 'sorned'],
+        labels: ['Hours worked', 'SORN'],
+        xLabelAngle: 60
+      });
+    });
+  </script>
+  <!-- skycons -->
+  <script>
+    var icons = new Skycons({
+        "color": "#73879C"
+      }),
+      list = [
+        "clear-day", "clear-night", "partly-cloudy-day",
+        "partly-cloudy-night", "cloudy", "rain", "sleet", "snow", "wind",
+        "fog"
+      ],
+      i;
+
+    for (i = list.length; i--;)
+      icons.set(list[i], list[i]);
+
+    icons.play();
+  </script>
+  
+  <script>
+    var opts = {
+      lines: 12, // The number of lines to draw
+      angle: 0, // The length of each line
+      lineWidth: 0.4, // The line thickness
+      pointer: {
+        length: 0.75, // The radius of the inner circle
+        strokeWidth: 0.042, // The rotation offset
+        color: '#1D212A' // Fill color
+      },
+      limitMax: 'false', // If true, the pointer will not go past the end of the gauge
+      colorStart: '#1ABC9C', // Colors
+      colorStop: '#1ABC9C', // just experiment with them
+      strokeColor: '#F0F3F3', // to see which ones work best for you
+      generateGradient: true
+    };
+    var target = document.getElementById('foo2'); // your canvas element
+    var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+    gauge.maxValue = 5000; // set max gauge value
+    gauge.animationSpeed = 32; // set animation speed (32 is default value)
+    gauge.set(3200); // set actual value
+    gauge.setTextField(document.getElementById("gauge-text2"));
+  </script>
   <script>
     $(document).ready(function() {
       // [17, 74, 6, 39, 20, 85, 7]
@@ -292,151 +785,7 @@
       }
     });
   </script>
-
-  <!-- worldmap -->
-  <script type="text/javascript" src="js/maps/jquery-jvectormap-2.0.3.min.js"></script>
-  <script type="text/javascript" src="js/maps/gdp-data.js"></script>
-  <script type="text/javascript" src="js/maps/jquery-jvectormap-world-mill-en.js"></script>
-  <script type="text/javascript" src="js/maps/jquery-jvectormap-us-aea-en.js"></script>
-  <!-- pace -->
-  <script src="js/pace/pace.min.js"></script>
-  <script>
-    $(function() {
-      $('#world-map-gdp').vectorMap({
-        map: 'world_mill_en',
-        backgroundColor: 'transparent',
-        zoomOnScroll: false,
-        series: {
-          regions: [{
-            values: gdpData,
-            scale: ['#E6F2F0', '#149B7E'],
-            normalizeFunction: 'polynomial'
-          }]
-        },
-        onRegionTipShow: function(e, el, code) {
-          el.html(el.html() + ' (GDP - ' + gdpData[code] + ')');
-        }
-      });
-    });
-  </script>
-  <!-- skycons -->
-  <script src="js/skycons/skycons.min.js"></script>
-  <script>
-    var icons = new Skycons({
-        "color": "#73879C"
-      }),
-      list = [
-        "clear-day", "clear-night", "partly-cloudy-day",
-        "partly-cloudy-night", "cloudy", "rain", "sleet", "snow", "wind",
-        "fog"
-      ],
-      i;
-
-    for (i = list.length; i--;)
-      icons.set(list[i], list[i]);
-
-    icons.play();
-  </script>
-
-  <!-- dashbord linegraph -->
-  <script>
-    var doughnutData = [{
-      value: 30,
-      color: "#455C73"
-    }, {
-      value: 30,
-      color: "#9B59B6"
-    }, {
-      value: 60,
-      color: "#BDC3C7"
-    }, {
-      value: 100,
-      color: "#26B99A"
-    }, {
-      value: 120,
-      color: "#3498DB"
-    }];
-    var myDoughnut = new Chart(document.getElementById("canvas1").getContext("2d")).Doughnut(doughnutData);
-  </script>
-  <!-- /dashbord linegraph -->
-  <!-- datepicker -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-
-      var cb = function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        //alert("Callback has fired: [" + start.format('MMMM D, YYYY') + " to " + end.format('MMMM D, YYYY') + ", label = " + label + "]");
-      }
-
-      var optionSet1 = {
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: {
-          days: 60
-        },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'left',
-        buttonClasses: ['btn btn-default'],
-        applyClass: 'btn-small btn-primary',
-        cancelClass: 'btn-small',
-        format: 'MM/DD/YYYY',
-        separator: ' to ',
-        locale: {
-          applyLabel: 'Submit',
-          cancelLabel: 'Clear',
-          fromLabel: 'From',
-          toLabel: 'To',
-          customRangeLabel: 'Custom',
-          daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-          monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-          firstDay: 1
-        }
-      };
-      $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-      $('#reportrange').daterangepicker(optionSet1, cb);
-      $('#reportrange').on('show.daterangepicker', function() {
-        console.log("show event fired");
-      });
-      $('#reportrange').on('hide.daterangepicker', function() {
-        console.log("hide event fired");
-      });
-      $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
-        console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
-      });
-      $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
-        console.log("cancel event fired");
-      });
-      $('#options1').click(function() {
-        $('#reportrange').data('daterangepicker').setOptions(optionSet1, cb);
-      });
-      $('#options2').click(function() {
-        $('#reportrange').data('daterangepicker').setOptions(optionSet2, cb);
-      });
-      $('#destroy').click(function() {
-        $('#reportrange').data('daterangepicker').remove();
-      });
-    });
-  </script>
-  <script>
-    NProgress.done();
-  </script>
-  <!-- /datepicker -->
-  <!-- /footer content -->
+ 
 </body>
 
 </html>
