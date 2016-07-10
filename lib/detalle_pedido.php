@@ -109,7 +109,7 @@
                          <div class="accordion" id="accordion" role="tablist" aria-multiselectable="false">
                             <div class="panel">
                                   <a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                    <h4 class="panel-title"><strong>Producto 1</strong></h4>
+                                    <h4 class="panel-title"><strong>Producto 1 </strong><span class="fa fa-chevron-down"></span></h4>
                                   </a>
                                   <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                         <div class="panel-body">
@@ -137,7 +137,7 @@
                          <div class="accordion" id="accordion" role="tablist" aria-multiselectable="false">
                             <div class="panel">
                                   <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    <h4 class="panel-title"><strong>Producto 1</strong></h4>
+                                    <h4 class="panel-title"><strong>Producto 1 </strong><span class="fa fa-chevron-down" aling="right"></span></h4>
                                   </a>
                                   <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                         <div class="panel-body">

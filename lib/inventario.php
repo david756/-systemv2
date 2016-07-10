@@ -152,7 +152,7 @@
                               <td>25/junio/2016 10:02 pm</td>
                               <td>pedro</td>
                               <td>10</td>
-                              <td><button type="button" class="btn btn-success btn-xs">ingresado</button></td>
+                              <td><button type="button" class="btn btn-info btn-xs">Vendido</button></td>
                               <td>productos sacados del inventario</td>
                               <td>$10.500</td>
                               <td>Colombina</td>
