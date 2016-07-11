@@ -159,7 +159,7 @@
 
               <div class="row x_title">
                 <div class="col-md-6">
-                  <h3>Usuarios</h3>
+                  <h3>Categorias</h3>
                 </div>
                 <div class="col-md-6">
 
@@ -170,89 +170,21 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>Formulario de ingreso nuevo Empleado</h2>
+                  <h2>Formulario de ingreso nuevas Categorias</h2>
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
 
                   <form class="form-horizontal form-label-left" novalidate>
 
-                    <p>Formulario de ingreso de usuarios</p>
+                    <p>Formulario de ingreso de Categorias</p>
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre" required="required" type="text">
+                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre de la Categoria" required="required" type="text">
                       </div>
-                    </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Apellido <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese apellido" required="required" type="text">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" >Genero <span class="required">*</span></label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <div id="gender" class="btn-group" data-toggle="buttons">
-
-                          <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                            <input type="radio" class="flat" name="gender" id="genderM" value="M" checked required />
-                            <input type="radio" name="gender" value="male"> &nbsp; Hombre &nbsp;
-                          </label>
-                          <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                            <input type="radio" class="flat" name="gender" id="genderF" value="F" />
-                            <input type="radio" name="gender" value="female"> Mujer
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" >Telefono <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="number" id="number" name="number" required="required" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" >Usuario <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="8"  name="name" placeholder="ingrese usuario" required="required" type="text">
-                      </div>
-                    </div>
-                    <div class="item form-group">
-                      <label for="password" class="control-label col-md-3">Contraseña</label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="password" type="password" name="password" data-validate-range="8" class="form-control col-md-7 col-xs-12" required="required">
-                      </div>
-                    </div>
-                    <div class="item form-group">
-                      <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Repetir contraseña</label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="password2" type="password" name="password2" data-validate-linked="password" class="form-control col-md-7 col-xs-12" required="required">
-                      </div>
-                    </div>
-                    <p>Seleccion de los roles del usuario</p>
-                    <div class="item form-group">
-                      <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Perfiles del usuario</label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                          <label>
-                            <input type="checkbox" class="flat"> Mesero
-                          </label><br>
-                          <label>
-                            <input type="checkbox" class="flat"> Caja
-                          </label><br>
-                          <label>
-                            <input type="checkbox" class="flat"> Cocina
-                          </label><br>
-                          <label>
-                            <input type="checkbox" class="flat"> Inventario
-                          </label>
-                      </div>
-                    </div>
-
+                    </div> 
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-md-offset-3">
@@ -260,16 +192,15 @@
                       </div>
                     </div>
                   </form>
-
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="col-md-8 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>Administradores <small>usuarios</small></h2>
+                  <h2>Lista de categorias</h2>
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
@@ -279,31 +210,22 @@
                             <tr>
                               <th>Id</th>
                               <th>Nombre</th>
-                              <th>Apellido</th>                             
-                              <th>Telefono</th>
                               <th>Estado</th>
-                              <th>Usuario</th>
                               <th>Accion</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr>
                               <td>125</td>
-                              <td>Juan David</td>
-                              <td>Hernandez</td>
-                              <td>3113142928</td>
-                              <td><button type="button" class="btn btn-success btn-xs">activo</button></td>
-                              <td>david756</td>
-                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalUsuario"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
+                              <td>Categoria</td>
+                              <td><button type="button" class="btn btn-success btn-xs">activa</button></td>
+                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalCategoria"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
                             </tr>
                             <tr>
                               <td>125</td>
-                              <td>Juan David</td>
-                              <td>Hernandez</td>
-                              <td>3113142928</td>
-                              <td><button type="button" class="btn btn-success btn-xs">activo</button></td>
-                              <td>david756</td>
-                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalUsuario"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
+                              <td>Categoria</td>
+                              <td><button type="button" class="btn btn-success btn-xs">activa</button></td>
+                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalCategoria"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
                             </tr>
                           </tbody>
                         </table>
@@ -315,83 +237,35 @@
             </div>
           </div>
 
-          <!-- /modal editar usuario -->
-          <div class="modal fade bs-example-modal-lg" id="ModalUsuario" tabindex="-1" role="dialog" aria-hidden="true">
+          <!-- /modal editar Categoria -->
+          <div class="modal fade bs-example-modal-lg" id="ModalCategoria" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content" align="center">
 
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel2">Editar Usuario</h4>
+                    <h4 class="modal-title" id="myModalLabel2">Editar Categoria</h4>
                   </div>
                 <div class="modal-body">
-                  <form class="form-horizontal form-label-left" novalidate>
+                      <form class="form-horizontal form-label-left" novalidate>
 
-                    <p>Formulario para editar usuarios</p>
+                    <p>Formulario de ingreso de Categoria</p>
                     <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nombre <span class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre" required="required" type="text" value="David Felipe">
+                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre de la Categoria" required="required" type="text" value="Nombre de la Categoria">
                       </div>
-                    </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Apellido <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese apellido" required="required" type="text" value="Hernandez">
-                      </div>
-                    </div>
+                    </div> 
+                    <div class="ln_solid"></div>
                     <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" >Genero <span class="required">*</span></label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <div id="gender" class="btn-group" data-toggle="buttons">
-
-                          <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                            <input type="radio" class="flat" name="gender" id="genderM" value="M" checked required />
-                            <input type="radio" name="gender" value="male"> &nbsp; Hombre &nbsp;
-                          </label>
-                          <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                            <input type="radio" class="flat" name="gender" id="genderF" value="F" />
-                            <input type="radio" name="gender" value="female"> Mujer
-                          </label>
-                        </div>
+                      <div class="col-md-6 col-md-offset-3">
+                        <button id="send" type="submit" class="btn btn-success">Guardar</button>
                       </div>
                     </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Telefono <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="number" id="number" name="number" required="required" class="form-control col-md-7 col-xs-12" value="3113142928">
-                      </div>
-                    </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Usuario <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="8"  name="name" placeholder="ingrese usuario" required="required" type="text" value="david756">
-                      </div>
-                    </div> <hr>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Perfiles del usuario</label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                          <label>
-                            <input type="checkbox" class="flat" checked="checked"> Mesero
-                          </label>
-                          <label>
-                            <input type="checkbox" class="flat"> Caja
-                          </label>
-                          <label>
-                            <input type="checkbox" class="flat"> Cocina
-                          </label>
-                          <label>
-                            <input type="checkbox" class="flat"> Inventario
-                          </label>
-                      </div>
-                    </div>                    
-                  </form>
-                 </div>
+                  </form>  
+                </div>
                   <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                         <button type="button" class="btn btn-success">Confirmar</button>
@@ -399,14 +273,14 @@
                 </div>
               </div>
             </div>
-            <!-- /modal editar usuario  -->
+            <!-- /modal editar Categoria  -->
 
-            <!-- /modal confirmar eliminar usuario -->
+            <!-- /modal confirmar eliminar Categoria -->
           <div class="modal fade bs-example-modal-sm" id="ModalConfirmar" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-sm">
                 <div class="modal-content" align="center">
                 <div class="modal-body">
-                  <h4>¿Esta seguro de eliminar este usuario?</h4>
+                  <h4>¿Esta seguro de eliminar esta Categoria?</h4>
                 </div>
                   <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -415,7 +289,7 @@
                 </div>
               </div>
             </div>
-            <!-- /modal confirmar eliminar usuario-->
+            <!-- /modal confirmar eliminar Categoria-->
 
         </div>
         <br />       

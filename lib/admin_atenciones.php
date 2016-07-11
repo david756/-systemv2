@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -19,12 +19,9 @@
 
   <!-- Custom styling plus plugins -->
   <link href="css/custom.css" rel="stylesheet">
-  <link href="css/icheck/flat/green.css" rel="stylesheet">
-
-    <!-- ion_range -->
-  <link rel="stylesheet" href="css/normalize.css" />
-  <link rel="stylesheet" href="css/ion.rangeSlider.css" />
-  <link rel="stylesheet" href="css/ion.rangeSlider.skinFlat.css" />
+  <link rel="stylesheet" type="text/css" href="css/maps/jquery-jvectormap-2.0.3.css" />
+  <link href="css/icheck/flat/green.css" rel="stylesheet" />
+  <link href="css/floatexamples.css" rel="stylesheet" type="text/css" />
 
   <link href="js/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -32,56 +29,147 @@
   <link href="js/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
 
-
   <script src="js/jquery.min.js"></script>
+  <script src="js/nprogress.js"></script>
 
   <!--[if lt IE 9]>
-        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
-        <![endif]-->
+  <script src="../assets/js/ie8-responsive-file-warning.js"></script>
+  <![endif]-->
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 
 </head>
-<body style="background:#F7F7F7;">
 
-<!-- top Menu navigation-->
-<?php include 'menu.php'; ?>
-<!-- /top Menu navigation -->
 
+<body class="nav-md">
+
+  <div class="container body">
+    <div class="main_container">
+      <div class="col-md-3 left_col">
+        <div class="left_col scroll-view">
+
+          <div class="navbar nav_title" style="border: 0;">
+            <a href="index.html" class="site_title"><i class="fa fa-glass"></i> <span>Mantil System</span></a>
+          </div>
+          <div class="clearfix"></div>
+
+          <!-- menu prile quick info -->
+          <div class="profile">
+            <div class="profile_pic">
+              <img src="images/img.jpg" alt="..." class="img-circle profile_img">
+            </div>
+            <div class="profile_info">
+              <span>Bienvenido,</span>
+              <h2>Usuario</h2>
+            </div>
+          </div>
+          <!-- /menu prile quick info -->
+
+          <br />
+
+          <!-- sidebar menu -->
+          <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+
+            <div class="menu_section">
+              <h3>Administrador</h3><br>
+              <ul class="nav side-menu">
+              <li><a><i class="fa fa-home"></i> Inicio </a></li>
+               <li><a><i class="fa fa-users"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">
+                    <li><a href="empty.html">Empleados</a></li>                    
+                    <li><a href="empty.html">Administradores</a></li>                    
+                  </ul>
+                </li>
+                <li><a><i class="fa fa-th-large"></i> Mesas <span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">
+                    <li><a href="empty.html">Administrar</a></li>               
+                  </ul>
+                </li>
+                <li><a><i class="fa fa-folder-o"></i> Categorias <span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">
+                  <li><a href="empty.html">Administrar</a></li>             
+                  </ul>
+                </li>
+                <li><a><i class="fa fa-beer"></i> Productos <span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">
+                    <li><a href="empty.html">Administrar</a></li>            
+                  </ul>
+                </li>
+                <li><a><i class="fa fa-edit"></i> Atenciones <span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">
+                    <li><a href="empty.html">Administrar</a></li>                  
+                  </ul>
+                </li>
+                <li><a><i class="fa fa-bar-chart"></i> Presentacion de datos <span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">
+                    <li><a href="empty.html">General</a></li>                    
+                    <li><a href="empty.html">Empleados</a></li>
+                    <li><a href="empty.html">Categorias</a></li>                    
+                    <li><a href="empty.html">Productos</a></li>
+                    <li><a href="empty.html">Atenciones</a></li>                    
+                    <li><a href="empty.html">Inventarios</a></li>                    
+                  </ul>
+                </li>
+                <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">
+                    <li><a href="empty.html">Reporte de hoy</a></li>                    
+                    <li><a href="empty.html">Reportes pasados</a></li>
+                    <li><a href="empty.html">Informe mes</a></li>                                        
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- /sidebar menu -->
+
+          <!-- /menu footer buttons -->
+          <div class="sidebar-footer hidden-small">
+            <a data-toggle="tooltip" data-placement="top" title="Soporte">
+              <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Pantalla Completa">
+              <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Salir">
+              <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+            </a>
+            <a data-toggle="tooltip" data-placement="top" title="Inicio">
+              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+          </div>
+          <!-- /menu footer buttons -->
+        </div>
+      </div>
+
+          <!-- top Menu navigation-->
+          <?php include 'admin_menu.php'; ?>
+          <!-- /top Menu navigation -->
 
 
       <!-- page content -->
       <div class="right_col" role="main">
 
-        <div class="x_content">
-          <div class="page-title">
-            <div class="title_left">
-              <h3>Inventario</h3>
-            </div>
+        <div class="row">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="dashboard_graph">
 
-            <div class="title_right">
-              <div class="pull-right">
-                <h2>Modificar Inventario <button type="button" class="btn btn-info btn-sm " data-toggle="modal" data-target="#Modalinventario">Agregar </button></h2>
+              <div class="row x_title">
+                <div class="col-md-6">
+                  <h3>Atenciones <small>Ordenes de pedidos</small></h3>
+                </div>
+                <div class="col-md-6">
+
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="clearfix"></div>
-
-          <div class="row">
-            <div class="col-md-12">
-              <div class="x_panel">
-                <!-- x_content-->                
-                <div class="x_content">
-                <div class="well">             
-                    
+                <div class="well"> 
                     <form class="form-horizontal">
                       <fieldset>
                       <div class="row">
-                          <div class="control-group col-md-4 col-sm-3 col-xs-12">
+                          <div class="control-group col-md-4 col-sm-6 col-xs-12">
                             <div class="controls">
                               <div class="input-prepend input-group">
                                 <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
@@ -90,170 +178,66 @@
                             </div>
                           </div>
 
-                            <div class="form-group col-md-4">
-                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                  <select class="select2_single form-control" tabindex="-1">
-                                    <option value="p1">Producto1</option>
-                                    <option value="p2">Producto2</option>
-                                    <option value="p3">Producto3</option>
-                                    <option value="p4">Producto4</option>
-                                  </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                              <button type="button" class="btn btn-default btn-sm">Consultar</button>
+                            <div class="col-md-8 col-sm-6 col-xs-12">
+                              <button type="button" class="btn btn-success btn-sm">Ver atenciones</button>
                             </div>
                         </div>
                       </fieldset>
                     </form>
                   </div>
-
-             <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="x_panel">
-                <div class="x_title">
-                  <h2>Producto 1 <small>Inventario</small></h2>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-
-                        <div class="col-sm-12 invoice-col">
-                                <b>Unidades disponibles: 13</b>
-                                <br>
-                                <br>
-                                <b>Valor de venta promedio:</b> $12.000
-                                <br>
-                                <b>Costo promedio:</b> $9.500
-                                <br><br>
-                              </div>
-                        <table id="datatable-buttons" class="table table-striped table-bordered">
+              <div class="col-md-12 col-sm-12 col-xs-12">                    
+                        <table  id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                           <thead>
                             <tr>
                               <th>Fecha</th>
-                              <th>Usuario</th>
-                              <th>Cantidad</th>
-                              <th>Accion</th>
+                              <th>Mesa</th>
+                              <th>Estado</th>
                               <th>Descripcion</th>
-                              <th>Costo</th>
-                              <th>Proveedor</th>
+                              <th>Descuento</th>
+                              <th>Cajero</th>
+                              <th>Accion</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr>
-                              <td>23/marzo/2016 12:02 pm</td>
-                              <td>Juan</td>
-                              <td>12</td>
-                              <td><button type="button" class="btn btn-success btn-xs">ingresado</button></td>
-                              <td>productos ingresados normalmente al inventario</td>
-                              <td>$12.500</td>
-                              <td>Babaria</td>
+                              <td>2 octubre 2016  2:16 pm</td>
+                              <td>Mesa 2</td>
+                              <td>pedido</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td><button type="button" class="btn btn-success btn-xs">Ver</button></td>
                             </tr>
                             <tr>
-                              <td>25/junio/2016 10:02 pm</td>
-                              <td>pedro</td>
-                              <td>10</td>
-                              <td><button type="button" class="btn btn-info btn-xs">Vendido</button></td>
-                              <td>productos sacados del inventario</td>
-                              <td>$10.500</td>
-                              <td>Colombina</td>
-                            </tr> 
-                            <tr>
-                              <td>25/junio/2016 10:02 pm</td>
-                              <td>pedro</td>
-                              <td>10</td>
-                              <td><button type="button" class="btn btn-danger btn-xs">eliminado</button></td>
-                              <td>productos sacados del inventario</td>
-                              <td>$10.500</td>
-                              <td>Colombina</td>
-                            </tr>                           
+                              <td>2 octubre 2016  2:16 pm</td>
+                              <td>Mesa 2</td>
+                              <td>pago</td>
+                              <td>Pago normal</td>
+                              <td></td>
+                              <td>Juan</td>
+                              <td><button type="button" class="btn btn-success btn-xs">Ver</button></td>
+                            </tr>
                           </tbody>
                         </table>
-                      </div>
-                    </div>
                   </div>
 
-                  <!-- /modal editar inventario -->
-                    <div class="modal fade bs-example-modal-lg" id="Modalinventario" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                          <div class="modal-content" align="center">
-
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-                              </button>
-                              <h4 class="modal-title" id="myModalLabel2">Acciones de inventario</h4>
-                            </div>
-                            <div class="modal-body">
-                               <form class="form-horizontal form-label-left">                                    
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Accion</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <select class="form-control">
-                                            <option>Ingresar</option>
-                                            <option>Eliminar</option>
-                                          </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Producto</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <select class="form-control">
-                                            <option>producto one</option>
-                                            <option>Option two</option>
-                                            <option>Option three</option>
-                                            <option>Option four</option>
-                                          </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Cantidad</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text" class="form-control" placeholder="ej : 10">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Costo</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text" class="form-control" placeholder="ej : 12000">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Proveedor</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text" class="form-control" placeholder="Nombre del proveedor">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Descricpion<span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <textarea class="form-control" rows="3" placeholder='Descripción'></textarea>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-info">Confirmar</button>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                    <!-- /modal editar inventario  -->
-                </div>
-                <!-- /x_content End dv -->
-              </div>
+              <div class="clearfix"></div>
             </div>
           </div>
-        </div>
 
-        <!-- footer content -->
+        </div>
+        <br />       
+       <!-- footer content -->
         <?php include 'footer.php'; ?>
         <!-- /footer content -->
-
       </div>
       <!-- /page content -->
 
-        <div id="custom_notifications" class="custom-notifications dsp_none">
+    </div>
+
+  </div>
+
+ <div id="custom_notifications" class="custom-notifications dsp_none">
                 <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
                 </ul>
                 <div class="clearfix"></div>
@@ -550,6 +534,7 @@
     });
   </script>
   <!-- /datepicker -->
+ 
 </body>
 
 </html>
