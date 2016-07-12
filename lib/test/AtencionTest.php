@@ -4,9 +4,9 @@
         include "../model/Mesa.php";
         
 
-        $mesa   = new Mesa(11);
+        $mesa   = new Mesa(54);
         $mesa   =$mesa->getMesa();        
-        $cajero = new Usuario(110);
+        $cajero = new Usuario(146);
         $cajero =$cajero->getUsuario();
         $fecha= date('Y-m-d H:i:s');
         //creando una nueva atencion
@@ -18,10 +18,10 @@
         
         
        //agregar($atencion);
-       // consultar(991979);
+       // consultar(991977);
        //consultarAll();
-       actualizar(991972, "descripcion 2",3000,$cajero,$mesa,$fecha,2);
-        //eliminar(991977);
+       //actualizar(991977, "descripcion 2",3000,$cajero,$mesa,$fecha,2);
+       //eliminar(991977);
    
         
         /*

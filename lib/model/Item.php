@@ -4,7 +4,7 @@
  * Clase AtencionProducto
  * @author David
  */
-class AtencionProducto {
+class Item {
 
     //id de la atencionProducto
     private $idAtencionProducto;
@@ -47,7 +47,7 @@ class AtencionProducto {
      * @param type $estado
      * @param type $cocinero
      */
-    function AtencionProducto($idAtencionProducto = "def", $producto = "def", $atencion = "def", $usuario = "def", $valor = "def", $horaPedido = "def", $cantidad = "def", $anexos = "def", $horaPreparacion = "def", $horaDespacho = "def", $estado = "def", $cocinero = "def") {
+    function Item($idAtencionProducto = "def", $producto = "def", $atencion = "def", $usuario = "def", $valor = "def", $horaPedido = "def", $cantidad = "def", $anexos = "def", $horaPreparacion = "def", $horaDespacho = "def", $estado = "def", $cocinero = "def") {
 
         $this->idAtencionProducto = $idAtencionProducto;
         $this->producto = $producto;
@@ -66,43 +66,45 @@ class AtencionProducto {
     /**
      * Metodo que retorna la atencion Producto consultada como objeto
      * @param type $id
-     * @return AtencionProducto
+     * @return Item
      */
     function getAtencionProducto() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select  ap.id ap_id ,ap.valor ap_valor,ap.anexos ap_anexos,ap.hora_pedido ap_hora_pedido,ap.hora_preparacion ap_hora_preparacion,ap.hora_despacho"
+        $query = "select  ap.id ap_id ,ap.valor ap_valor,ap.anexos ap_anexos,ap.hora_pedido ap_hora_pedido,"
+                . "ap.hora_preparacion ap_hora_preparacion,ap.hora_despacho"
                 . " ap_hora_despacho,ap.descuento ap_descuento,ap.fk_atencion"
-                . " ap_fk_atencion,ap.fk_producto ap_fk_producto,ap.fk_estadoProd"
-                . " ap_fk_estadoProd,ap.fk_cocinero ap_fk_cocinero,"
-                . "ea.id ea_id,ea.fk_empleado ea_fk_empleado,ea.fk_aten_prod ea_fk_aten_prod "
-                . "from aten_prod ap left join empl_atencion ea on ap.id=ea.fk_aten_prod where ap.id=?";
+                . " ap_fk_atencion,ap.fk_producto ap_fk_producto,ap.fk_estado_item"
+                . " ap_fk_estado_item,ap.fk_cocinero ap_fk_cocinero,"
+                . "ea.id ea_id,ea.fk_usuario ea_fk_usuario,ea.fk_item ea_fk_item "
+                . "from items ap left join atencion_empleados ea on ap.id=ea.fk_item where ap.id=?";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->idAtencionProducto);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         Database::disconnect();
-        $resultado = New AtencionProducto($result['ap_id'], $result['ap_fk_producto'], $result['ap_fk_atencion'], $result['ea_fk_empleado']
+        $resultado = New Item($result['ap_id'], $result['ap_fk_producto'], $result['ap_fk_atencion'], $result['ea_fk_usuario']
                 , $result['ap_valor'], $result['ap_hora_pedido'], 1, $result['ap_anexos'], $result['ap_hora_preparacion'], $result['ap_hora_despacho']
-                , $result['ap_fk_estadoProd'], $result['ap_fk_cocinero']);
+                , $result['ap_fk_estado_item'], $result['ap_fk_cocinero']);
         return $resultado;
     }
 
     /**
      * Metodo devuelve un array con la lista de todas las atencionProductos
      * @return Array <AtencionProducto>.
-     * ap : atenProd, ea : empl_Aten
-     * return ap_id , ap_valor , ap_anexos ea.fk_empleado.
+     * ap : items, ea : atencion_empleados
+     * return ap_id , ap_valor , ap_anexos ea.fk_usuario.
      */
     function getAtencionProductos() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select  ap.id ap_id ,ap.valor ap_valor,ap.anexos ap_anexos,ap.hora_pedido ap_hora_pedido,ap.hora_preparacion ap_hora_preparacion,ap.hora_despacho"
+        $query = "select  ap.id ap_id ,ap.valor ap_valor,ap.anexos ap_anexos,ap.hora_pedido ap_hora_pedido,"
+                . "ap.hora_preparacion ap_hora_preparacion,ap.hora_despacho"
                 . " ap_hora_despacho,ap.descuento ap_descuento,ap.fk_atencion"
-                . " ap_fk_atencion,ap.fk_producto ap_fk_producto,ap.fk_estadoProd"
-                . " ap_fk_estadoProd,ap.fk_cocinero ap_fk_cocinero,"
-                . "ea.id ea_id,ea.fk_empleado ea_fk_empleado,ea.fk_aten_prod ea_fk_aten_prod "
-                . "from aten_prod ap left join empl_atencion ea on ap.id=ea.fk_aten_prod ";
+                . " ap_fk_atencion,ap.fk_producto ap_fk_producto,ap.fk_estado_item"
+                . " ap_fk_estado_item,ap.fk_cocinero ap_fk_cocinero,"
+                . "ea.id ea_id,ea.fk_usuario ea_fk_usuario,ea.fk_item ea_fk_item "
+                . "from items ap left join atencion_empleados ea on ap.id=ea.fk_item ";
         $result = $pdo->query($query);
         Database::disconnect();
         return $result;
@@ -121,8 +123,8 @@ class AtencionProducto {
         for ($i = 0; $i < $this->cantidad; $i++) {
             try {
                 $pdo = Database::connect();
-                $query = "insert into aten_prod set valor = ?,anexos = ?,hora_pedido = ?,hora_preparacion = ?,"
-                        . "hora_despacho = ?,fk_atencion = ?,fk_producto = ?,fk_cocinero=?,fk_estadoProd = 1";
+                $query = "insert into items set valor = ?,anexos = ?,hora_pedido = ?,hora_preparacion = ?,"
+                        . "hora_despacho = ?,fk_atencion = ?,fk_producto = ?,fk_cocinero=?,fk_estado_item = 1";
                 //$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 //$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                 $stmt = $pdo->prepare($query);
@@ -139,7 +141,7 @@ class AtencionProducto {
                 $this->idAtencionProducto = $pdo->lastInsertId();
 
                 if ($resultado1) {
-                    $query = "insert into empl_atencion set fk_empleado =? ,fk_aten_prod=?";
+                    $query = "insert into atencion_empleados set fk_usuario =? ,fk_item=?";
                     $stmt = $pdo->prepare($query);
                     $stmt->bindParam(1, $this->usuario->getIdUsuario());
                     $stmt->bindParam(2, $this->idAtencionProducto);
@@ -149,10 +151,10 @@ class AtencionProducto {
                 Database::disconnect();
                 if ($resultado1) {
                     if ($resultado2) {
-                        $atencionProducto = new AtencionProducto($this->idAtencionProducto, $this->producto, $this->atencion, $this->usuario, $this->valor, $this->horaPedido, 1, $this->anexos, $this->horaPreparacion, $this->horaDespacho, $this->estado, $this->cocinero);
+                        $atencionProducto = new Item($this->idAtencionProducto, $this->producto, $this->atencion, $this->usuario, $this->valor, $this->horaPedido, 1, $this->anexos, $this->horaPreparacion, $this->horaDespacho, $this->estado, $this->cocinero);
                     } else {
                         //si no agrego correctamente la tabla empl_atencion , elimina la atencion creada.
-                        $atencionCreada = new AtencionProducto($this->idAtencionProducto);
+                        $atencionCreada = new Item($this->idAtencionProducto);
                         $atencionCreada->deleteAtencionProducto();
                         return "*1* Error al tratar de crear AtencionProducto:"
                                 . " error Al asignar mesero a la atencion";
@@ -175,8 +177,8 @@ class AtencionProducto {
         try {
             require_once "database.php";
             $pdo = Database::connect();
-            $query = "update aten_prod set valor = ?,anexos = ?,hora_pedido = ?,hora_preparacion = ?,"
-                    . "hora_despacho = ?,fk_atencion = ?,fk_producto = ?,fk_cocinero=?,fk_estadoProd = ?"
+            $query = "update items set valor = ?,anexos = ?,hora_pedido = ?,hora_preparacion = ?,"
+                    . "hora_despacho = ?,fk_atencion = ?,fk_producto = ?,fk_cocinero=?,fk_estado_item = ?"
                     . " where id =" . $this->idAtencionProducto;
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->valor);
@@ -193,7 +195,7 @@ class AtencionProducto {
                 //solo si agrego la atencion Producto con exito , ahora agrega
                 //el empleado atencion
                 $pdo = Database::connect();
-                $query = "update empl_atencion set fk_empleado = ?"
+                $query = "update atencion_empleados set fk_usuario = ?"
                         . "where fk_aten_prod =" . $this->idAtencionProducto;
                 $stmt = $pdo->prepare($query);
                 $stmt->bindParam(1, $this->usuario->getIdUsuario());
@@ -220,7 +222,7 @@ class AtencionProducto {
         try {
             require_once "database.php";
             $pdo = Database::connect();
-            $query = "delete from aten_prod where id =?";
+            $query = "delete from items where id =?";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->idAtencionProducto);
             Database::disconnect();

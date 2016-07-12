@@ -4,19 +4,19 @@
 
         
         //creando un nuevo producto
-        $categoria = new Categoria(1,"categoria Prueba 1");
+        //$categoria = new Categoria(1,"categoria Prueba 1");
         //$categoria=$categoria->createCategoria();
-       // $producto = new Producto(null,"nombre",10,"descripcion",$categoria); 
+        //$producto = new Producto(null,"nombre",10,"descripcion",$categoria,1,0); 
                
         /*
          * llamado a funciones
          */
 
         //agregar($producto);
-        //consultar(13);
+        //consultar(11);
         //consultarAll();
-        //actualizar(20,"nombre2",20,"descripcion2",$categoria);
-        //eliminar(10);
+        //actualizar(11,"nombre2",20,"descripcion2",$categoria,2,1);
+        //eliminar(11);
 
         /*
          * Agregar producto a la base de datos
@@ -56,9 +56,9 @@
         /*
          * Actualizar un producto
          */
-        function actualizar($id,$nombre,$valor,$descripcion,$categoria){
+        function actualizar($id,$nombre,$valor,$descripcion,$categoria,$estado,$stock){
             echo("<br>***Actrualizar la producto***<br>");
-            $productosActualizar= new Producto($id,$nombre,$valor,$descripcion,$categoria);
+            $productosActualizar= new Producto($id,$nombre,$valor,$descripcion,$categoria,$estado,$stock);
             $resultado=$productosActualizar->updateProducto();
             echo $resultado;            
         }

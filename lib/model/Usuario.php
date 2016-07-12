@@ -20,6 +20,8 @@ class Usuario {
     private $genero;
     //telefono usuario
     private $telefono;
+    //estado usuario
+    private $estado;
     //privilegios del usuario (mesero,cajero ,admin,etc)
     private $privilegios;
 
@@ -32,9 +34,10 @@ class Usuario {
      * @param type $contrasena
      * @param type $genero
      * @param type $telefono
+     * @param type $estado
      * @param type $privilegios
      */
-    function Usuario($id = "def", $nombre = "def", $apellido = "def", $usuario = "def", $contrasena = "def", $genero = "def", $telefono = "def", $privilegios = "def") {
+    function Usuario($id = "def", $nombre = "def", $apellido = "def", $usuario = "def", $contrasena = "def", $genero = "def", $telefono = "def",$estado = "def", $privilegios = "def") {
 
         $this->idUsuario = $id;
         $this->nombre = $nombre;
@@ -43,6 +46,7 @@ class Usuario {
         $this->clave = $contrasena;
         $this->genero = $genero;
         $this->telefono = $telefono;
+        $this->estado = $estado;
         $this->privilegios = $privilegios;
     }
 
@@ -53,7 +57,7 @@ class Usuario {
     function getUsuario() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select * from empleados where id=?";
+        $query = "select * from usuarios where id=?";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->idUsuario);
         $stmt->execute();
@@ -62,7 +66,7 @@ class Usuario {
 
         $userPriv = new Usuario($result['id']);
         $privilegios = $userPriv->searchPrivilegios();
-        $resultado = New Usuario($result['id'], $result['nombre'], $result['apellido'], $result['telefono'], $result['genero'], $result['usuario'], $result['clave'], $privilegios);
+        $resultado = New Usuario($result['id'], $result['nombre'], $result['apellido'], $result['telefono'],$result['fk_estado'], $result['genero'], $result['usuario'], $result['clave'], $privilegios);
         return $resultado;
     }
 
@@ -73,7 +77,7 @@ class Usuario {
     function getUsuarios() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select * from empleados";
+        $query = "select * from usuarios";
         $result = $pdo->query($query);
         Database::disconnect();
         return $result;
@@ -90,7 +94,7 @@ class Usuario {
         $pdo = Database::connect();
         //1-id del usuario,2-true si es admin o false si no lo es,3-privilegios.
         //1-cajero,2-mesero,3-cocinero,4inventario.
-        $query = "SELECT e.id,e.admin,p.id FROM empleados e "
+        $query = "SELECT e.id,e.admin,p.id FROM usuarios e "
                 . "left JOIN perfil_empleados pe on e.id=pe.fk_empleado"
                 . " left JOIN perfiles p on pe.fk_perfil=p.id where e.id=?";
         $stmt = $pdo->prepare($query);
@@ -121,6 +125,8 @@ class Usuario {
     /**
      * @param type $privilegios : Array (5) : 
      * 0-Admin,1-cajero,2-mesero,3-cocinero,4inventario
+     * posicion 0 reservado para admin 0=no , 1=si
+     * posicion 1-4 para otros perfiles,no hay orden
      * @return True si se crean con exito, String error, si hay error
      */
     function createPrivilegios($privilegios) {
@@ -131,7 +137,7 @@ class Usuario {
         } else {
             require_once "database.php";
             $pdo = Database::connect();
-            $query = "update empleados set admin = ? where id =" . $this->idUsuario;
+            $query = "update usuarios set admin = ? where id =" . $this->idUsuario;
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $privilegios[0]);
             if (!$stmt->execute()) {
@@ -179,7 +185,7 @@ class Usuario {
         require_once "database.php";
         $estado = true;
         $pdo = Database::connect();
-        $query = "SELECT * FROM empleados e INNER JOIN empl_atencion ea on e.id=ea.fk_empleado "
+        $query = "SELECT * FROM usuarios e INNER JOIN empl_atencion ea on e.id=ea.fk_empleado "
                 . "LEFT JOIN atenciones a on e.id=a.fk_cajero"
                 . " LEFT JOIN inventarios i on e.id=i.fk_empleado WHERE e.id=" . $this->idUsuario;
         $stmt = $pdo->prepare($query);
@@ -201,8 +207,8 @@ class Usuario {
         try {
             require_once "database.php";
             $pdo = Database::connect();
-            $query = "insert into empleados set nombre = ?,apellido = ?,usuario = ?,"
-                    . "clave = ?,genero = ?,telefono = ?";
+            $query = "insert into usuarios set nombre = ?,apellido = ?,usuario = ?,"
+                    . "clave = ?,genero = ?,telefono = ?,fk_estado = ?";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->nombre);
             $stmt->bindParam(2, $this->apellido);
@@ -210,10 +216,11 @@ class Usuario {
             $stmt->bindParam(4, $this->clave);
             $stmt->bindParam(5, $this->genero);
             $stmt->bindParam(6, $this->telefono);
+            $stmt->bindParam(7, $this->estado);
             $resultado = $stmt->execute();
             $this->idUsuario = $pdo->lastInsertId();
 
-            $usuario = new Usuario($this->idUsuario, $this->nombre, $this->apellido, $this->usuario, $this->clave, $this->genero, $this->telefono, $this->privilegios);
+            $usuario = new Usuario($this->idUsuario, $this->nombre, $this->apellido, $this->usuario, $this->clave, $this->genero, $this->telefono,$this->estado, $this->privilegios);
             Database::disconnect();
 
             if ($resultado) {
@@ -241,13 +248,14 @@ class Usuario {
         try {
             require_once "database.php";
             $pdo = Database::connect();
-            $query = "update empleados set nombre = ?,apellido = ?,clave = ?,genero = ?,telefono = ? where id =" . $this->idUsuario;
+            $query = "update usuarios set nombre = ?,apellido = ?,clave = ?,genero = ?,telefono = ?,fk_estado = ? where id =" . $this->idUsuario;
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->nombre);
             $stmt->bindParam(2, $this->apellido);
             $stmt->bindParam(3, $this->clave);
             $stmt->bindParam(4, $this->genero);
             $stmt->bindParam(5, $this->telefono);
+            $stmt->bindParam(6, $this->estado);
             Database::disconnect();
             if ($stmt->execute()) {
                 return "exito";
@@ -268,7 +276,7 @@ class Usuario {
             try {
                 require_once "database.php";
                 $pdo = Database::connect();
-                $query = "delete from empleados where id =?";
+                $query = "delete from usuarios where id =?";
                 $stmt = $pdo->prepare($query);
                 $stmt->bindParam(1, $this->idUsuario);
                 Database::disconnect();
@@ -331,6 +339,14 @@ class Usuario {
      */
     function getTelefono() {
         return $this->telefono;
+    }
+    
+    /**
+     * Metodo que obtiene el estado de un usuario
+     * @return String
+     */
+    function getEstado() {
+        return $this->estado;
     }
 
     /**
@@ -403,6 +419,14 @@ class Usuario {
      */
     function setTelefono($telefono) {
         $this->telefono = $telefono;
+    }
+    
+    /**
+     * Metdo set estado de la clase usuario
+     * @param type $estado
+     */
+    function setEstado($estado) {
+        $this->telefono = $estado;
     }
 
     /**

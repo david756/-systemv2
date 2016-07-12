@@ -16,6 +16,11 @@ class Producto {
     private $descripcion;
     //categoria del producto
     private $categoria;
+    //estado del producto
+    private $estado;
+    //estado del control_stock
+    private $control_stock;
+    	
 
     /**
      * Metodo constructor de la clase Producto
@@ -24,13 +29,17 @@ class Producto {
      * @param type $valor
      * @param type $descripcion
      * @param type $categoria
+     * @param type $estado
+     * @param type $control_stock
      */
-    function Producto($idProducto = "def", $nombre = "def", $valor = "def", $descripcion = "def", $categoria = "def") {
+    function Producto($idProducto = "def", $nombre = "def", $valor = "def", $descripcion = "def", $categoria = "def",$estado = "def",$control_stock = "def") {
         $this->idProducto = $idProducto;
         $this->nombre = $nombre;
         $this->valor = $valor;
         $this->descripcion = $descripcion;
         $this->categoria = $categoria;
+        $this->estado = $estado;
+        $this->control_stock = $control_stock;
     }
 
     /**
@@ -47,7 +56,8 @@ class Producto {
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         Database::disconnect();
-        $resultado = New Producto($result['id'], $result['nombre'], $result['valor'], $result['descripcion'], $result['fk_categoria']);
+        $resultado = New Producto($result['id'], $result['nombre'], $result['valor'], $result['descripcion'],
+         $result['fk_categoria'],$result['fk_estado'],$result['control_stock']);
         return $resultado;
     }
 
@@ -95,15 +105,17 @@ class Producto {
             require_once "database.php";
             $pdo = Database::connect();
             $query = "insert into productos set nombre = ?,valor = ?,"
-                    . "descripcion = ?,fk_categoria = ?";
+                    . "descripcion = ?,fk_categoria = ?,fk_estado = ?,control_stock = ?";
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->nombre);
             $stmt->bindParam(2, $this->valor);
             $stmt->bindParam(3, $this->descripcion);
             $stmt->bindParam(4, $this->categoria->getIdCategoria());
+            $stmt->bindParam(5, $this->estado);
+            $stmt->bindParam(6, $this->control_stock);
             $resultado = $stmt->execute();
             $this->idProducto = $pdo->lastInsertId();
-            $producto = new Producto($this->idProducto, $this->nombre, $this->valor, $this->descripcion, $this->categoria);
+            $producto = new Producto($this->idProducto, $this->nombre, $this->valor, $this->descripcion, $this->categoria,$this->estado,$this->control_stock);
             Database::disconnect();
             if ($resultado) {
                 return $producto;
@@ -125,12 +137,14 @@ class Producto {
             require_once "database.php";
             $pdo = Database::connect();
             $query = "update productos set nombre = ?,valor = ?,"
-                    . "descripcion = ?,fk_categoria = ? where id =" . $this->idProducto;
+                    . "descripcion = ?,fk_categoria = ?,fk_estado = ?,control_stock = ? where id =" . $this->idProducto;
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->nombre);
             $stmt->bindParam(2, $this->valor);
             $stmt->bindParam(3, $this->descripcion);
             $stmt->bindParam(4, $this->categoria->getIdCategoria());
+            $stmt->bindParam(5, $this->estado);
+            $stmt->bindParam(6, $this->control_stock);
             Database::disconnect();
             if ($stmt->execute()) {
                 return "exito";
@@ -210,6 +224,22 @@ class Producto {
     }
 
     /**
+     * metodo get del estado del producto
+     * @return estado
+     */
+    function getEstado() {
+        return $this->estado;
+    }
+    
+    /**
+     * metodo get del control_stock del producto
+     * @return control_stock
+     */
+    function getControlStock() {
+        return $this->control_stock;
+    }
+
+    /**
      * metodo set id del producto
      * @param type $idProducto
      */
@@ -247,6 +277,21 @@ class Producto {
      */
     function setCategoria($categoria) {
         $this->categoria = $categoria;
+    }
+
+    /**
+     * metodo set estado del producto
+     * @param type $estado
+     */
+    function setEstado($estado) {
+        $this->estado = $estado;
+    }
+    /**
+     * metodo set control_stock del producto
+     * @param type $control_stock
+     */
+    function setControlStock($control_stock) {
+        $this->control_stock = $control_stock;
     }
 
 }

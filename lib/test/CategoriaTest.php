@@ -10,10 +10,10 @@
         
         
         //agregar($categoria);
-        //consultar(6);
+        //consultar(20);
         //consultarAll();
-        actualizar(1, "sapos Rellenos");
-       // eliminar(3);
+        //actualizar(20, "sapos Rellenos");
+       //eliminar(20);
         
         
         /*

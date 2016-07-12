@@ -27,7 +27,8 @@
     max-width: 800px;
     position: relative;
 }
-<style type="text/css">     
+    </style>
+    <style type="text/css">     
 
       /***** radio-box *****/
       /* radio-box grupo 01*/
@@ -50,8 +51,8 @@
       li.radio_01 input[type=radio].ultimo + label      { background: url(images/radio_01.png) 100% 0px no-repeat; width: 140px; }
       li.radio_01 input[type=radio].ultimo:checked + label  { background: url(images/radio_01.png) 100% -140px no-repeat; }
 
-      </style>
-  </style>
+     
+    </style>
 
   <!-- Custom styling plus plugins -->
   <link href="css/custom.css" rel="stylesheet">

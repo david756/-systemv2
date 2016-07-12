@@ -6,15 +6,14 @@
         
         /*
          * llamado a funciones
-         */
+         */       
         
+       //agregar($mesa);
+        //consultar(53);
+        //consultarAll();
+        //actualizar(53, "mesa .. actualizada");
+        //eliminar(53);
         
-        //agregar($mesa);
-        /*consultar(3);
-        consultarAll();
-        actualizar(7, "mesa .. actualizada");
-        eliminar(20);
-        */
         
         /*
          * Agregar mesa a la base de datos

@@ -3,8 +3,8 @@
         include "../model/Usuario.php";
         include "../model/Producto.php";
 
-        $producto = new Producto(2);
-        $usuario = new Usuario(113); 
+        $producto = new Producto(12);
+        $usuario = new Usuario(146); 
         
         $producto = $producto->getProducto();
         $usuario = $usuario->getUsuario();
@@ -21,9 +21,9 @@
         
         
        //agregar($inventario);
-       // consultar(3);
+       //consultar(1);
        //consultarAll();
-       bajar($inventario);
+       //bajar($inventario);
         
         
         /*

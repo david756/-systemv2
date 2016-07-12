@@ -2,23 +2,27 @@
         include "../model/Usuario.php";
 
         //creando un nuevo usuario
-        $usuario = new Usuario(null,"nombre","apellido","usuario","pass","genero","telefono"); 
+        $usuario = new Usuario(null,"nombre","apellido","usuario","pass","genero","telefono",1); 
         
         /*
          * llamado a funciones
-         */      
-        $privilegios=array(1,2,3,4,1);
-        //$usuario->setPrivilegios($privilegios);
+         */ 
+        //0-Admin,1-cajero,2-mesero,3-cocinero,4inventario
+        //posicion 0 reservado para admin 0=no , 1=si
+        //posicion 1-4 para otros perfiles,no hay orden
+        $privilegios=array(0,4,3);
+        $usuario->setPrivilegios($privilegios);
         //$user=agregar($usuario);
-        //consultar(132);
+        //consultar(145);
         //consultarAll();
-        //actualizar(132, "nombre2","apellido2","usuario2","cont2","genero2","telefono2","def");
-        //eliminar(119);
-        //searchPriv(132);
+        //actualizar(145, "nombre2","apellido2","usuario2","cont2","genero2","telefono2",2,"def");
+        eliminar(146);
+        //searchPriv(145);
         
         /*Crear Privilegios*/
-        //$usuarioConsulta= new Usuario(136);
+        //$usuarioConsulta= new Usuario(145);
         //$user=$usuarioConsulta->getUsuario();
+        //actualiza los privilegios (borra todos y crea)
         //createPriv($user,$privilegios);
         
         
@@ -64,9 +68,9 @@
         /*
          * Actualizar un usuario
          */
-        function actualizar($id,$nombre,$apellido,$usuario,$contrasena,$genero,$telefono,$privilegios){
+        function actualizar($id,$nombre,$apellido,$usuario,$contrasena,$genero,$telefono,$estado,$privilegios){
             echo("<br>***Actrualizar la usuario***<br>");
-            $usuariosActualizar= new Usuario($id,$nombre,$apellido,$usuario,$contrasena,$genero,$telefono,$privilegios);
+            $usuariosActualizar= new Usuario($id,$nombre,$apellido,$usuario,$contrasena,$genero,$telefono,$estado,$privilegios);
             $resultado=$usuariosActualizar->updateUsuario();
             echo $resultado;            
         }
