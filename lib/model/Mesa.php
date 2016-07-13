@@ -38,6 +38,28 @@ class Mesa {
         $resultado = New Mesa($result['id'], $result['descripcion']);
         return $resultado;
     }
+    
+    /**
+     * Metodo que devuelve una mesa y su disponibilidad,[disponible ocupada].
+     * @param type $id
+     * @return Mesa
+     * id,descripcion,disponibilidad
+     * estado es el id de la atencion o null
+     */
+    function getMesaDisponiblidad() {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "select mesas.id,mesas.descripcion,atenciones.id as "
+                . "disponibilidad from mesas left JOIN atenciones"
+                . " on mesas.id=atenciones.fk_mesa WHERE mesas.id=?";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->idMesa);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+        $resultado = New Mesa($result['id'], $result['descripcion']);
+        return $resultado;
+    }
 
     /**
      * Metodo devuelve un array con la lista de todas las mesas
@@ -47,6 +69,24 @@ class Mesa {
         require_once "database.php";
         $pdo = Database::connect();
         $query = "select * from mesas";
+        $result = $pdo->query($query);
+        Database::disconnect();
+        return $result;
+    }
+    
+    /**
+     * Metodo devuelve un array con la lista de todas 
+     * las mesas y su disponibilidad
+     * id,descripcion,diponibilidad
+     * estado es el id de la atencion o null
+     * @return Array <Mesa>
+     */
+    function getMesasDisponibilidad() {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "select mesas.id,mesas.descripcion,atenciones.id"
+                . " as disponibilidad from mesas left JOIN atenciones on"
+                . " mesas.id=atenciones.fk_mesa";
         $result = $pdo->query($query);
         Database::disconnect();
         return $result;
@@ -91,10 +131,10 @@ class Mesa {
             if ($resultado) {
                 return $mesa;
             } else {
-                return "*1* Error al tratar de crear Mesa:  " . $resultado;
+                return "*101 Error al tratar de crear Mesa";
             }
         } catch (Exception $e) {
-            echo "*2* Error al tratar de crear Mesa:  " . $e->getMessage();
+            echo "*102 Error al tratar de crear Mesa";
         }
     }
 

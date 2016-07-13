@@ -166,6 +166,10 @@
                 </div>
               </div>
 
+              <div class="row">
+                <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+              </div>
+
            <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
@@ -175,23 +179,18 @@
                 </div>
                 <div class="x_content">
 
-                  <form class="form-horizontal form-label-left" novalidate>
-
-                    <p>Formulario de ingreso de mesas</p>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre de la mesa" required="required" type="text">
-                      </div>
-                    </div> 
-                    <div class="ln_solid"></div>
-                    <div class="form-group">
-                      <div class="col-md-6 col-md-offset-3">
-                        <button id="send" type="submit" class="btn btn-success">Guardar</button>
-                      </div>
-                    </div>
-                  </form>
+                    <form id="create" data-toggle="validator" id="form_create" class="form-horizontal form-label-left" novalidate>
+                      <p>Formulario de ingreso de mesas</p>
+                      <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="crear-nombre" placeholder="ingrese nombre de la mesa" required type="text">
+                        </div>
+                      </div>                     
+                      <div class="ln_solid"></div>  
+                      <button id="crear_mesa" type="submit" class="btn btn-success disabled" >Guardar</button>                  
+                    </form>
                 </div>
               </div>
             </div>
@@ -347,23 +346,26 @@
   <script type="text/javascript" src="js/maps/jquery-jvectormap-us-aea-en.js"></script>
 
   <!-- Datatables-->
-        <script src="js/datatables/jquery.dataTables.min.js"></script>
-        <script src="js/datatables/dataTables.bootstrap.js"></script>
-        <script src="js/datatables/dataTables.buttons.min.js"></script>
-        <script src="js/datatables/buttons.bootstrap.min.js"></script>
-        <script src="js/datatables/jszip.min.js"></script>
-        <script src="js/datatables/pdfmake.min.js"></script>
-        <script src="js/datatables/vfs_fonts.js"></script>
-        <script src="js/datatables/buttons.html5.min.js"></script>
-        <script src="js/datatables/buttons.print.min.js"></script>
-        <script src="js/datatables/dataTables.fixedHeader.min.js"></script>
-        <script src="js/datatables/dataTables.keyTable.min.js"></script>
-        <script src="js/datatables/dataTables.responsive.min.js"></script>
-        <script src="js/datatables/responsive.bootstrap.min.js"></script>
-        <script src="js/datatables/dataTables.scroller.min.js"></script>
+  <script src="js/datatables/jquery.dataTables.min.js"></script>
+  <script src="js/datatables/dataTables.bootstrap.js"></script>
+  <script src="js/datatables/dataTables.buttons.min.js"></script>
+  <script src="js/datatables/buttons.bootstrap.min.js"></script>
+  <script src="js/datatables/jszip.min.js"></script>
+  <script src="js/datatables/pdfmake.min.js"></script>
+  <script src="js/datatables/vfs_fonts.js"></script>
+  <script src="js/datatables/buttons.html5.min.js"></script>
+  <script src="js/datatables/buttons.print.min.js"></script>
+  <script src="js/datatables/dataTables.fixedHeader.min.js"></script>
+  <script src="js/datatables/dataTables.keyTable.min.js"></script>
+  <script src="js/datatables/dataTables.responsive.min.js"></script>
+  <script src="js/datatables/responsive.bootstrap.min.js"></script>
+  <script src="js/datatables/dataTables.scroller.min.js"></script>        
+  <script src="js/validator.min.js"></script>
 
    <!-- pace -->
         <script src="js/pace/pace.min.js"></script>
+
+        
         <script>
           var handleDataTableButtons = function() {
               "use strict";
@@ -397,6 +399,7 @@
               }
             }();
         </script>
+
         <script type="text/javascript">
           $(document).ready(function() {
             $('#datatable').dataTable();
@@ -417,50 +420,77 @@
           });
           TableManageButtons.init();
         </script>
-  <script src="js/pace/pace.min.js"></script>
-  <script src="js/validator/validator.js"></script>
-  <script>
-    // initialize the validator function
-    validator.message['date'] = 'not a real date';
 
-    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
-    $('form')
-      .on('blur', 'input[required], input.optional, select.required', validator.checkField)
-      .on('change', 'select.required', validator.checkField)
-      .on('keypress', 'input[required][pattern]', validator.keypress);
+        <script>
+          var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+            showLeftPush = document.getElementById( 'showLeftPush' ),
+            body = document.body;
+            
+          showLeftPush.onclick = function() {
+            classie.toggle( this, 'active' );
+            classie.toggle( body, 'cbp-spmenu-push-toright' );
+            classie.toggle( menuLeft, 'cbp-spmenu-open' );
+            disableOther( 'showLeftPush' );
+          };
+          
+          function disableOther( button ) {
+            if( button !== 'showLeftPush' ) {
+              classie.toggle( showLeftPush, 'disabled' );
+            }
+        }
+        </script>
 
-    $('.multi.required')
-      .on('keyup blur', 'input', function() {
-        validator.checkField.apply($(this).siblings().last()[0]);
-      });
+      <script>
+            $(document).ready(function() {
+                // process the form
+                $('#create').submit(function() {
+                    if (!$("#crear_mesa").hasClass( "disabled" )) {
+                    console.log("entro");
+                    // get the form data
+                    // there are many ways to get this data using jQuery 
+                    // (you can use the class or id also)
+                    var data = {
+                        'nombre_mesa'     : $('input[name=crear-nombre]').val(),
+                        'metodo'          : "create"
+                    };
+                    // process the form
+                    $.ajax({
+                            data:  data,
+                            url:   'controller/Mesa.php',
+                            type:  'post',
 
-    // bind the validation to the form submit event
-    //$('#send').click('submit');//.prop('disabled', true);
+                            beforeSend: function () {
+                                    $("#resultado").html("Procesando, espere por favor...");
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                    $('#resultado').attr("class","alert alert-danger");
+                                    $('#resultado').html('<o>201:Ocurrio un error </p>');
+                                    $('#resultado').show("slow").delay(4000).hide("slow");
+                            },
+                            success:  function (response,estado,objeto) {
+                                   if (response=="exito") {
+                                    $('#resultado').html("Usuario se agrego con exito");
+                                    $('#resultado').attr("class","alert alert-info");
+                                    $('#resultado').show("slow").delay(4000).hide("slow");
+                                   }
+                                   else{
+                                     $('#resultado').attr("class","alert alert-danger");
+                                     $('#resultado').html("202:Ocurrio un error: ");
+                                     $('#resultado').html(response);
+                                     $('#resultado').show("slow").delay(4000).hide("slow");
+                                   } 
+                            },
 
-    $('form').submit(function(e) {
-      e.preventDefault();
-      var submit = true;
-      // evaluate the form using generic validaing
-      if (!validator.checkAll($(this))) {
-        submit = false;
-      }
+                    });
+                  }
+                  event.preventDefault(); 
+                });
 
-      if (submit)
-        this.submit();
-      return false;
-    });
+            });
 
-    /* FOR DEMO ONLY */
-    $('#vfields').change(function() {
-      $('form').toggleClass('mode2');
-    }).prop('checked', false);
+        </script>
 
-    $('#alerts').change(function() {
-      validator.defaults.alerts = (this.checked) ? false : true;
-      if (this.checked)
-        $('form .alert').remove();
-    }).prop('checked', false);
-  </script>
+
  
 </body>
 
