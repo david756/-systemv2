@@ -2,17 +2,17 @@
         include "../model/Mesa.php";
 
         //creando una nueva mesa
-        $mesa = new Mesa(null,"mesa Prueba 1");    
+        $mesa = new Mesa(null,"mesa Prueba 1",1);    
         
         /*
          * llamado a funciones
          */       
         
        //agregar($mesa);
-        //consultar(53);
+       //consultar(11);
         //consultarAll();
-        //actualizar(53, "mesa .. actualizada");
-        //eliminar(53);
+        //actualizar(40, "mesa .. actualizada");
+        //eliminar(11);
         
         
         /*
@@ -34,6 +34,7 @@
             $mesa=$mesaConsulta->getMesa();
             echo 'mesa consultada id: '.$mesa->getIdMesa().'<br>';
             echo 'mesa consultada nombre: '.$mesa->getDescripcion().'<br>';
+            echo 'mesa consultada estado: '.$mesa->getEstado().'<br>';
         }
         
         

@@ -31,7 +31,152 @@
   <link href="js/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>   
+  <script>
+            $(document).ready(function() {
+                // process the form
+                $('#create').submit(function() {
+                    if (!$("#crear_mesa").hasClass( "disabled" )) {
+                    console.log("entro");
+                    // get the form data
+                    // there are many ways to get this data using jQuery 
+                    // (you can use the class or id also)
+                    var data = {
+                        'nombre_mesa'     : $('input[name=crear-nombre]').val(),
+                        'metodo'          : "create"
+                    };
+                    // process the form
+                    $.ajax({
+                            data:  data,
+                            url:   'controller/Mesa.php',
+                            type:  'post',
 
+                            beforeSend: function () {
+                                    $("#resultado").html("Procesando, espere por favor...");
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                    $('#resultado').attr("class","alert alert-danger");
+                                    $('#resultado').html('<o>201:Ocurrio un error </p>');
+                                    $('#resultado').show("slow").delay(4000).hide("slow");
+                            },
+                            success:  function (response,estado,objeto) {
+                                   if (response=="exito") {
+                                    $('input[name=crear-nombre]').val("")
+                                    $('#resultado').html("el usuario se agrego con exito!");
+                                    $('#resultado').attr("class","alert alert-info");
+                                    $('#resultado').show("slow").delay(4000).hide("slow");
+                                    mostrarLista();
+                                   }
+                                   else{
+                                     $('#resultado').attr("class","alert alert-danger");
+                                     $('#resultado').html("202:Ocurrio un error: ");
+                                     $('#resultado').html(response);
+                                     $('#resultado').show("slow").delay(4000).hide("slow");
+                                   } 
+                            },
+
+                    });
+                  }
+                  event.preventDefault(); 
+                });
+
+            });
+
+  </script> 
+  <script>
+            $(document).ready(function() {
+              mostrarLista();
+            });
+  </script>
+  <script type="text/javascript">
+      function mostrarLista(){         
+                  $.post("controller/Mesa.php", 
+                  {metodo: "listaMesas"}
+                  ,function(tabla){
+                    $('#tabla').html(tabla);
+                  }
+                  );
+      }
+     function modalEliminarMesa(id){
+                  var textoId=document.getElementById("id_mesa_remove");    
+                  textoId.setAttribute("value", id);
+                  $('#ModalConfirmar').modal('show');
+       }
+
+       function modalEditarMesa(id,nombre){
+
+                  
+
+                  var textoId=$('#id_mesa_edit').val(id);  
+                  var textoNombre=$('#descripcion_mesa_edit').val(nombre); 
+                  $('#ModalEdiarMesa').modal('show');
+       }
+
+       function bloquearMesa(id){
+              $.post("controller/Mesa.php", 
+                    {metodo: "cambiarEstado",
+                     id_mesa: id},function(respuesta){
+                      if (respuesta=="Exito") {
+                        mostrarLista();
+                        $('#resultado').html("Cambio de estado la mesa");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                    }
+              );  
+       }
+       function confirmarEliminar(){
+            mesaId=$('#id_mesa_remove').attr("value");
+            console.log(mesaId);
+            $.post("controller/Mesa.php", 
+                    {metodo: "delete",
+                     id_mesa:  mesaId},function(respuesta){
+                      $('#ModalConfirmar').modal('hide');
+                      if (respuesta=="exito") {
+                        mostrarLista()
+                        $('#resultado').html("la mesa fue eliminada!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              );  
+       }
+       function confirmarEditar(){
+            mesaId=$('#id_mesa_edit').val();
+            mesaDescripcion=$('#descripcion_mesa_edit').val();
+            console.log(mesaDescripcion);
+            $.post("controller/Mesa.php", 
+                    {metodo: "update",
+                     id_mesa:  mesaId,
+                     descripcion:  mesaDescripcion},function(respuesta){
+                      $('#ModalEdiarMesa').modal('hide');
+                      if (respuesta=="Exito") {
+                        mostrarLista();
+                        $('#resultado').html("la mesa fue editada!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              );  
+       }
+  </script>    
   <!--[if lt IE 9]>
   <script src="../assets/js/ie8-responsive-file-warning.js"></script>
   <![endif]-->
@@ -196,15 +341,14 @@
             </div>
           </div>
 
-          <div class="col-md-8 col-sm-12 col-xs-12">
+          <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
                   <h2>Lista de mesas</h2>
                   <div class="clearfix"></div>
                 </div>
-                <div class="x_content">
-                        
-                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                <div class="x_content">                        
+                        <table id="datatable-buttons" class="table table-striped">
                           <thead>
                             <tr>
                               <th>Id</th>
@@ -212,22 +356,11 @@
                               <th>Estado</th>
                               <th>Accion</th>
                             </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>125</td>
-                              <td>Mesa</td>
-                              <td><button type="button" class="btn btn-success btn-xs">activa</button></td>
-                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalMesa"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
-                            </tr>
-                            <tr>
-                              <td>125</td>
-                              <td>Mesa</td>
-                              <td><button type="button" class="btn btn-success btn-xs">activa</button></td>
-                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalMesa"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
-                            </tr>
+                          </thead>                         
+                          <tbody id="tabla">                           
+                           
                           </tbody>
-                        </table>
+                        </table>                       
                       </div>
                     </div>
                   </div>
@@ -237,7 +370,7 @@
           </div>
 
           <!-- /modal editar mesa -->
-          <div class="modal fade bs-example-modal-lg" id="ModalMesa" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal fade bs-example-modal-lg" id="ModalEdiarMesa" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content" align="center">
 
@@ -247,28 +380,22 @@
                     <h4 class="modal-title" id="myModalLabel2">Editar Mesa</h4>
                   </div>
                 <div class="modal-body">
-                      <form class="form-horizontal form-label-left" novalidate>
-
-                    <p>Formulario de ingreso de Mesa</p>
+                  <form class="form-horizontal form-label-left" novalidate>
+                    <p>Formulario para editar Mesa</p>
+                    <input type="text" id ="id_mesa_edit" value="" style="display:none">
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre de la mesa" required="required" type="text" value="Nombre de la mesa">
+                        <input id="descripcion_mesa_edit" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre de la mesa" required="required" type="text" value="Nombre de la mesa">
                       </div>
-                    </div> 
-                    <div class="ln_solid"></div>
-                    <div class="form-group">
-                      <div class="col-md-6 col-md-offset-3">
-                        <button id="send" type="submit" class="btn btn-success">Guardar</button>
-                      </div>
+                    </div>                 
+                    <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                          <button type="button" class="btn btn-success" onclick="confirmarEditar()">Confirmar</button>
                     </div>
                   </form>  
                 </div>
-                  <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success">Confirmar</button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -281,9 +408,10 @@
                 <div class="modal-body">
                   <h4>¿Esta seguro de eliminar esta mesa?</h4>
                 </div>
+                <input type="text" id ="id_mesa_remove" value="" style="display:none">
                   <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success">Confirmar</button>
+                        <button id="confirmar" type="button" class="btn btn-success" onclick="confirmarEliminar()">Confirmar</button>
                   </div>
                 </div>
               </div>
@@ -365,62 +493,6 @@
    <!-- pace -->
         <script src="js/pace/pace.min.js"></script>
 
-        
-        <script>
-          var handleDataTableButtons = function() {
-              "use strict";
-              0 !== $("#datatable-buttons").length && $("#datatable-buttons").DataTable({
-                dom: "Bfrtip",
-                buttons: [{
-                  extend: "copy",
-                  className: "btn-sm"
-                }, {
-                  extend: "csv",
-                  className: "btn-sm"
-                }, {
-                  extend: "excel",
-                  className: "btn-sm"
-                }, {
-                  extend: "pdf",
-                  className: "btn-sm"
-                }, {
-                  extend: "print",
-                  className: "btn-sm"
-                }],
-                responsive: !0
-              })
-            },
-            TableManageButtons = function() {
-              "use strict";
-              return {
-                init: function() {
-                  handleDataTableButtons()
-                }
-              }
-            }();
-        </script>
-
-        <script type="text/javascript">
-          $(document).ready(function() {
-            $('#datatable').dataTable();
-            $('#datatable-keytable').DataTable({
-              keys: true
-            });
-            $('#datatable-responsive').DataTable();
-            $('#datatable-scroller').DataTable({
-              ajax: "js/datatables/json/scroller-demo.json",
-              deferRender: true,
-              scrollY: 380,
-              scrollCollapse: true,
-              scroller: true
-            });
-            var table = $('#datatable-fixed-header').DataTable({
-              fixedHeader: true
-            });
-          });
-          TableManageButtons.init();
-        </script>
-
         <script>
           var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
             showLeftPush = document.getElementById( 'showLeftPush' ),
@@ -439,59 +511,6 @@
             }
         }
         </script>
-
-      <script>
-            $(document).ready(function() {
-                // process the form
-                $('#create').submit(function() {
-                    if (!$("#crear_mesa").hasClass( "disabled" )) {
-                    console.log("entro");
-                    // get the form data
-                    // there are many ways to get this data using jQuery 
-                    // (you can use the class or id also)
-                    var data = {
-                        'nombre_mesa'     : $('input[name=crear-nombre]').val(),
-                        'metodo'          : "create"
-                    };
-                    // process the form
-                    $.ajax({
-                            data:  data,
-                            url:   'controller/Mesa.php',
-                            type:  'post',
-
-                            beforeSend: function () {
-                                    $("#resultado").html("Procesando, espere por favor...");
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) {
-                                    $('#resultado').attr("class","alert alert-danger");
-                                    $('#resultado').html('<o>201:Ocurrio un error </p>');
-                                    $('#resultado').show("slow").delay(4000).hide("slow");
-                            },
-                            success:  function (response,estado,objeto) {
-                                   if (response=="exito") {
-                                    $('#resultado').html("Usuario se agrego con exito");
-                                    $('#resultado').attr("class","alert alert-info");
-                                    $('#resultado').show("slow").delay(4000).hide("slow");
-                                   }
-                                   else{
-                                     $('#resultado').attr("class","alert alert-danger");
-                                     $('#resultado').html("202:Ocurrio un error: ");
-                                     $('#resultado').html(response);
-                                     $('#resultado').show("slow").delay(4000).hide("slow");
-                                   } 
-                            },
-
-                    });
-                  }
-                  event.preventDefault(); 
-                });
-
-            });
-
-        </script>
-
-
- 
 </body>
 
 </html>

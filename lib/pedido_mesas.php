@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -22,7 +22,7 @@
   <link href="css/icheck/flat/green.css" rel="stylesheet">
   <style type="text/css">
 
-  #mesa_ocupada {
+  .mesa_ocupada {
     background:#A1A1A1;
     height:170px;
     width:170px;
@@ -33,7 +33,7 @@
     text-align:center;        
     color:white;
     }
-    #mesa_disponible {
+    .mesa_disponible {
     background:#2ABA9B;
     height:170px;
     width:170px;
@@ -48,6 +48,18 @@
 
 
   <script src="js/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>   
+
+    <script type="text/javascript">
+    $(document).ready(function() {                      
+                  $.post("controller/Mesa.php", 
+                  {metodo: "pedidoMesas"}
+                  ,function(mesa){
+                    $('#mesas').html(mesa);
+                  }
+               );
+     });      
+    </script>
 
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -78,88 +90,15 @@
             </div>
           </div>
           <div class="clearfix"></div>
-
+          <div class="row">
+                <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+          </div>
           <div class="row">
             <div class="col-md-12">
               <div class="x_panel">
                 <!-- x_content-->                
-                <div class="x_content">
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_disponible" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Disponible</h4>
-                  </div>
-                  <div id="mesa_ocupada" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Ocupada</h4>
-                  </div>
-                  <div id="mesa_ocupada" class="col-md-3 col-sm-6">
-                           <h5>Mesa 2 nueva arriba</h5>
-                           <a href=""><img src="images/mesa.png"></a>
-                           <h4>Ocupada</h4>
-                  </div>
-
+                <div class="x_content" id="mesas">
+                  
                 </div>
                 <!-- /x_content End dv -->
               </div>
