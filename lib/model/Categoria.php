@@ -112,7 +112,7 @@ class Categoria {
             $stmt->bindParam(1, $this->nombre);
             Database::disconnect();
             if ($stmt->execute()) {
-                return "exito";
+                return "Exito";
             } else {
                 return "*1* Error al tratar de actualizar Categoria";
             }

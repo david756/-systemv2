@@ -9,21 +9,22 @@
          */ 
         //0-Admin,1-cajero,2-mesero,3-cocinero,4inventario
         //posicion 0 reservado para admin 0=no , 1=si
-        //posicion 1-4 para otros perfiles,no hay orden
-        $privilegios=array(0,4,3);
-        $usuario->setPrivilegios($privilegios);
+        //posicion 1-4 para otros perfiles
+        //solo 1 o cero
+        $privilegios=array(1,0,0,0,1);
+        //$usuario->setPrivilegios($privilegios);
         //$user=agregar($usuario);
-        //consultar(145);
+        //consultar(149);
         //consultarAll();
         //actualizar(145, "nombre2","apellido2","usuario2","cont2","genero2","telefono2",2,"def");
-        eliminar(146);
+        //eliminar(146);
         //searchPriv(145);
         
         /*Crear Privilegios*/
-        //$usuarioConsulta= new Usuario(145);
-        //$user=$usuarioConsulta->getUsuario();
+        $usuarioConsulta= new Usuario(149);
+        $user=$usuarioConsulta->getUsuario();
         //actualiza los privilegios (borra todos y crea)
-        //createPriv($user,$privilegios);
+        createPriv($user,$privilegios);
         
         
               

@@ -1,3 +1,31 @@
+<script>
+        function salidaSegura(){
+
+          console.log("salidaSegura");
+                var data = {                        
+                    'metodo'      : "cerrarSesion"
+                };
+                // process the form
+                $.ajax({
+                        data:  data,
+                        url:   'controller/Usuario.php',
+                        type:  'post',
+                        error: function(jqXHR, textStatus, errorThrown) {
+                             new PNotify({title: 'Oh No!', text: 'error fatal. No se cerro sesion',
+                            type: 'error'});  
+                        },
+                        success:  function (response,estado,objeto) {                                
+                               if (response=="Exito") {                                   
+                                  window.location.href = "login_system.php"}
+                                else{
+                                   new PNotify({title: 'Oh No!',text: response,type: 'error'});
+                                }                                   
+                        },
+
+                });
+              }
+
+  </script> 
 <!-- top Menu navigation-->
       <div class="top_nav">
 
@@ -14,9 +42,9 @@
                   <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
-                  <li><a href="javascript:;">  Perfil</a>
+                  <li><a href="perfil_usuario.php">  Perfil</a>
                   </li>
-                  <li><a href="login.php"><i class="fa fa-sign-out pull-right"></i> Salida Segura</a>
+                  <li><a onclick="salidaSegura()"><i class="fa fa-sign-out pull-right"></i> Salida Segura</a>
                   </li>
                 </ul>
               </li>
@@ -57,3 +85,57 @@
         </div>
       </div>
       <!-- /top Menu navigation -->
+
+      <!-- PNotify -->
+  <script type="text/javascript" src="js/notify/pnotify.core.js"></script>
+  <script type="text/javascript" src="js/notify/pnotify.buttons.js"></script>
+  <script type="text/javascript" src="js/notify/pnotify.nonblock.js"></script>
+
+  <script>
+    $(function() {
+      var cnt = 10; //$("#custom_notifications ul.notifications li").length + 1;
+      TabbedNotification = function(options) {
+        var message = "<div id='ntf" + cnt + "' class='text alert-" + options.type + "' style='display:none'><h2><i class='fa fa-bell'></i> " + options.title +
+          "</h2><div class='close'><a href='javascript:;' class='notification_close'><i class='fa fa-close'></i></a></div><p>" + options.text + "</p></div>";
+
+        if (document.getElementById('custom_notifications') == null) {
+          alert('doesnt exists');
+        } else {
+          $('#custom_notifications ul.notifications').append("<li><a id='ntlink" + cnt + "' class='alert-" + options.type + "' href='#ntf" + cnt + "'><i class='fa fa-bell animated shake'></i></a></li>");
+          $('#custom_notifications #notif-group').append(message);
+          cnt++;
+          CustomTabs(options);
+        }
+      }
+
+      CustomTabs = function(options) {
+        $('.tabbed_notifications > div').hide();
+        $('.tabbed_notifications > div:first-of-type').show();
+        $('#custom_notifications').removeClass('dsp_none');
+        $('.notifications a').click(function(e) {
+          e.preventDefault();
+          var $this = $(this),
+            tabbed_notifications = '#' + $this.parents('.notifications').data('tabbed_notifications'),
+            others = $this.closest('li').siblings().children('a'),
+            target = $this.attr('href');
+          others.removeClass('active');
+          $this.addClass('active');
+          $(tabbed_notifications).children('div').hide();
+          $(target).show();
+        });
+      }
+
+      CustomTabs();
+
+      var tabid = idname = '';
+      $(document).on('click', '.notification_close', function(e) {
+        idname = $(this).parent().parent().attr("id");
+        tabid = idname.substr(-2);
+        $('#ntf' + tabid).remove();
+        $('#ntlink' + tabid).parent().remove();
+        $('.notifications a').first().addClass('active');
+        $('#notif-group div').first().css('display', 'block');
+      });
+    })
+  </script>
+  

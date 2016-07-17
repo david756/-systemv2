@@ -24,6 +24,61 @@
 
   <script src="js/jquery.min.js"></script>
 
+  <script>
+            $(document).ready(function() {
+                // process the form
+                $('#login').submit(function() {
+                    if (!$("#ingresar").hasClass( "disabled" )) {
+                    // get the form data
+                    // there are many ways to get this data using jQuery 
+                    // (you can use the class or id also)
+                    var data = {
+                        'usuario'     : $('input[name=usuario]').val(),
+                        'clave'       : $('input[name=clave]').val(),
+                        'metodo'      : "crearSesion"
+                    };
+                    // process the form
+                    $.ajax({
+                            data:  data,
+                            url:   'controller/Usuario.php',
+                            type:  'post',
+
+                            beforeSend: function () {
+                                    $("#resultado").html("Procesando, espere por favor...");
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                    $('#resultado').attr("class","alert alert-danger");
+                                    $('#resultado').html('<o>201:Ocurrio un error </p>');
+                                    $('#resultado').show("slow").delay(4000).hide("slow");
+                            },
+                            success:  function (response,estado,objeto) {
+                                   if (response=="Exito") {
+                                    $('input[name=usuario]').val("");
+                                    $('input[name=clave]').val("");
+                                    $('#resultado').html("Inicio exitoso: por favor espere ...");
+                                    $('#resultado').attr("class","alert alert-info");
+                                    $('#resultado').show("slow").delay(4000).hide("slow");
+                                    setTimeout(function(){window.location.href = "menu_principal.php"}, 1200);
+
+                                    
+                                   }
+                                   else{
+                                     $('#resultado').attr("class","alert alert-danger");
+                                     $('#resultado').html("202:Ocurrio un error: ");
+                                     $('#resultado').html(response);
+                                     $('#resultado').show("slow").delay(4000).hide("slow");
+                                   } 
+                            },
+
+                    });
+                  }
+                  event.preventDefault(); 
+                });
+
+            });
+
+  </script> 
+
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
         <![endif]-->
@@ -45,16 +100,19 @@
     <div id="wrapper">
       <div id="login" class="animate form">
         <section class="login_content">
-          <form>
+          <form id="login" data-toggle="validator" novalidate>
             <h1>Formulario de ingreso</h1>
+            <div class="row">
+                <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+              </div>
             <div>
-              <input type="text" class="form-control" placeholder="Usuario" required="" />
+              <input type="text" class="form-control" placeholder="Usuario" name="usuario" required="" />
             </div>
             <div>
-              <input type="password" class="form-control" placeholder="Contraseña" required="" />
+              <input type="password" class="form-control" placeholder="Contraseña" name="clave" required="" />
             </div>
             <div>
-              <a class="btn btn-default submit" >Ingresar</a>
+              <button type="submit" id="ingresar" class="btn btn-default submit disabled" >Ingresar</button>
               <a class="reset_pass" href="#">Tiene problemas para ingresar?</a>
             </div>
             <div class="clearfix"></div>
@@ -77,7 +135,28 @@
       </div>      
     </div>
   </div>
+  <script src="js/validator.min.js"></script>
+   <!-- pace -->
+        <script src="js/pace/pace.min.js"></script>
 
+        <script>
+          var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+            showLeftPush = document.getElementById( 'showLeftPush' ),
+            body = document.body;
+            
+          showLeftPush.onclick = function() {
+            classie.toggle( this, 'active' );
+            classie.toggle( body, 'cbp-spmenu-push-toright' );
+            classie.toggle( menuLeft, 'cbp-spmenu-open' );
+            disableOther( 'showLeftPush' );
+          };
+          
+          function disableOther( button ) {
+            if( button !== 'showLeftPush' ) {
+              classie.toggle( showLeftPush, 'disabled' );
+            }
+        }
+        </script>
 </body>
 
 </html>

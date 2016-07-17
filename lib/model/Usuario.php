@@ -69,6 +69,34 @@ class Usuario {
         $resultado = New Usuario($result['id'], $result['nombre'], $result['apellido'], $result['telefono'],$result['fk_estado'], $result['genero'], $result['usuario'], $result['clave'], $privilegios);
         return $resultado;
     }
+    
+    /**
+     * Obtener Usuario con user y clave para luego validar
+     * @return Usuario
+     */
+    function getUsuarioClave() {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "select * from usuarios where usuario=? and clave=?";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->usuario);
+        $stmt->bindParam(2, $this->clave);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+        if (!empty($result)){
+            $userPriv = new Usuario($result['id']);
+            $privilegios = $userPriv->searchPrivilegios();
+            $resultado = New Usuario($result['id'], $result['nombre'], $result['apellido'], 
+            $result['telefono'],$result['fk_estado'], $result['genero'], 
+            $result['usuario'], $result['clave'], $privilegios);
+            return $resultado;
+        }
+        else {
+            return null;
+        }
+        
+    }
 
     /**
      * Metodo devuelve un array con la lista de todos los usuarios
@@ -104,10 +132,9 @@ class Usuario {
         Database::disconnect();
         //array de privilegios
         //0-Admin,1-cajero,2-mesero,3-cocinero,4inventario.
-        $privilegios = array(0);
+        $privilegios =array(0, 0, 0, 0, 0);
 
         if (empty($result)) {
-            $privilegios = array(0, 0, 0, 0, 0);
             return $privilegios;
         } else {
             if ($result[0][1] == 1) {
@@ -115,7 +142,7 @@ class Usuario {
                 return $privilegios;
             } else {
                 foreach ($result as $r) {
-                    $privilegios[] = $r[2];
+                    $privilegios[$r[2]] = 1;
                 }
                 return $privilegios;
             }
@@ -126,7 +153,7 @@ class Usuario {
      * @param type $privilegios : Array (5) : 
      * 0-Admin,1-cajero,2-mesero,3-cocinero,4inventario
      * posicion 0 reservado para admin 0=no , 1=si
-     * posicion 1-4 para otros perfiles,no hay orden
+     * posicion 1-4 para otros perfiles
      * @return True si se crean con exito, String error, si hay error
      */
     function createPrivilegios($privilegios) {
@@ -153,21 +180,22 @@ class Usuario {
             $stmt->bindParam(1, $this->idUsuario);
             $stmt->execute();
 
-
             $i = 0;
             foreach ($privilegios as $list) {
-                if ($i != 0 && $list != 0) {
-                    $query = "INSERT INTO perfil_empleados(fk_perfil,fk_empleado) VALUES (?, ?)";
-                    $stmt = $pdo->prepare($query);
-                    $stmt->bindParam(1, $list);
-                    $stmt->bindParam(2, $this->idUsuario);
-                    $resultado = $stmt->execute();
+                //solo si i != 0 , la primera posicion es de admin , no interesa aca.
+                //list = 1 , si cuenta con el privilegio
+                if ($i != 0 && $list==1) {                    
+                        $query = "INSERT INTO perfil_empleados(fk_perfil,fk_empleado) VALUES (?, ?)";
+                        $stmt = $pdo->prepare($query);
+                        $stmt->bindParam(1, $i);
+                        $stmt->bindParam(2, $this->idUsuario);
+                        $resultado = $stmt->execute();
 
-                    if (!$resultado) {
-                        $estado = "*2* error Creando privilegios";
-                        Database::disconnect();
-                        return $estado;
-                    }
+                        if (!$resultado) {
+                            $estado = "*2* error Creando privilegios";
+                            Database::disconnect();
+                            return $estado;
+                        }                   
                 }
                 $i++;
             }
@@ -290,6 +318,51 @@ class Usuario {
             }
         } else {
             return "*3* Error al tratar de eliminar Usuario: El usuario ya esta activo";
+        }
+    }
+    
+    function crearSesion($user){
+        try {
+                require_once "sesion.php";
+                $sesion = Sesion::crearSesion($user);
+                if ($sesion=="Exito") {
+                    return "Exito";
+                }
+        else { 
+            return "*2* Error al tratar de crear sesion:  " . $sesion;
+        }
+        } catch (Exception $e) {
+                echo "*3* Error al tratar de crear sesion:  " . $e->getMessage();
+        }
+    }
+    
+    function cerrarSesion(){
+        try {
+                require_once "sesion.php";
+                $sesion = Sesion::cerrarSesion();
+                if ($sesion=="Exito") {
+                    return "Exito";
+                }
+        else { 
+            return "*1* Error al tratar de crear sesion:  " . $sesion;
+        }
+        } catch (Exception $e) {
+                echo "*2* Error al tratar de crear sesion:  " . $e->getMessage();
+        }
+    }
+    
+    function getSesion(){
+        try {
+                require_once "sesion.php";
+                $usuario = Sesion::getSesion();
+                if ($usuario!=null) {
+                    return $usuario;
+                }
+                else { 
+                    return "*1* Error : no existe Sesion";
+                }
+        } catch (Exception $e) {
+                echo "*2* Error al tratar de obtener sesion:  " . $e->getMessage();
         }
     }
 

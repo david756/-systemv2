@@ -24,6 +24,22 @@
 
   <script src="js/jquery.min.js"></script>
 
+  <script type="text/javascript">
+            $(document).ready(function() {
+              mostrarMenu();
+            });
+  </script>
+  <script type="text/javascript">
+      function mostrarMenu(){         
+                  $.post("controller/Usuario.php", 
+                  {metodo: "menuPrincipal"}
+                  ,function(menuPrincipal){
+                    $('#menu').html(menuPrincipal);
+                  }
+                  );
+      }
+  </script>
+
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
         <![endif]-->
@@ -60,31 +76,8 @@
             <div class="col-md-12">
               <div class="x_panel">
                 <!-- x_content-->                
-                <div class="x_content">
-                  <div class="col-md-3 col-sm-6" align="center">
-                           <h2 >Administracion</h2>
-                           <a href=""><img src="images/admin.png" WIDTH=120 HEIGHT=120 class="img-responsive" alt="Responsive image"></a>
-                  </div>
-                  <div class="col-md-3 col-sm-6" align="center">
-                           <h2 >Pedido</h2>
-                           <a href=""><img src="images/pedido.png" WIDTH=120 HEIGHT=120 class="img-responsive" alt="Responsive image"></a>
-                  </div>
-                  <div class="col-md-3 col-sm-6" align="center">
-                           <h2 >Inventario</h2>
-                           <a href=""><img src="images/inventario.png" WIDTH=120 HEIGHT=120 class="img-responsive" alt="Responsive image"></a>
-                  </div>
-                  <div class="col-md-3 col-sm-6" align="center">
-                           <h2 >Administracion</h2>
-                           <a href=""><img src="images/admin.png" WIDTH=120 HEIGHT=120 class="img-responsive" alt="Responsive image"></a>
-                  </div>
-                  <div class="col-md-3 col-sm-6" align="center">
-                           <h2 >Pedido</h2>
-                           <a href=""><img src="images/pedido.png" WIDTH=120 HEIGHT=120 class="img-responsive" alt="Responsive image"></a>
-                  </div>
-                  <div class="col-md-3 col-sm-6" align="center">
-                           <h2 >Inventario</h2>
-                           <a href=""><img src="images/inventario.png" WIDTH=120 HEIGHT=120 class="img-responsive" alt="Responsive image"></a>
-                  </div>
+                <div id="menu" class="x_content" >                  
+                  
                 </div>
                 <!-- /x_content End dv -->
               </div>
