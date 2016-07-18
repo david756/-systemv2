@@ -1,6 +1,22 @@
 <script>
+            $(document).ready(function() {
+                $.ajax({
+                   type   : 'POST',
+                   url    : 'controller/Usuario.php',
+                   data  : {metodo: "datosUsuario"},
+                   dataType : 'json',
+                   success  : function(data){
+                      $('#usernameUser1').html(data.username);
+                  },
+                   error  : function(data){
+                    console.log(data);
+                  }
+               });
+            });
+</script>
+<script>
+         
         function salidaSegura(){
-
           console.log("salidaSegura");
                 var data = {                        
                     'metodo'      : "cerrarSesion"
@@ -38,7 +54,7 @@
             <ul class="nav navbar-nav navbar-right">
               <li class="">
                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <img src="images/img.jpg" alt="">Usuario
+                  <img src="images/img.jpg" alt=""><span id="usernameUser1"></span>
                   <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">

@@ -11,20 +11,20 @@
         //posicion 0 reservado para admin 0=no , 1=si
         //posicion 1-4 para otros perfiles
         //solo 1 o cero
-        $privilegios=array(1,0,0,0,1);
+        //$privilegios=array(1,0,0,0,1);
         //$usuario->setPrivilegios($privilegios);
         //$user=agregar($usuario);
-        //consultar(149);
+        consultar(150);
         //consultarAll();
         //actualizar(145, "nombre2","apellido2","usuario2","cont2","genero2","telefono2",2,"def");
         //eliminar(146);
         //searchPriv(145);
         
         /*Crear Privilegios*/
-        $usuarioConsulta= new Usuario(149);
-        $user=$usuarioConsulta->getUsuario();
+        //$usuarioConsulta= new Usuario(149);
+        //$user=$usuarioConsulta->getUsuario();
         //actualiza los privilegios (borra todos y crea)
-        createPriv($user,$privilegios);
+        //createPriv($user,$privilegios);
         
         
               
@@ -47,6 +47,8 @@
             echo 'usuario consultado id: '.$usuario->getIdUsuario().'<br>';
             echo 'usuario consultado nombre: '.$usuario->getNombre().'<br>';
             echo 'usuario consultado apellido: '.$usuario->getApellido().'<br>';
+            echo 'usuario consultado username: '.$usuario->getUserName().'<br>';
+            echo 'usuario consultado telefono: '.$usuario->getTelefono().'<br>';
             echo 'usuario consultado privilegio: ';
             print_r($usuario->getPrivilegios());
             

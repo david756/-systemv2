@@ -1,4 +1,47 @@
-<!-- top Menu navigation-->
+<script>
+            $(document).ready(function() {
+                $.ajax({
+                   type   : 'POST',
+                   url    : 'controller/Usuario.php',
+                   data  : {metodo: "datosUsuario"},
+                   dataType : 'json',
+                   success  : function(data){
+                      $('#usernameUser1').html(data.username);
+                  },
+                   error  : function(data){
+                    console.log(data);
+                  }
+               });
+            });
+</script>
+<script>
+        function salidaSegura(){
+
+          console.log("salidaSegura");
+                var data = {                        
+                    'metodo'      : "cerrarSesion"
+                };
+                // process the form
+                $.ajax({
+                        data:  data,
+                        url:   'controller/Usuario.php',
+                        type:  'post',
+                        error: function(jqXHR, textStatus, errorThrown) {
+                             new PNotify({title: 'Oh No!', text: 'error fatal. No se cerro sesion',
+                            type: 'error'});  
+                        },
+                        success:  function (response,estado,objeto) {                                
+                               if (response=="Exito") {                                   
+                                  window.location.href = "login_system.php"}
+                                else{
+                                   new PNotify({title: 'Oh No!',text: response,type: 'error'});
+                                }                                   
+                        },
+
+                });
+              }
+
+  </script> <!-- top Menu navigation-->
       <div class="top_nav">
 
         <div class="nav_menu">
@@ -10,13 +53,13 @@
             <ul class="nav navbar-nav navbar-right">
               <li class="">
                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <img src="images/img.jpg" alt="">Usuario
+                  <img src="images/img.jpg" alt=""><span id="usernameUser1"></span>
                   <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
-                  <li><a href="javascript:;">  Perfil</a>
+                  <li><a href="perfil_usuario.php">  Perfil</a>
                   </li>
-                  <li><a href="login.php"><i class="fa fa-sign-out pull-right"></i> Salida Segura</a>
+                  <li><a onclick="salidaSegura()"><i class="fa fa-sign-out pull-right"></i> Salida Segura</a>
                   </li>
                 </ul>
               </li>

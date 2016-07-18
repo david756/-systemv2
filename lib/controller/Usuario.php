@@ -47,6 +47,15 @@ switch ($metodo) {
     case "menuPrincipal":
         menuPrincipal();
         break;
+    case "datosUsuario":
+        datosUsuario();
+        break; 
+    case "notificaciones":
+        notificaciones();
+        break; 
+    case "crearNotificacion":
+        crearNotificacion();
+        break; 
     default:
         die ('302:Error, no se encontro dirección');
     }
@@ -149,4 +158,72 @@ switch ($metodo) {
             echo '301:Error no se pudo cargar el contenido ,intente nuevamente.';
             }
      }
+     
+     /**
+     * Muestra los datos de usuario en formato json ,incluyendo los privilegios
+     * @return json listado de datos de usuario
+     */
+     function datosUsuario(){
+        $data = array();
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        $usuario=$usuario->getUsuario();
+        $data['nombre'] = $usuario->getNombre();
+        $data['apellido'] = $usuario->getApellido();
+        $data['telefono'] = $usuario->getTelefono();
+        $data['username'] = $usuario->getUserName();
+        $data['estado'] = $usuario->getEstado();        
+        $data['privilegios'] = $usuario->getPrivilegios();
+        echo json_encode($data);
+     }
+          
+     /**
+     * Muestra las notificaciones que le han llegado a un usuario
+     * @return html notificaciones de usuario
+     */
+     function notificaciones(){
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        $notificaciones=$usuario->notificaciones();
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        foreach ($notificaciones as $n) {  
+           $f = date_create($n['fecha']);
+           $fecha= date_format($f,'d')." de ".$meses[date_format($f,'n')-1]. " del ".date_format($f,'Y'). " - ". date_format($f,'g:i a');
+           
+            //// $date = date_create($n['fecha']);
+           // $fecha= date_format($date, 'd-m-Y g:i a');
+           // $fecha= strftime("%A %d de %B del %Y");
+            
+            print '<li class="media event">
+                    <a class="pull-left border-aero profile_thumb">
+                      <i class="fa fa-user green"></i>
+                    </a>
+                    <div class="message_wrapper">
+                      <b>'.$n['usuario'].'</b>
+                      <p> <small>'.$fecha.'</small></p>
+                      <h5> '.$n['mensaje'].'</h5>
+                      <br />
+                    </div>
+                  </li>';
+        }
+     }
+     /**
+    * Crear una notificacion
+    * @param Post datos de notificacion recibe usuario destino ,
+    * mensaje
+    */
+   function crearNotificacion(){
+   $destino = $_POST["destino"];
+   $mensaje = $_POST["mensaje"];
+   
+   $usuario = new Usuario();
+   $usuario= $usuario->getSesion();
+   $estado=$usuario->crear_notificacion($destino,$mensaje);
+
+   if ($estado=="Exito") {
+       echo "Exito";
+   } else {
+       echo $estado;
+   }
+   }
 ?>

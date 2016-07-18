@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -23,6 +23,71 @@
 
 
   <script src="js/jquery.min.js"></script>
+
+  <script>
+            $(document).ready(function() {
+               datosUsuario();
+               notificaciones();
+            });
+  </script>
+  <script type="text/javascript">
+      function datosUsuario(){         
+              $.ajax({
+                   type   : 'POST',
+                   url    : 'controller/Usuario.php',
+                   data  : {metodo: "datosUsuario"},
+                   dataType : 'json',
+                   success  : function(data){
+                      $('#nombreUser').html(data.nombre);
+                      $('#telefonoUser').html(data.telefono);
+                      $('#usernameUser').html(data.username); 
+                      $('#editNombre').val(data.nombre);
+                      $('#editApellido').val(data.apellido);
+                      $('#editTelefono').val(data.telefono);                  
+                      console.log(data.nombre);
+                      console.log("a continuacion abajo el telefono");
+                      console.log(data.telefono);
+                      console.log(data.username);
+                  },
+                   error  : function(data){
+                    console.log(data);
+                  }
+               });
+      }
+      function notificaciones(){         
+                  $.post("controller/Usuario.php", 
+                  {metodo: "notificaciones"}
+                  ,function(tabla){
+                    $('#notificaciones').html(tabla);
+                  }
+                  );
+      }
+
+      function crearNotificacion(){      
+                  var destino=$('#destino').val();  
+                  var mensaje=$('#mensaje').val(); 
+
+            $.post("controller/Usuario.php", 
+                    {metodo: "crearNotificacion",
+                     destino:  destino,
+                     mensaje:  mensaje},
+                     function(respuesta){
+                      $('#ModalNuevoMsj').modal('hide');
+                      if (respuesta=="Exito") {
+                        $('#resultado').html("Notificacion enviada!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              );  
+       }
+  </script>
 
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -67,10 +132,10 @@
                             <div class="profile_img">
                                 <a href=""><img src="images/usuario.png" WIDTH=120 HEIGHT=120 class="img-responsive" alt="Responsive image"></a>
                             </div>
-                            <h3>Juan12</h3>
+                            <h3><span id="usernameUser"></span></h3>
                             <ul class="list-unstyled user_data">
-                              <li><i class="fa fa-map-marker user-profile-icon"></i> Juan David Gomez</li>  
-                              <li><i class="fa fa-briefcase user-profile-icon"></i> 3113254578</li>   
+                              <li ><i class="fa fa-user user-profile-icon"></i> <span id="nombreUser"></span></li>  
+                              <li ><i class="fa fa-phone user-profile-icon"></i> <span id="telefonoUser"></span></li>   
                               <li class="m-top-xs">
                                 <i class="fa fa-external-link user-profile-icon"></i>
                                 <a href="http://www.kimlabs.com/profile/" target="_blank">www.mantil.com</a>
@@ -79,31 +144,12 @@
 
                             <a class="btn btn-success btn-sm" data-toggle="modal" data-target="#ModalPerfil"><i class="fa fa-edit m-right-xs"></i>Editar Perfil</a>
                             <a class="btn btn-default btn-sm"  data-toggle="modal" data-target="#ModalClave"><i class="fa fa-edit m-right-xs"></i>Cambiar contraseña</a><hr>
-                            <br />
-
-                            <!-- start skills -->
-                            <h4>Habilidades</h4>
-                            <ul class="list-unstyled user_data">
-                              <li>
-                                <p>Rendimiento</p>
-                                <div class="progress progress_sm">
-                                  <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="60"></div>
-                                </div>
-                              </li>                              
-                            </ul>
-                            <!-- end of skills -->
+                            <br />                           
                           </div>
 
                           <div class="col-md-9 col-sm-9 col-xs-12">
 
-                            <div class="profile_title">
-                              <div class="col-md-6">
-                                <h2>Reporte de actividad de usuario</h2>
-                              </div>
-                            </div>
-                            <!-- start of user-activity-graph -->
-                            <div id="graph_bar" style="width:100%; height:280px;"></div>
-                            <!-- end of user-activity-graph -->
+                           
 
                             <div class="" role="tabpanel" data-example-id="togglable-tabs">
                               <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
@@ -112,42 +158,12 @@
                               </ul>
                               <div id="myTabContent" class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                                   <div class="row">
+                                      <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+                                    </div>
                                 <br><button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#ModalNuevoMsj"><i class="fa fa-bell"></i> Nueva Notificación</button><hr>
                                   <!-- start recent activity -->
-                                  <ul class="messages list-unstyled top_profiles scroll-view">
-                                    <li class="media event">
-                                      <a class="pull-left border-aero profile_thumb">
-                                        <i class="fa fa-user green"></i>
-                                      </a>
-                                      <div class="message_wrapper">
-                                        <b>Usuario 1</b>
-                                        <p> <small>20-octubre-2016  12:02 pm</small></p>
-                                        <h5>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth.</h5>
-                                        <br />
-                                      </div>
-                                    </li>
-                                    <li class="media event">
-                                      <a class="pull-left border-aero profile_thumb">
-                                        <i class="fa fa-user green"></i>
-                                      </a>
-                                      <div class="message_wrapper">
-                                        <b>Usuario 1</b>
-                                        <p> <small>20-octubre-2016  12:02 pm</small></p>
-                                        <h5>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth.</h5>
-                                        <br />
-                                      </div>
-                                    </li>
-                                    <li class="media event">
-                                      <a class="pull-left border-aero profile_thumb">
-                                        <i class="fa fa-user green"></i>
-                                      </a>
-                                      <div class="message_wrapper">
-                                        <b>Usuario 1</b>
-                                        <p> <small>20-octubre-2016  12:02 pm</small></p>
-                                        <h5>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth.</h5>
-                                        <br />
-                                      </div>
-                                    </li>                                   
+                                  <ul id="notificaciones" class="messages list-unstyled top_profiles scroll-view">                                                 
                                   </ul>
                                   <!-- end recent activity -->
                                 </div>
@@ -170,19 +186,19 @@
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Nombre</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <input type="text" class="form-control" value="David Felipe" placeholder="Nombre">
+                                          <input id="editNombre" type="text" class="form-control" value="" placeholder="Nombre">
                                         </div>
                                       </div>                                     
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Apellido</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <input type="text" class="form-control" value="Hernandez" placeholder="Apellidos">
+                                          <input id="editApellido" type="text" class="form-control" value="" placeholder="Apellidos">
                                         </div>
                                       </div>
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Telefono</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <input type="text" class="form-control" value="3113142928" placeholder="telefono">
+                                          <input id="editTelefono" type="text" class="form-control" value="" placeholder="telefono">
                                         </div>
                                       </div>
                                 </form>
@@ -253,9 +269,9 @@
                                   <div class="form-group">
                                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Destino: </label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <select class="form-control">
+                                          <select id="destino" class="form-control">
                                             <option>Todos</option>
-                                            <option>Option one</option>
+                                            <option>149</option>
                                             <option>Option two</option>
                                             <option>Option three</option>
                                             <option>Option four</option>
@@ -266,14 +282,14 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Notificación <span class="required">*</span>
                                         </label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <textarea class="form-control" rows="3" placeholder='Escriba aqui el mensaje'></textarea>
+                                          <textarea id="mensaje" class="form-control" rows="3" placeholder='Escriba aqui el mensaje'></textarea>
                                         </div>
                                     </div>
                             </form><br>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-success">Enviar</button>
+                              <button type="button" class="btn btn-success" onclick="crearNotificacion()">Enviar</button>
                             </div>
                           </div>
                         </div>

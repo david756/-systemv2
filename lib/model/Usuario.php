@@ -66,7 +66,7 @@ class Usuario {
 
         $userPriv = new Usuario($result['id']);
         $privilegios = $userPriv->searchPrivilegios();
-        $resultado = New Usuario($result['id'], $result['nombre'], $result['apellido'], $result['telefono'],$result['fk_estado'], $result['genero'], $result['usuario'], $result['clave'], $privilegios);
+        $resultado = New Usuario($result['id'], $result['nombre'], $result['apellido'], $result['usuario'],$result['fk_estado'], $result['genero'], $result['telefono'], $result['clave'], $privilegios);
         return $resultado;
     }
     
@@ -365,7 +365,49 @@ class Usuario {
                 echo "*2* Error al tratar de obtener sesion:  " . $e->getMessage();
         }
     }
-
+    
+    /**
+     * Obtener notificaciones del usuario
+     * @return lista de notificaciones
+     */
+    function notificaciones() {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "select n.mensaje,n.fecha,u.usuario as usuario from notificaciones n "
+                . "INNER JOIN usuarios u on n.fk_usuario=u.id WHERE n.fk_destino=?";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->idUsuario);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();
+        return $result;
+    }
+    
+     function crear_notificacion($destino,$mensaje) {
+        try {
+            require_once "database.php";
+            $pdo = Database::connect();
+            $fecha= date('Y-m-d H:i:s');
+            $query = "INSERT INTO notificaciones (id, mensaje, fecha, fk_destino, fk_usuario)"
+                    . " VALUES (NULL, ?, ?, ?, ?);";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(1, $mensaje);
+            $stmt->bindParam(2, $fecha);
+            $stmt->bindParam(3, $destino);
+            $stmt->bindParam(4, $this->idUsuario); 
+            Database::disconnect();
+            
+            if ($stmt->execute()) {
+                return "Exito";
+            } else {
+                return "*1* Error al tratar de crear notificacion";
+            }
+        } catch (Exception $e) {
+            echo "*2* Error al tratar de crear notificacion:  " . $e->getMessage();
+        }
+    }
+    
+    
     /**
      * Metodo que obtiene el id de un usuario
      * @return String
