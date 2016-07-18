@@ -28,6 +28,7 @@
             $(document).ready(function() {
                datosUsuario();
                notificaciones();
+               listaUsuarios();
             });
   </script>
   <script type="text/javascript">
@@ -62,6 +63,14 @@
                   }
                   );
       }
+      function listaUsuarios(){         
+                  $.post("controller/Usuario.php", 
+                  {metodo: "listaUsuario"}
+                  ,function(users){
+                    $('#destino').html(users);
+                  }
+                  );
+      }
 
       function crearNotificacion(){      
                   var destino=$('#destino').val();  
@@ -77,6 +86,7 @@
                         $('#resultado').html("Notificacion enviada!");
                         $('#resultado').attr("class","alert alert-success");
                         $('#resultado').show("slow").delay(4000).hide("slow");
+                        notificaciones();
                       }
                       else{
                         $('#resultado').html(respuesta);
@@ -86,6 +96,67 @@
                       
                     }
               );  
+       }
+       function editarUser(){
+            userNombre=$('#editNombre').val();
+            userApellido=$('#editApellido').val();
+            userTelefono=$('#editTelefono').val();
+
+            $.post("controller/Usuario.php", 
+                    {metodo: "update",
+                     nombre:  userNombre,
+                     apellido: userApellido,
+                     telefono:  userTelefono,
+                   },function(respuesta){
+                      $('#ModalPerfil').modal('hide');
+                      if (respuesta=="Exito") {
+                        datosUsuario();
+                        $('#resultado').html("usuario fue editado!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              );  
+       }
+       function cambiarClave(){
+            claveAntigua=$('#claveAntigua').val();
+            claveNueva1=$('#claveNueva1').val();
+            claveNueva2=$('#claveNueva2').val();
+
+            if (claveNueva1==claveNueva2) {
+              $.post("controller/Usuario.php", 
+                    {metodo: "cambiarClave",
+                     claveAntigua:  claveAntigua,
+                     claveNueva: claveNueva1,
+                   },function(respuesta){
+                      $('#ModalClave').modal('hide');
+                      if (respuesta=="Exito") {
+                        claveAntigua=$('#claveAntigua').val("");
+                        claveNueva1=$('#claveNueva1').val("");
+                        claveNueva2=$('#claveNueva2').val("");
+                        $('#resultado').html("se cambio clave con exito!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        claveAntigua=$('#claveAntigua').val("");
+                        claveNueva1=$('#claveNueva1').val("");
+                        claveNueva2=$('#claveNueva2').val("");
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              );  
+            }
+            
        }
   </script>
 
@@ -205,7 +276,7 @@
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-success">Confirmar</button>
+                              <button type="button" class="btn btn-success" onclick="editarUser()">Confirmar</button>
                             </div>
                           </div>
                         </div>
@@ -228,26 +299,26 @@
                                   <div class="form-group">
                                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Nueva contraseña</label>
                                       <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="password" class="form-control" placeholder="Nueva contraseña">
+                                        <input id="claveNueva1" type="password" class="form-control" placeholder="Nueva contraseña">
                                       </div>
                                     </div> 
                                     <div class="form-group">
                                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Repetir contraseña</label>
                                       <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="password" class="form-control" placeholder="Repita contraseña">
+                                        <input id="claveNueva2" type="password" class="form-control" placeholder="Repita contraseña">
                                       </div>
                                     </div> 
                                     <div class="form-group">
                                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Antigua contraseña</label>
                                       <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="password" class="form-control" placeholder="Cntraseña">
+                                        <input id="claveAntigua" type="password" class="form-control" placeholder="Cntraseña">
                                       </div>
                                     </div> 
                             </form>
                             </div>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-success">Confirmar</button>
+                              <button type="button" class="btn btn-success" onclick="cambiarClave()">Confirmar</button>
                             </div>
                           </div>
                         </div>
@@ -269,12 +340,7 @@
                                   <div class="form-group">
                                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Destino: </label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <select id="destino" class="form-control">
-                                            <option>Todos</option>
-                                            <option>149</option>
-                                            <option>Option two</option>
-                                            <option>Option three</option>
-                                            <option>Option four</option>
+                                          <select id="destino" class="form-control">                                            
                                           </select>
                                         </div>
                                     </div><br>

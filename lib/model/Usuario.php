@@ -57,7 +57,7 @@ class Usuario {
     function getUsuario() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select * from usuarios where id=?";
+        $query = "select id,nombre,apellido,telefono,genero,usuario,admin,fk_estado from usuarios where id=?";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->idUsuario);
         $stmt->execute();
@@ -66,7 +66,8 @@ class Usuario {
 
         $userPriv = new Usuario($result['id']);
         $privilegios = $userPriv->searchPrivilegios();
-        $resultado = New Usuario($result['id'], $result['nombre'], $result['apellido'], $result['usuario'],$result['fk_estado'], $result['genero'], $result['telefono'], $result['clave'], $privilegios);
+        $resultado = New Usuario($result['id'], $result['nombre'], $result['apellido'], $result['usuario']
+                ,null, $result['genero'], $result['telefono'], $result['fk_estado'], $privilegios);
         return $resultado;
     }
     
@@ -88,9 +89,32 @@ class Usuario {
             $userPriv = new Usuario($result['id']);
             $privilegios = $userPriv->searchPrivilegios();
             $resultado = New Usuario($result['id'], $result['nombre'], $result['apellido'], 
-            $result['telefono'],$result['fk_estado'], $result['genero'], 
-            $result['usuario'], $result['clave'], $privilegios);
+            $result['usuario'],null, $result['genero'], 
+            $result['telefono'], $result['fk_estado'], $privilegios);
             return $resultado;
+        }
+        else {
+            return null;
+        }
+        
+    }
+    
+    /**
+     * verficar la clave de un usuario
+     * @return Usuario
+     */
+    function verificarClave($clave) {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "select * from usuarios where usuario=? and clave=?";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->usuario);
+        $stmt->bindParam(2, $clave);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+        if (!empty($result)){
+            return "Exito";
         }
         else {
             return null;
@@ -105,7 +129,7 @@ class Usuario {
     function getUsuarios() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select * from usuarios";
+        $query = "select id,nombre,apellido,telefono,genero,usuario,admin,fk_estado from usuarios";
         $result = $pdo->query($query);
         Database::disconnect();
         return $result;
@@ -276,17 +300,18 @@ class Usuario {
         try {
             require_once "database.php";
             $pdo = Database::connect();
-            $query = "update usuarios set nombre = ?,apellido = ?,clave = ?,genero = ?,telefono = ?,fk_estado = ? where id =" . $this->idUsuario;
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $query = "update usuarios set nombre = ?,apellido = ?,genero = ?,telefono = ?,fk_estado = ? where id =" . $this->idUsuario;
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->nombre);
             $stmt->bindParam(2, $this->apellido);
-            $stmt->bindParam(3, $this->clave);
-            $stmt->bindParam(4, $this->genero);
-            $stmt->bindParam(5, $this->telefono);
-            $stmt->bindParam(6, $this->estado);
+            $stmt->bindParam(3, $this->genero);
+            $stmt->bindParam(4, $this->telefono);
+            $stmt->bindParam(5, $this->estado);
             Database::disconnect();
             if ($stmt->execute()) {
-                return "exito";
+                return "Exito";
             } else {
                 return "*1* Error al tratar de actualizar Usuario";
             }
@@ -294,6 +319,40 @@ class Usuario {
             echo "*2* Error al tratar de actualizar Usuario: " . $e->getMessage();
         }
     }
+    
+    /**
+     * Metodo que actualiza la clave de usuario en la base de datos
+     * @return string Resultado
+     */
+    function cambiarClave($clave1,$clave2) {
+        $u = new Usuario($this->idUsuario);
+        $u = $u->getUsuario();
+        $u=  $u->verificarClave($clave1);
+        if ($u=="Exito") {  
+        try {
+            require_once "database.php";
+            $pdo = Database::connect();
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);            
+            $query = "update usuarios set clave = ? where id =" . $this->idUsuario;
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(1, $clave2);
+            Database::disconnect();
+            if ($stmt->execute()) {
+                return "Exito";
+            } else {
+                return "*1* Error al tratar de cambiar clave a Usuario";
+            }
+        } catch (Exception $e) {
+            return "*2* Error al tratar de cambiar clave a Usuario: " . $e->getMessage();
+        }
+        
+        }
+        else {
+            return "la clave ingresada no es correcta.";
+        }
+    }
+
 
     /**
      * Metodo que Elimina usuario de la base de datos
@@ -321,6 +380,12 @@ class Usuario {
         }
     }
     
+    
+    /**
+     * Metodo que crea la sesion del usuario
+     * @return string Exito si crea la sesion correctamente , de lo contrario 
+     * retorna el error generado
+     */
     function crearSesion($user){
         try {
                 require_once "sesion.php";
@@ -335,7 +400,11 @@ class Usuario {
                 echo "*3* Error al tratar de crear sesion:  " . $e->getMessage();
         }
     }
-    
+    /**
+     * Metodo que cierra y elimina la sesion del usuario
+     * @return string Exito si cierra la sesion correctamente , de lo contrario 
+     * retorna el error generado
+     */
     function cerrarSesion(){
         try {
                 require_once "sesion.php";
@@ -350,7 +419,11 @@ class Usuario {
                 echo "*2* Error al tratar de crear sesion:  " . $e->getMessage();
         }
     }
-    
+    /**
+     * Metodo que obtiene el usuario de la sesion actual
+     * @return string Usuario que esta en sesion actualmente,
+     * retorna el usuario con los privilegios
+     */
     function getSesion(){
         try {
                 require_once "sesion.php";
@@ -374,7 +447,8 @@ class Usuario {
         require_once "database.php";
         $pdo = Database::connect();
         $query = "select n.mensaje,n.fecha,u.usuario as usuario from notificaciones n "
-                . "INNER JOIN usuarios u on n.fk_usuario=u.id WHERE n.fk_destino=?";
+                . "INNER JOIN usuarios u on n.fk_usuario=u.id WHERE n.fk_destino=?"
+                . "order by n.fecha DESC";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->idUsuario);
         $stmt->execute();
@@ -382,11 +456,20 @@ class Usuario {
         Database::disconnect();
         return $result;
     }
-    
+    /**
+     * crea una notificacion en la base de datos
+     * 
+     * @param type $destino
+     * @param type $mensaje
+     * @return string Exito si cierra la sesion correctamente , de lo contrario 
+     * retorna el error generado
+     */
      function crear_notificacion($destino,$mensaje) {
         try {
             require_once "database.php";
             $pdo = Database::connect();
+            //$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            //$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $fecha= date('Y-m-d H:i:s');
             $query = "INSERT INTO notificaciones (id, mensaje, fecha, fk_destino, fk_usuario)"
                     . " VALUES (NULL, ?, ?, ?, ?);";
@@ -436,9 +519,9 @@ class Usuario {
      * Metodo que obtiene la contrasena de un usuario
      * @return String
      */
-    function getContrasena() {
-        return $this->clave;
-    }
+    //function getContrasena() {
+        //return $this->clave;
+    //}
 
     /**
      * Metodo que obtiene el genero de un usuario
@@ -516,9 +599,9 @@ class Usuario {
      * Metdo set contrasena de la clase usuario
      * @param type $contrasena
      */
-    function setContrasena($contrasena) {
-        $this->clave = $contrasena;
-    }
+    //function setContrasena($contrasena) {
+      //  $this->clave = $contrasena;
+    //}
 
     /**
      * Metdo set genero de la clase usuario

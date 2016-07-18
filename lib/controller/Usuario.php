@@ -35,6 +35,9 @@ switch ($metodo) {
     case "cambiarEstado":
         cambiarEstado();
         break;
+    case "cambiarClave":
+        cambiarClave();
+        break;
     case "crearSesion":
         crearSesion();
         break;
@@ -56,10 +59,36 @@ switch ($metodo) {
     case "crearNotificacion":
         crearNotificacion();
         break; 
+    case "listaUsuario":
+        listaUsuario();
+        break; 
     default:
         die ('302:Error, no se encontro dirección');
     }
         
+    
+    /**
+    * Actualizar una mesa
+    * @param Post idMesa,nombreMesa recibe id y 
+    * nombre actualizado  de la mesa que 
+    * va a crear
+    */
+   function actualizar(){
+        $nombre=$_POST["nombre"];
+        $apellido=$_POST["apellido"];        
+        $telefono = $_POST["telefono"];
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        $userNew= new Usuario($usuario->getIdUsuario(), $nombre, $apellido, $usuario->getUserName()
+                ,null, $usuario->getGenero(), $telefono ,1,null);
+        $resultado=$userNew->updateUsuario();
+
+    if ($resultado=="Exito") {
+        echo "Exito";
+    } else {
+        echo $resultado;
+    }
+    }
     /**
     * Crear una sesion
     * @param Post nombreMesa recibe nombre de la mesa que 
@@ -78,9 +107,9 @@ switch ($metodo) {
             if ($userSesion=="Exito") {
                 echo "Exito";
             }
-         else {
-                echo $userSesion;
-            }
+            else {
+                   echo $userSesion;
+               }
 
         } else {
             echo "304:Error de usuario o contraseña";
@@ -207,23 +236,47 @@ switch ($metodo) {
                   </li>';
         }
      }
-     /**
+     
+     function listaUsuario(){
+         $usuario = new Usuario();
+         $lista=$usuario->getUsuarios();
+         foreach ($lista as $l) { 
+            print ' <option value="'.$l['id'].'">'.$l['usuario'].'</option>';
+        }
+     }
+     
+    /**
     * Crear una notificacion
     * @param Post datos de notificacion recibe usuario destino ,
     * mensaje
     */
-   function crearNotificacion(){
-   $destino = $_POST["destino"];
-   $mensaje = $_POST["mensaje"];
-   
-   $usuario = new Usuario();
-   $usuario= $usuario->getSesion();
-   $estado=$usuario->crear_notificacion($destino,$mensaje);
+    function crearNotificacion(){
+        $destino = $_POST["destino"];
+        $mensaje = $_POST["mensaje"];
 
-   if ($estado=="Exito") {
-       echo "Exito";
-   } else {
-       echo $estado;
-   }
-   }
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        $estado=$usuario->crear_notificacion($destino,$mensaje);
+
+        if ($estado=="Exito") {
+            echo "Exito";
+        } else {
+            echo $estado;
+        }
+    }
+    
+    function cambiarClave(){
+        $claveAntigua = $_POST["claveAntigua"];
+        $claveNueva =$_POST["claveNueva"];
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        $estado=$usuario->cambiarClave($claveAntigua,$claveNueva);
+        
+        if ($estado=="Exito") {
+            echo "Exito";
+        } else {
+            echo $estado;
+        }
+        
+    }
 ?>

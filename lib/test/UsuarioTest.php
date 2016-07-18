@@ -14,9 +14,9 @@
         //$privilegios=array(1,0,0,0,1);
         //$usuario->setPrivilegios($privilegios);
         //$user=agregar($usuario);
-        consultar(150);
+        consultar(149);
         //consultarAll();
-        //actualizar(145, "nombre2","apellido2","usuario2","cont2","genero2","telefono2",2,"def");
+        //actualizar(149, "nombre2","apellido2","usuario2","cont2","genero2","telefono2",1,"def");
         //eliminar(146);
         //searchPriv(145);
         
@@ -49,6 +49,7 @@
             echo 'usuario consultado apellido: '.$usuario->getApellido().'<br>';
             echo 'usuario consultado username: '.$usuario->getUserName().'<br>';
             echo 'usuario consultado telefono: '.$usuario->getTelefono().'<br>';
+            echo 'usuario consultado estado: '.$usuario->getEstado().'<br>';
             echo 'usuario consultado privilegio: ';
             print_r($usuario->getPrivilegios());
             
