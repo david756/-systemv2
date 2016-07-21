@@ -14,7 +14,7 @@
         //$privilegios=array(1,0,0,0,1);
         //$usuario->setPrivilegios($privilegios);
         //$user=agregar($usuario);
-        consultar(149);
+        consultar(192);
         //consultarAll();
         //actualizar(149, "nombre2","apellido2","usuario2","cont2","genero2","telefono2",1,"def");
         //eliminar(146);

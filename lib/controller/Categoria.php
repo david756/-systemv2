@@ -4,7 +4,7 @@
  * a la base de datos
  */
 include "../model/Categoria.php";
-
+include "../model/Usuario.php";
 /**
  * recibe por POST el metodo segun
  * el proceso que valla a realizar
@@ -22,15 +22,19 @@ if (isset($_POST["metodo"])) {
  */
 switch ($metodo) {
     case "create":
+        verificarAdmin();
         crear();
         break;
     case "update":
+        verificarAdmin();
         actualizar();
         break;
     case "delete":
+        verificarAdmin();
         eliminar();
         break;
     case "listaCategorias":
+        verificarAdmin();
         listaCategorias();
         break;
     
@@ -110,5 +114,32 @@ function listaCategorias(){
         </tr>';
         }    
     }
-
+    
+    /**
+    * confirma que exista la sesion de usuario y que sea administrador
+    * para poder realizar cambios propios de este privilegio
+    */
+    function verificarAdmin(){        
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        if (!is_object($usuario)) {
+            die ('Por favor inicie sesion para continuar');
+        }
+        if ($usuario->getPrivilegios()[0]!=1) {
+           die('no esta autorizado para realizar esta accion');
+        }
+    }
+    
+    /**
+    * confirma que exista la sesion de usuario y que sea empleado
+    * para poder realizar cambios propios de este privilegio
+    */
+    function verificarUser(){
+        
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        if (!is_object($usuario)) {
+            die ('Por favor inicie sesion para continuar');
+        }
+    }
 ?>

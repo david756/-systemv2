@@ -22,6 +22,46 @@
   <link rel="stylesheet" type="text/css" href="css/maps/jquery-jvectormap-2.0.3.css" />
   <link href="css/icheck/flat/green.css" rel="stylesheet" />
   <link href="css/floatexamples.css" rel="stylesheet" type="text/css" />
+  <!-- Checkbox verdes css -->
+  <style type="text/css">
+    input[type=checkbox].css-checkbox {
+              position:absolute; 
+              z-index:-1000; 
+              left:-1000px;
+              overflow: hidden;
+              clip: rect(0 0 0 0);
+              height:1px; 
+              width:1px;
+              margin:-1px;
+              padding:0; border:0;
+            }
+
+            input[type=checkbox].css-checkbox + label.css-label {
+              padding-left:26px;
+              height:21px; 
+              display:inline-block;
+              line-height:21px;
+              background-repeat:no-repeat;
+              background-position: 0 0;
+              font-size:13px;
+              vertical-align:middle;
+              cursor:pointer;
+
+            }
+
+            input[type=checkbox].css-checkbox:checked + label.css-label {
+              background-position: 0 -21px;
+            }
+            label.css-label {
+                background-image:url("images/check.png");
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+              }
+  </style>
 
   <script src="js/jquery.min.js"></script>
   <script src="js/nprogress.js"></script>
@@ -31,6 +71,204 @@
   <link href="js/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+  <script>
+            $(document).ready(function() {
+                // process the form
+                $('#create').submit(function() {
+                    if (!$("#crear_usuario").hasClass( "disabled" )) {
+                        var checked = [0,0,0,0,0];
+                        var i=0;
+                        $("input[name='categoria[]']:checked").each(function ()
+                        {
+                            checked[parseInt($(this).val())]=1;
+                            i++;
+                        });
+
+
+                        if (i>0) {
+                              var privilegios = JSON.stringify(checked);
+                              // get the form data
+                              // there are many ways to get this data using jQuery 
+                              // (you can use the class or id also)
+                              var data = {
+                                  'nombre_usuario'     : $('input[name=crear-nombre]').val(),
+                                  'apellido_usuario'     : $('input[name=crear-apellido]').val(),
+                                  'usuario_usuario'     : $('input[name=crear-usuario]').val(),
+                                  'clave_usuario'     : $('input[name=crear-clave]').val(),
+                                  'telefono_usuario'     : $('input[name=crear-telefono]').val(),
+                                  'genero_usuario'     : $('input[name=crear-genero]:checked').val(),
+                                  'privilegios_usuario' : privilegios,
+                                  'metodo'          : "create"
+                              };
+                                // process the form
+                                  $.ajax({
+                                          data:  data,
+                                          url:   'controller/Usuario.php',
+                                          type:  'post',
+
+                                          beforeSend: function () {
+                                                  $("#resultado").html("Procesando, espere por favor...");
+                                          },
+                                          error: function(jqXHR, textStatus, errorThrown) {
+                                                  $('#resultado').attr("class","alert alert-danger");
+                                                  $('#resultado').html('<o>201:Ocurrio un error </p>');
+                                                  $('#resultado').show("slow").delay(4000).hide("slow");
+                                          },
+                                          success:  function (response,estado,objeto) {
+                                                 if (response=="exito") {
+                                                  $('input[name=crear-nombre]').val(""),
+                                                  $('input[name=crear-apellido]').val(""),
+                                                  $('input[name=crear-usuario]').val(""),
+                                                  $('input[name=crear-clave]').val(""),
+                                                  $('input[name=crear-clave2]').val(""),
+                                                  $('input[name=crear-telefono]').val(""),
+
+                                                  $('#resultado').html("el usuario se agrego con exito!");
+                                                  $('#resultado').attr("class","alert alert-info");
+                                                  $('#resultado').show("slow").delay(4000).hide("slow");
+                                                  mostrarLista();
+                                                 }
+                                                 else{
+                                                   $('#resultado').attr("class","alert alert-danger");
+                                                   $('#resultado').html("202:Ocurrio un error: ");
+                                                   $('#resultado').html(response);
+                                                   $('#resultado').show("slow").delay(4000).hide("slow");
+                                                 } 
+                                          },
+
+                                  });
+                      }
+                  }
+                  event.preventDefault(); 
+                });
+
+            });
+
+  </script> 
+  <script>
+            $(document).ready(function() {
+              mostrarLista();
+            });
+  </script>
+  <script type="text/javascript">
+      function mostrarLista(){         
+                  $.post("controller/Usuario.php", 
+                  {metodo: "listaUsuariosEmp"}
+                  ,function(tabla){
+                    $('#tabla').html(tabla);
+                  }
+                  );
+      }
+     function modalEliminarUsuario(id){
+                  var textoId=document.getElementById("id_usuario_remove");    
+                  textoId.setAttribute("value", id);
+                  $('#ModalConfirmar').modal('show');
+       }
+
+       function modalEditarUsuario(id,nombre,apellido,usuario,genero,telefono,privilegios){
+
+                  var textoId=$('#id_usuario_edit').val(id);  
+                  var textoNombre=$('#nombre_usuario_edit').val(nombre);
+                  var textoApellido=$('#apellido_usuario_edit').val(apellido);
+                  var textoTelefono=$('#telefono_usuario_edit').val(telefono);
+                  var privilegios = JSON.parse(privilegios);
+                  $(".css-checkbox").prop('checked', false); 
+
+                  $("input[name='categoriaEdit[]']").each(function ()
+                  {
+                    if ((privilegios[parseInt($(this).val())])==1) {
+                        $(this).prop('checked', true);
+                    }
+
+                  });
+
+                  $('#ModalEdiarUsuario').modal('show');
+       }
+
+       function bloquearUsuario(id){
+              $.post("controller/Usuario.php", 
+                    {metodo: "cambiarEstado",
+                     id_usuario: id},function(respuesta){
+                      if (respuesta=="Exito") {
+                        mostrarLista();
+                        $('#resultado').html("Cambio de estado del usuario");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                    }
+              );  
+       }
+       function confirmarEliminar(){
+            usuarioId=$('#id_usuario_remove').attr("value");
+            $.post("controller/Usuario.php", 
+                    {metodo: "delete",
+                     id_usuario:  usuarioId},function(respuesta){
+                      $('#ModalConfirmar').modal('hide');
+                      if (respuesta=="exito") {
+                        mostrarLista()
+                        $('#resultado').html("el usuario fue eliminado!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              );  
+       }
+       function confirmarEditar(){
+            usuarioId=$('#id_usuario_edit').val();
+            usuarioNombre=$('#nombre_usuario_edit').val();
+            usuarioApellido=$('#apellido_usuario_edit').val();
+            usuarioGenero=$('input[name=editar-genero]:checked').val();
+            usuarioTelefono=$('#telefono_usuario_edit').val();
+
+            var checked = [0,0,0,0,0];
+            var i=0;
+                        $("input[name='categoriaEdit[]']:checked").each(function ()
+                        {
+                            checked[parseInt($(this).val())]=1;
+                            i++;
+                        });
+
+                  if (i>0) {
+                    var privilegios = JSON.stringify(checked);
+                    $.post("controller/Usuario.php", 
+                            {metodo: "update2",
+                           id_usuario:  usuarioId,
+                           nombre:  usuarioNombre,
+                           apellido:  usuarioApellido,
+                           genero:  usuarioGenero,
+                           telefono:  usuarioTelefono,
+                           privilegios:  privilegios,},function(respuesta){
+                            $('#ModalEdiarUsuario').modal('hide');
+                            if (respuesta=="Exito") {
+                              mostrarLista();
+                              $('#resultado').html("el usuario fue editado!");
+                              $('#resultado').attr("class","alert alert-success");
+                              $('#resultado').show("slow").delay(4000).hide("slow");
+                            }
+                            else{
+                              $('#resultado').html(respuesta);
+                              $('#resultado').attr("class","alert alert-danger");
+                              $('#resultado').show("slow").delay(4000).hide("slow");
+                            }
+                            
+                          }
+                    );  
+                  }
+           
+       }
+  </script> 
 
   <!--[if lt IE 9]>
   <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -165,7 +403,9 @@
 
                 </div>
               </div>
-
+              <div class="row">
+                <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+              </div>
            <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
@@ -175,21 +415,21 @@
                 </div>
                 <div class="x_content">
 
-                  <form class="form-horizontal form-label-left" novalidate>
+                  <form id="create" data-toggle="validator" id="form_create" class="form-horizontal form-label-left" novalidate>
 
                     <p>Formulario de ingreso de usuarios</p>
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre" required="required" type="text">
+                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="crear-nombre" placeholder="ingrese nombre" required="required" type="text">
                       </div>
                     </div>
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Apellido <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese apellido" required="required" type="text">
+                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="crear-apellido" placeholder="ingrese apellido" required="required" type="text">
                       </div>
                     </div>
                     <div class="form-group">
@@ -198,12 +438,12 @@
                         <div id="gender" class="btn-group" data-toggle="buttons">
 
                           <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                            <input type="radio" class="flat" name="gender" id="genderM" value="M" checked required />
-                            <input type="radio" name="gender" value="male"> &nbsp; Hombre &nbsp;
+                            <input type="radio" class="flat" name="crear-genero"  value="M" checked required />
+                            <input type="radio" name="crear-genero" value="M"> &nbsp; Hombre &nbsp;
                           </label>
                           <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                            <input type="radio" class="flat" name="gender" id="genderF" value="F" />
-                            <input type="radio" name="gender" value="female"> Mujer
+                            <input type="radio" class="flat" name="crear-genero"  value="F" />
+                            <input type="radio" name="crear-genero" value="F"> Mujer
                           </label>
                         </div>
                       </div>
@@ -212,43 +452,48 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" >Telefono <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="number" id="number" name="number" required="required" class="form-control col-md-7 col-xs-12">
+                        <input type="number" step="1" min="0" data-minlength="7" id="number" name="crear-telefono" required="required" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" >Usuario <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="8"  name="name" placeholder="ingrese usuario" required="required" type="text">
+                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="8"  name="crear-usuario" placeholder="ingrese usuario" required="required" type="text">
                       </div>
                     </div>
                     <div class="item form-group">
                       <label for="password" class="control-label col-md-3">Contraseña</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="password" type="password" name="password" data-validate-range="8" class="form-control col-md-7 col-xs-12" required="required">
+                        <input type="password" name="crear-clave" data-toggle="validator" data-minlength="4" class="form-control" id="inputPassword" placeholder="Contraseña" required>
+                        <span class="help-block">Minimo 4 caracteres</span>
                       </div>
                     </div>
                     <div class="item form-group">
                       <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Repetir contraseña</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="password2" type="password" name="password2" data-validate-linked="password" class="form-control col-md-7 col-xs-12" required="required">
+                        <input type="password" name="crear-clave2" class="form-control" id="inputPasswordConfirm" data-match="#inputPassword" data-match-error="Opps! las contraseñas no coinciden" placeholder="Confirmar Contraseña" required>
+                               <div class="help-block with-errors"></div> 
                       </div>
                     </div>
+
+                 
+
                     <p>Seleccion de los roles del usuario</p>
                     <div class="item form-group">
                       <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Perfiles del usuario</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                           <label>
-                            <input type="checkbox" class="flat"> Mesero
+                            <input type="checkbox" name="categoria[]" value="1" class="flat"> Mesero
                           </label><br>
                           <label>
-                            <input type="checkbox" class="flat"> Caja
+                            <input type="checkbox" name="categoria[]" value="2" class="flat"> Caja
                           </label><br>
                           <label>
-                            <input type="checkbox" class="flat"> Cocina
+                            <input type="checkbox" name="categoria[]" value="3" class="flat"> Cocina
                           </label><br>
                           <label>
-                            <input type="checkbox" class="flat"> Inventario
+                            <input type="checkbox" name="categoria[]" value="4" class="flat"> Inventario
                           </label>
                       </div>
                     </div>
@@ -256,7 +501,7 @@
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-md-offset-3">
-                        <button id="send" type="submit" class="btn btn-success">Guardar</button>
+                        <button id="crear_usuario" type="submit" class="btn btn-success disabled" >Guardar</button>  
                       </div>
                     </div>
                   </form>
@@ -269,12 +514,12 @@
           <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>Administradores <small>usuarios</small></h2>
+                  <h2>Empleados <small>usuarios</small></h2>
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
                         
-                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                        <table id="datatable-buttons" class="table table-striped">
                           <thead>
                             <tr>
                               <th>Id</th>
@@ -286,25 +531,7 @@
                               <th>Accion</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            <tr>
-                              <td>125</td>
-                              <td>Juan David</td>
-                              <td>Hernandez</td>
-                              <td>3113142928</td>
-                              <td><button type="button" class="btn btn-success btn-xs">activo</button></td>
-                              <td>david756</td>
-                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalUsuario"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
-                            </tr>
-                            <tr>
-                              <td>125</td>
-                              <td>Juan David</td>
-                              <td>Hernandez</td>
-                              <td>3113142928</td>
-                              <td><button type="button" class="btn btn-success btn-xs">activo</button></td>
-                              <td>david756</td>
-                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalUsuario"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
-                            </tr>
+                          <tbody id="tabla">                            
                           </tbody>
                         </table>
                       </div>
@@ -316,7 +543,7 @@
           </div>
 
           <!-- /modal editar usuario -->
-          <div class="modal fade bs-example-modal-lg" id="ModalUsuario" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal fade bs-example-modal-lg" id="ModalEdiarUsuario" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content" align="center">
 
@@ -329,32 +556,32 @@
                   <form class="form-horizontal form-label-left" novalidate>
 
                     <p>Formulario para editar usuarios</p>
+                    <input type="text" id ="id_usuario_edit" value="" style="display:none">
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nombre <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre" required="required" type="text" value="David Felipe">
+                        <input id="nombre_usuario_edit" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre" required="required" type="text">
                       </div>
                     </div>
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Apellido <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese apellido" required="required" type="text" value="Hernandez">
+                        <input id="apellido_usuario_edit" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese apellido" required="required" type="text" >
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" >Genero <span class="required">*</span></label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                         <div id="gender" class="btn-group" data-toggle="buttons">
-
                           <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                            <input type="radio" class="flat" name="gender" id="genderM" value="M" checked required />
-                            <input type="radio" name="gender" value="male"> &nbsp; Hombre &nbsp;
+                            <input type="radio" class="flat" name="editar-genero" value="M" checked required />
+                            <input  type="radio" name="editar-genero" value="M"> &nbsp; Hombre &nbsp;
                           </label>
                           <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                            <input type="radio" class="flat" name="gender" id="genderF" value="F" />
-                            <input type="radio" name="gender" value="female"> Mujer
+                            <input type="radio" class="flat" name="editar-genero" value="F" />
+                            <input  type="radio" name="editar-genero" value="F"> Mujer
                           </label>
                         </div>
                       </div>
@@ -363,30 +590,28 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Telefono <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="number" id="number" name="number" required="required" class="form-control col-md-7 col-xs-12" value="3113142928">
+                        <input type="number" id="telefono_usuario_edit" name="number" required="required" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Usuario <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="8"  name="name" placeholder="ingrese usuario" required="required" type="text" value="david756">
-                      </div>
-                    </div> <hr>
+                    <hr>
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Perfiles del usuario</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                           <label>
-                            <input type="checkbox" class="flat" checked="checked"> Mesero
+                            <input id="check1" type="checkbox" class="css-checkbox" name="categoriaEdit[]" value="1" >
+                            <label for="check1" class="css-label radGroup2">Mesero</label>
                           </label>
                           <label>
-                            <input type="checkbox" class="flat"> Caja
+                            <input id="check2" type="checkbox" class="css-checkbox" name="categoriaEdit[]" value="2" >
+                            <label for="check2" class="css-label radGroup2">Caja</label>
                           </label>
                           <label>
-                            <input type="checkbox" class="flat"> Cocina
+                            <input  id="check3" type="checkbox" class="css-checkbox"  name="categoriaEdit[]" value="3" > 
+                            <label for="check3" class="css-label radGroup2">Cocina</label>
                           </label>
                           <label>
-                            <input type="checkbox" class="flat"> Inventario
+                            <input  id="check4" type="checkbox" class="css-checkbox" name="categoriaEdit[]" value="4" >
+                            <label for="check4" class="css-label radGroup2">Inventario</label>
                           </label>
                       </div>
                     </div>                    
@@ -394,7 +619,7 @@
                  </div>
                   <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success">Confirmar</button>
+                        <button type="button" class="btn btn-success" onclick="confirmarEditar()">Confirmar</button>
                   </div>
                 </div>
               </div>
@@ -408,9 +633,10 @@
                 <div class="modal-body">
                   <h4>¿Esta seguro de eliminar este usuario?</h4>
                 </div>
+                <input type="text" id ="id_usuario_remove" value="" style="display:none">
                   <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success">Confirmar</button>
+                        <button id="confirmar" type="button" class="btn btn-success" onclick="confirmarEliminar()">Confirmar</button>
                   </div>
                 </div>
               </div>
@@ -488,106 +714,29 @@
         <script src="js/datatables/responsive.bootstrap.min.js"></script>
         <script src="js/datatables/dataTables.scroller.min.js"></script>
 
-   <!-- pace -->
+        <script src="js/validator.min.js"></script>
+
+        <!-- pace -->
         <script src="js/pace/pace.min.js"></script>
+        
         <script>
-          var handleDataTableButtons = function() {
-              "use strict";
-              0 !== $("#datatable-buttons").length && $("#datatable-buttons").DataTable({
-                dom: "Bfrtip",
-                buttons: [{
-                  extend: "copy",
-                  className: "btn-sm"
-                }, {
-                  extend: "csv",
-                  className: "btn-sm"
-                }, {
-                  extend: "excel",
-                  className: "btn-sm"
-                }, {
-                  extend: "pdf",
-                  className: "btn-sm"
-                }, {
-                  extend: "print",
-                  className: "btn-sm"
-                }],
-                responsive: !0
-              })
-            },
-            TableManageButtons = function() {
-              "use strict";
-              return {
-                init: function() {
-                  handleDataTableButtons()
-                }
-              }
-            }();
-        </script>
-        <script type="text/javascript">
-          $(document).ready(function() {
-            $('#datatable').dataTable();
-            $('#datatable-keytable').DataTable({
-              keys: true
-            });
-            $('#datatable-responsive').DataTable();
-            $('#datatable-scroller').DataTable({
-              ajax: "js/datatables/json/scroller-demo.json",
-              deferRender: true,
-              scrollY: 380,
-              scrollCollapse: true,
-              scroller: true
-            });
-            var table = $('#datatable-fixed-header').DataTable({
-              fixedHeader: true
-            });
-          });
-          TableManageButtons.init();
-        </script>
-  <script src="js/pace/pace.min.js"></script>
-  <script src="js/validator/validator.js"></script>
-  <script>
-    // initialize the validator function
-    validator.message['date'] = 'not a real date';
-
-    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
-    $('form')
-      .on('blur', 'input[required], input.optional, select.required', validator.checkField)
-      .on('change', 'select.required', validator.checkField)
-      .on('keypress', 'input[required][pattern]', validator.keypress);
-
-    $('.multi.required')
-      .on('keyup blur', 'input', function() {
-        validator.checkField.apply($(this).siblings().last()[0]);
-      });
-
-    // bind the validation to the form submit event
-    //$('#send').click('submit');//.prop('disabled', true);
-
-    $('form').submit(function(e) {
-      e.preventDefault();
-      var submit = true;
-      // evaluate the form using generic validaing
-      if (!validator.checkAll($(this))) {
-        submit = false;
-      }
-
-      if (submit)
-        this.submit();
-      return false;
-    });
-
-    /* FOR DEMO ONLY */
-    $('#vfields').change(function() {
-      $('form').toggleClass('mode2');
-    }).prop('checked', false);
-
-    $('#alerts').change(function() {
-      validator.defaults.alerts = (this.checked) ? false : true;
-      if (this.checked)
-        $('form .alert').remove();
-    }).prop('checked', false);
-  </script>
- 
+          var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+            showLeftPush = document.getElementById( 'showLeftPush' ),
+            body = document.body;
+            
+          showLeftPush.onclick = function() {
+            classie.toggle( this, 'active' );
+            classie.toggle( body, 'cbp-spmenu-push-toright' );
+            classie.toggle( menuLeft, 'cbp-spmenu-open' );
+            disableOther( 'showLeftPush' );
+          };
+          
+          function disableOther( button ) {
+            if( button !== 'showLeftPush' ) {
+              classie.toggle( showLeftPush, 'disabled' );
+            }
+        }
+        </script> 
 </body>
 
 </html>

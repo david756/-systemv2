@@ -129,7 +129,9 @@ class Usuario {
     function getUsuarios() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select id,nombre,apellido,telefono,genero,usuario,admin,fk_estado from usuarios";
+        $query = "select u.id,u.nombre,u.apellido,u.telefono,u.genero,u.usuario,u.admin,"
+                . "u.fk_estado,eu.descripcion estado from usuarios u "
+                . "INNER JOIN estado_usuarios eu on u.fk_estado=eu.id order by u.id asc";
         $result = $pdo->query($query);
         Database::disconnect();
         return $result;
@@ -259,16 +261,18 @@ class Usuario {
         try {
             require_once "database.php";
             $pdo = Database::connect();
-            $query = "insert into usuarios set nombre = ?,apellido = ?,usuario = ?,"
-                    . "clave = ?,genero = ?,telefono = ?,fk_estado = ?";
+            
+            $query ="INSERT INTO usuarios (id, nombre, apellido, telefono, genero,"
+            . " usuario, clave, admin, fk_estado) VALUES "
+                    . "(NULL, ?, ?, ?, ?, ?, ?, '0', '1');";
+            
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->nombre);
             $stmt->bindParam(2, $this->apellido);
-            $stmt->bindParam(3, $this->usuario);
-            $stmt->bindParam(4, $this->clave);
-            $stmt->bindParam(5, $this->genero);
-            $stmt->bindParam(6, $this->telefono);
-            $stmt->bindParam(7, $this->estado);
+            $stmt->bindParam(3, $this->telefono);
+            $stmt->bindParam(4, $this->genero);
+            $stmt->bindParam(5, $this->usuario);
+            $stmt->bindParam(6, $this->clave);
             $resultado = $stmt->execute();
             $this->idUsuario = $pdo->lastInsertId();
 
@@ -351,7 +355,39 @@ class Usuario {
         else {
             return "la clave ingresada no es correcta.";
         }
-    }
+     }
+     
+       /**
+     * Metodo que cambia el estado de un usuario en la base de datos
+     * @return string Resultado
+     */
+    function cambiarEstado() {
+        $usuarioActualizar= new Usuario($this->idUsuario);
+        $resultado=$usuarioActualizar->getUsuario();
+        if ($resultado->getEstado()==1) {
+            $estado=2;
+        }
+         else {
+            $estado=1;
+        }
+            try {
+                require_once "database.php";
+                $pdo = Database::connect();
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                $query = "update Usuarios set fk_estado = ? where id =" . $this->idUsuario;
+                $stmt = $pdo->prepare($query);
+                $stmt->bindParam(1, $estado);
+                Database::disconnect();
+                if ($stmt->execute()) {
+                    return "Exito";
+                } else {
+                    return "*101* Error al tratar de cambiar estado al usuario";
+                }
+            } catch (Exception $e) {
+                echo "*102* Error al tratar cambiar estado a usuario: " . $e->getMessage();
+            }
+        } 
 
 
     /**

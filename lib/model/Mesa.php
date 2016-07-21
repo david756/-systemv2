@@ -70,7 +70,7 @@ class Mesa {
         require_once "database.php";
         $pdo = Database::connect();
         $query = "select m.id,m.descripcion,em.descripcion as estado from mesas m inner join estado_mesas em "
-                . "on m.fk_estado=em.id ";
+                . "on m.fk_estado=em.id order by m.id asc";
         $result = $pdo->query($query);
         Database::disconnect();
         return $result;

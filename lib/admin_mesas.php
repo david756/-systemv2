@@ -487,7 +487,8 @@
   <script src="js/datatables/dataTables.keyTable.min.js"></script>
   <script src="js/datatables/dataTables.responsive.min.js"></script>
   <script src="js/datatables/responsive.bootstrap.min.js"></script>
-  <script src="js/datatables/dataTables.scroller.min.js"></script>        
+  <script src="js/datatables/dataTables.scroller.min.js"></script>    
+      
   <script src="js/validator.min.js"></script>
 
    <!-- pace -->
