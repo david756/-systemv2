@@ -68,7 +68,7 @@ class Producto {
     function getProductos() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select * from productos";
+        $query = "select p.id,p.nombre,p.descripcion,p.valor,c.id as id_categoria,c.nombre as categoria,p.control_stock as stock,ep.descripcion as estado from productos p inner join estado_productos ep on p.fk_estado=ep.id INNER JOIN categorias c on c.id=p.fk_categoria order by p.id asc";
         $result = $pdo->query($query);
         Database::disconnect();
         return $result;
@@ -147,7 +147,7 @@ class Producto {
             $stmt->bindParam(6, $this->control_stock);
             Database::disconnect();
             if ($stmt->execute()) {
-                return "exito";
+                return "Exito";
             } else {
                 return "*1* Error al tratar de actualizar Producto";
             }
@@ -182,6 +182,38 @@ class Producto {
                     . "El producto ya tiene atenciones registradas";
         }
     }
+    
+    /**
+     * Metodo que cambia el estado de una producto en la base de datos
+     * @return string Resultado
+     */
+    function cambiarEstado() {
+        $productosActualizar= new Producto($this->idProducto);
+        $resultado=$productosActualizar->getProducto();
+        if ($resultado->getEstado()==1) {
+            $estado=2;
+        }
+         else {
+            $estado=1;
+        }
+            try {
+                require_once "database.php";
+                $pdo = Database::connect();
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                $query = "update productos set fk_estado = ? where id =" . $this->idProducto;
+                $stmt = $pdo->prepare($query);
+                $stmt->bindParam(1, $estado);
+                Database::disconnect();
+                if ($stmt->execute()) {
+                    return "Exito";
+                } else {
+                    return "*101* Error al tratar de cambiar estado a Producto";
+                }
+            } catch (Exception $e) {
+                echo "*102* Error al tratar cambiar estado a Producto: " . $e->getMessage();
+            }
+        } 
 
     /**
      * Metodo get Id del producto

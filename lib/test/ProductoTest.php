@@ -4,15 +4,15 @@
 
         
         //creando un nuevo producto
-        //$categoria = new Categoria(1,"categoria Prueba 1");
-        //$categoria=$categoria->createCategoria();
-        //$producto = new Producto(null,"nombre",10,"descripcion",$categoria,1,0); 
+        $categoria = new Categoria(1,"categoria Prueba 1");
+        $categoria=$categoria->createCategoria();
+        $producto = new Producto(null,"nombre",10,"descripcion",$categoria,1,0); 
                
         /*
          * llamado a funciones
          */
 
-        //agregar($producto);
+        agregar($producto);
         //consultar(11);
         //consultarAll();
         //actualizar(11,"nombre2",20,"descripcion2",$categoria,2,1);

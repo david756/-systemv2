@@ -185,6 +185,7 @@
               );  
        }
        function confirmarEliminar(){
+         
             usuarioId=$('#id_usuario_remove').attr("value");
             $.post("controller/Usuario.php", 
                     {metodo: "delete",
@@ -203,9 +204,10 @@
                       }
                       
                     }
-              );  
+              );          
        }
        function confirmarEditar(){
+        if (!$("#editar_usuario").hasClass( "disabled" )) {
             usuarioId=$('#id_usuario_edit').val();
             usuarioNombre=$('#nombre_usuario_edit').val();
             usuarioApellido=$('#apellido_usuario_edit').val();
@@ -238,7 +240,8 @@
                             
                           }
                     );  
-           
+           }
+           event.preventDefault(); 
        }
   </script> 
 
@@ -504,22 +507,21 @@
                     <h4 class="modal-title" id="myModalLabel2">Editar Usuario</h4>
                   </div>
                 <div class="modal-body">
-                  <form class="form-horizontal form-label-left" novalidate>
-
+                  <form data-toggle="validator" class="form-horizontal form-label-left" novalidate>
                     <p>Formulario para editar usuarios</p>
                     <input type="text" id ="id_usuario_edit" value="" style="display:none">
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nombre <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="nombre_usuario_edit" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre" required="required" type="text">
+                        <input id="nombre_usuario_edit" class="form-control col-md-7 col-xs-12"  name="name" placeholder="ingrese nombre" required="required" type="text">
                       </div>
                     </div>
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Apellido <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="apellido_usuario_edit" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese apellido" required="required" type="text" >
+                        <input id="apellido_usuario_edit" class="form-control col-md-7 col-xs-12" name="name" placeholder="ingrese apellido" required="required" type="text" >
                       </div>
                     </div>
                     <div class="form-group">
@@ -541,16 +543,16 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Telefono <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="number" id="telefono_usuario_edit" name="number" required="required" class="form-control col-md-7 col-xs-12">
+                        <input type="number" id="telefono_usuario_edit" name="number"  step="1" min="0" data-minlength="7" required="required" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
-                    <hr>                   
-                  </form>
-                 </div>
-                  <div class="modal-footer">
+                    <hr>   
+                    <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success" onclick="confirmarEditar()">Confirmar</button>
-                  </div>
+                        <button id="editar_usuario" type="submit" class="btn btn-success disabled" onclick="confirmarEditar()">Confirmar</button>
+                  </div>                
+                  </form>
+                 </div>                  
                 </div>
               </div>
             </div>

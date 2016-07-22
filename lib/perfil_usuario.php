@@ -75,7 +75,7 @@
       function crearNotificacion(){      
                   var destino=$('#destino').val();  
                   var mensaje=$('#mensaje').val(); 
-
+            if (mensaje.length > 5) {            
             $.post("controller/Usuario.php", 
                     {metodo: "crearNotificacion",
                      destino:  destino,
@@ -96,8 +96,10 @@
                       
                     }
               );  
+            }
        }
        function editarUser(){
+        if (!$("#editar_usuario").hasClass( "disabled" )) {
             userNombre=$('#editNombre').val();
             userApellido=$('#editApellido').val();
             userTelefono=$('#editTelefono').val();
@@ -122,13 +124,15 @@
                       }
                       
                     }
-              );  
+              ); 
+            }
+           event.preventDefault();  
        }
        function cambiarClave(){
             claveAntigua=$('#claveAntigua').val();
             claveNueva1=$('#claveNueva1').val();
             claveNueva2=$('#claveNueva2').val();
-
+          if (!$("#editar_clave").hasClass( "disabled" )) {
             if (claveNueva1==claveNueva2) {
               $.post("controller/Usuario.php", 
                     {metodo: "cambiarClave",
@@ -156,7 +160,8 @@
                     }
               );  
             }
-            
+            }
+            event.preventDefault();  
        }
   </script>
 
@@ -253,31 +258,32 @@
                               <h4 class="modal-title" id="myModalLabel2">Cambiar su información de Perfil</h4>
                             </div>
                             <div class="modal-body">  
-                               <form class="form-horizontal form-label-left">
+                               <form data-toggle="validator" class="form-horizontal form-label-left" novalidate>
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Nombre</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <input id="editNombre" type="text" class="form-control" value="" placeholder="Nombre">
+                                          <input id="editNombre" type="text" class="form-control" value="" required="required" placeholder="Nombre">
                                         </div>
                                       </div>                                     
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Apellido</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <input id="editApellido" type="text" class="form-control" value="" placeholder="Apellidos">
+                                          <input id="editApellido" type="text" class="form-control" value="" required="required" placeholder="Apellidos">
                                         </div>
                                       </div>
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Telefono</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <input id="editTelefono" type="text" class="form-control" value="" placeholder="telefono">
+                                          <input id="editTelefono" type="text" class="form-control"  step="1" min="0" data-minlength="7" value="" required="required" placeholder="telefono">
                                         </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                        <button id="editar_usuario" type="submit" class="btn btn-success disabled" onclick="editarUser()">Confirmar</button>
                                       </div>
                                 </form>
                             </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-success" onclick="editarUser()">Confirmar</button>
-                            </div>
+                            
                           </div>
                         </div>
                     </div>
@@ -291,35 +297,38 @@
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                               </button>
-                              <h4 class="modal-title" id="myModalLabel2">Modificar Atencion</h4>
+                              <h4 class="modal-title" id="myModalLabel2">Modificar Contraseña</h4>
                             </div>
                             <div class="body">
                             <br>
-                            <form class="form-horizontal form-label-left">
-                                  <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Nueva contraseña</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input id="claveNueva1" type="password" class="form-control" placeholder="Nueva contraseña">
+                            <form data-toggle="validator" id="form_create" class="form-horizontal form-label-left" novalidate>
+                                 
+                                    <div class="item form-group">
+                                      <label for="password" class="control-label col-md-3">Nueva contraseña</label>
+                                      <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="password" name="crear-clave" data-toggle="validator" data-minlength="4" class="form-control" id="claveNueva1" placeholder="Contraseña" required>
                                       </div>
-                                    </div> 
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Repetir contraseña</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input id="claveNueva2" type="password" class="form-control" placeholder="Repita contraseña">
+                                    </div>
+                                    <div class="item form-group">
+                                      <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Repetir contraseña</label>
+                                      <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="password" name="crear-clave2" class="form-control" id="claveNueva2" data-match="#claveNueva1" data-match-error="Opps! las contraseñas no coinciden" placeholder="Confirmar Contraseña" required>
+                                               <div class="help-block with-errors"></div> 
                                       </div>
-                                    </div> 
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Antigua contraseña</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input id="claveAntigua" type="password" class="form-control" placeholder="Cntraseña">
+                                    </div>
+                                    <div class="item form-group">
+                                      <label for="password" class="control-label col-md-3">Antigua contraseña</label>
+                                      <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="password" name="crear-clave" data-toggle="validator" data-minlength="4" class="form-control" id="claveAntigua" placeholder="Contraseña" required>
                                       </div>
-                                    </div> 
+                                    </div>
+
+                                    <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                  <button id="editar_clave" type="submit" class="btn btn-success disabled" onclick="cambiarClave()">Confirmar</button>
+                                </div>
                             </form>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-success" onclick="cambiarClave()">Confirmar</button>
-                            </div>
+                            </div>                            
                           </div>
                         </div>
                     </div>
@@ -398,8 +407,29 @@
   <script src="js/moris/raphael-min.js"></script>
   <script src="js/moris/morris.min.js"></script>
 
-  <!-- pace -->
-  <script src="js/pace/pace.min.js"></script>
+  <script src="js/validator.min.js"></script>
+
+        <!-- pace -->
+        <script src="js/pace/pace.min.js"></script>
+        
+        <script>
+          var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+            showLeftPush = document.getElementById( 'showLeftPush' ),
+            body = document.body;
+            
+          showLeftPush.onclick = function() {
+            classie.toggle( this, 'active' );
+            classie.toggle( body, 'cbp-spmenu-push-toright' );
+            classie.toggle( menuLeft, 'cbp-spmenu-open' );
+            disableOther( 'showLeftPush' );
+          };
+          
+          function disableOther( button ) {
+            if( button !== 'showLeftPush' ) {
+              classie.toggle( showLeftPush, 'disabled' );
+            }
+        }
+        </script> 
 </body>
 
 </html>

@@ -153,6 +153,7 @@
               );  
        }
        function confirmarEditar(){
+        if (!$("#editar_mesa").hasClass( "disabled" )) {
             mesaId=$('#id_mesa_edit').val();
             mesaDescripcion=$('#descripcion_mesa_edit').val();
             console.log(mesaDescripcion);
@@ -175,6 +176,8 @@
                       
                     }
               );  
+            }
+                  event.preventDefault();
        }
   </script>    
   <!--[if lt IE 9]>
@@ -380,7 +383,7 @@
                     <h4 class="modal-title" id="myModalLabel2">Editar Mesa</h4>
                   </div>
                 <div class="modal-body">
-                  <form class="form-horizontal form-label-left" novalidate>
+                  <form data-toggle="validator" id="form_create" class="form-horizontal form-label-left" novalidate>
                     <p>Formulario para editar Mesa</p>
                     <input type="text" id ="id_mesa_edit" value="" style="display:none">
                     <div class="item form-group">
@@ -392,7 +395,7 @@
                     </div>                 
                     <div class="modal-footer">
                           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                          <button type="button" class="btn btn-success" onclick="confirmarEditar()">Confirmar</button>
+                          <button id="editar_mesa" type="submit" class="btn btn-success disabled" onclick="confirmarEditar()">Confirmar</button>
                     </div>
                   </form>  
                 </div>

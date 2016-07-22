@@ -23,6 +23,46 @@
   <link href="css/icheck/flat/green.css" rel="stylesheet" />
   <link href="css/floatexamples.css" rel="stylesheet" type="text/css" />
 
+  <!-- Checkbox verdes css -->
+  <style type="text/css">
+    input[type=checkbox].css-checkbox {
+              position:absolute; 
+              z-index:-1000; 
+              left:-1000px;
+              overflow: hidden;
+              clip: rect(0 0 0 0);
+              height:1px; 
+              width:1px;
+              margin:-1px;
+              padding:0; border:0;
+            }
+
+            input[type=checkbox].css-checkbox + label.css-label {
+              padding-left:26px;
+              height:21px; 
+              display:inline-block;
+              line-height:21px;
+              background-repeat:no-repeat;
+              background-position: 0 0;
+              font-size:13px;
+              vertical-align:middle;
+              cursor:pointer;
+
+            }
+
+            input[type=checkbox].css-checkbox:checked + label.css-label {
+              background-position: 0 -21px;
+            }
+            label.css-label {
+                background-image:url("images/check.png");
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+              }
+  </style>
   <script src="js/jquery.min.js"></script>
   <script src="js/nprogress.js"></script>
 
@@ -31,7 +71,195 @@
   <link href="js/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <script>
+            $(document).ready(function() {
+                // process the form
+                $('#create').submit(function() {
 
+                    if (!$("#crear_producto").hasClass( "disabled" )) {
+                              // get the form data
+                              // there are many ways to get this data using jQuery 
+                              // (you can use the class or id also)
+                              stock=0;
+                              if($('input[name=crear-stock]').is(':checked')) { 
+                                stock=1;
+                                console.log("entro");
+                              }
+                              
+                              var data = {
+                                  'nombre_producto'     : $('input[name=crear-nombre]').val(),
+                                  'descripcion_producto' : $('#crear-descripcion').val(),
+                                  'valor_producto'     : $('input[name=crear-valor]').val(),
+                                  'categoria_producto'     : $("#categorias option:selected").val(),
+                                  'stock_producto'     : stock,
+                                  'metodo'          : "create"
+                              };
+                              console.log (data);
+
+                                // process the form
+                                  $.ajax({
+                                          data:  data,
+                                          url:   'controller/Producto.php',
+                                          type:  'post',
+
+                                          beforeSend: function () {
+                                                  $("#resultado").html("Procesando, espere por favor...");
+                                          },
+                                          error: function(jqXHR, textStatus, errorThrown) {
+                                                  $('#resultado').attr("class","alert alert-danger");
+                                                  $('#resultado').html('<o>201:Ocurrio un error </p>');
+                                                  $('#resultado').show("slow").delay(4000).hide("slow");
+                                          },
+                                          success:  function (response,estado,objeto) {
+                                                 if (response=="exito") {
+                                                  $('input[name=crear-nombre]').val("");
+                                                  $('#crear-descripcion').val("");
+                                                  $('#categorias > option[value=""]').attr('selected', 'selected');
+                                                  $('input[name=crear-valor]').val("");
+
+                                                  $('#resultado').html("el producto se agrego con exito!");
+                                                  $('#resultado').attr("class","alert alert-info");
+                                                  $('#resultado').show("slow").delay(4000).hide("slow");
+                                                  mostrarLista();
+                                                 }
+                                                 else{
+                                                   $('#resultado').attr("class","alert alert-danger");
+                                                   $('#resultado').html("202:Ocurrio un error: ");
+                                                   $('#resultado').html(response);
+                                                   $('#resultado').show("slow").delay(4000).hide("slow");
+                                                 } 
+                                          },
+
+                                  });
+                  }
+                  event.preventDefault(); 
+                });
+
+            });
+
+  </script> 
+  <script>
+            $(document).ready(function() {
+              mostrarLista();
+              listaCategorias();
+            });
+  </script>
+  <script type="text/javascript">
+      function mostrarLista(){         
+                  $.post("controller/Producto.php", 
+                  {metodo: "listaProductos"}
+                  ,function(tabla){
+                    $('#tabla').html(tabla);
+                  }
+                  );
+      }
+      function listaCategorias(){         
+                  $.post("controller/Producto.php", 
+                  {metodo: "listaCategorias"}
+                  ,function(tabla){
+                    $('.categorias').html(tabla);
+                  }
+                  );
+      }
+     function modalEliminarProducto(id){
+                  var textoId=document.getElementById("id_producto_remove");    
+                  textoId.setAttribute("value", id);
+                  $('#ModalConfirmar').modal('show');
+       }
+
+       function modalEditarProducto(id,nombre,descripcion,valor,Categoria){
+
+                  var textoId=$('#id_producto_edit').val(id);  
+                  var textoNombre=$('#nombre_producto_edit').val(nombre);
+                  var textoDescripcion=$('#descripcion_producto_edit').val(descripcion);
+                  var textoValor=$('#valor_producto_edit').val(valor);
+                  var textoCategoria=$('#categoria_producto_edit > option[value='+Categoria+']').attr('selected', 'selected');
+
+                  $('#ModalEdiarProducto').modal('show');
+       }
+
+       function bloquearProducto(id){
+              $.post("controller/Producto.php", 
+                    {metodo: "cambiarEstado",
+                     id_producto: id},function(respuesta){
+                      if (respuesta=="Exito") {
+                        mostrarLista();
+                        $('#resultado').html("Cambio de estado del producto");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                    }
+              );  
+       }
+       function confirmarEliminar(){
+            productoId=$('#id_producto_remove').attr("value");
+            $.post("controller/Producto.php", 
+                    {metodo: "delete",
+                     id_producto:  productoId},function(respuesta){
+                      $('#ModalConfirmar').modal('hide');
+                      if (respuesta=="exito") {
+                        mostrarLista()
+                        $('#resultado').html("el producto fue eliminado!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              );  
+       }
+       function confirmarEditar(){
+        if (!$("#editar_producto").hasClass( "disabled" )) {
+            productoId=$('#id_producto_edit').val();
+            productoNombre=$('#nombre_producto_edit').val();
+            productoDescripcion=$('#descripcion_producto_edit').val();
+            productoValor=$('#valor_producto_edit').val();
+            productoCategoria=$('#categoria_producto_edit option:selected').val();
+            productoStock=$('#stock_producto_edit').val();
+
+            stock=0;
+            if($('input[name=editar-stock]').is(':checked')) { 
+              stock=1;
+              console.log("entro");
+            }
+
+                    $.post("controller/Producto.php", 
+                            {metodo: "update",
+                           id_producto:  productoId,
+                           nombre:  productoNombre,
+                           descripcion:  productoDescripcion,
+                           valor:  productoValor,
+                           categoria:  productoCategoria,
+                           Stock:stock},
+                           function(respuesta){
+                            $('#ModalEdiarProducto').modal('hide');
+                            if (respuesta=="Exito") {
+                              mostrarLista();
+                              $('#resultado').html("el producto fue editado!");
+                              $('#resultado').attr("class","alert alert-success");
+                              $('#resultado').show("slow").delay(4000).hide("slow");
+                            }
+                            else{
+                              $('#resultado').html(respuesta);
+                              $('#resultado').attr("class","alert alert-danger");
+                              $('#resultado').show("slow").delay(4000).hide("slow");
+                            }
+                            
+                          }
+                    );  
+           }
+                  event.preventDefault(); 
+       }
+  </script> 
   <!--[if lt IE 9]>
   <script src="../assets/js/ie8-responsive-file-warning.js"></script>
   <![endif]-->
@@ -165,7 +393,9 @@
 
                 </div>
               </div>
-
+              <div class="row">
+                <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+              </div>
            <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
@@ -175,38 +405,33 @@
                 </div>
                 <div class="x_content">
 
-                  <form class="form-horizontal form-label-left" novalidate>
-
+                  <form  id="create" data-toggle="validator" class="form-horizontal form-label-left" novalidate>
                     <p>Formulario de ingreso de productos</p>
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre del producto" required="required" type="text">
+                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="crear-nombre" placeholder="ingrese nombre del producto" required="required" type="text">
                       </div>
                     </div>
                     <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Descripción </span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Descripción <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <textarea class="form-control" rows="3" placeholder='descripcion del producto'></textarea>
+                        <textarea class="form-control" rows="3" id="crear-descripcion" placeholder='descripcion del producto' required="required"></textarea>
                       </div>
                     </div>
                     <div class="item form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" >Valor <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="number" id="number" name="number" required="required" class="form-control col-md-7 col-xs-12">
+                        <input type="number" id="number" name="crear-valor" required="required" class="form-control col-md-7 col-xs-12">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Categoria </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <select class="form-control" required>
-                          <option value="">Categoria 1</option>
-                          <option value="press">Categoria 2</option>
-                          <option value="net">Categoria 3</option>
-                          <option value="mouth">Categoria 4</option>
+                      <div class="col-md-6 col-sm-6 col-xs-12" >
+                        <select class="form-control categorias" id="categorias" name="categorias" required="required">                          
                         </select>
                       </div>
                     </div>
@@ -214,14 +439,14 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Hacer control de Stock </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                           <label>
-                            <input type="checkbox" class="flat" checked="checked">
+                            <input type="checkbox" class="flat" checked="checked" value="1" name="crear-stock">
                           </label>                          
                       </div>
                     </div>
                     <div class="ln_solid"></div>
                     <div class="form-group">
                       <div class="col-md-6 col-md-offset-3">
-                        <button id="send" type="submit" class="btn btn-success">Guardar</button>
+                        <button id="crear_producto" type="submit" class="btn btn-success disabled" >Guardar</button> 
                       </div>
                     </div>
                   </form>
@@ -239,7 +464,7 @@
                 </div>
                 <div class="x_content">
                         
-                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                        <table id="datatable-buttons" class="table table-striped">
                           <thead>
                             <tr>
                               <th>Id</th>
@@ -251,25 +476,7 @@
                               <th>Accion</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            <tr>
-                              <td>125</td>
-                              <td>Producto</td>
-                              <td>5000</td>
-                              <td>Categoria</td>
-                              <td><button type="button" class="btn btn-success btn-xs">activo</button></td>
-                              <td>si</td>
-                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalProducto"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
-                            </tr>
-                            <tr>
-                              <td>125</td>
-                              <td>Producto</td>
-                              <td>5000</td>
-                              <td>Categoria</td>
-                              <td><button type="button" class="btn btn-success btn-xs">activo</button></td>
-                              <td>si</td>
-                              <td align="center"><h4>  <a class="fa fa-ban"></a>        <a class="fa fa-edit" data-toggle="modal" data-target="#ModalProducto"></a>      <a class="fa fa-remove" data-toggle="modal" data-target="#ModalConfirmar"></a></h4></td>
-                            </tr>
+                          <tbody id="tabla">                           
                           </tbody>
                         </table>
                       </div>
@@ -281,9 +488,9 @@
           </div>
 
           <!-- /modal editar producto -->
-          <div class="modal fade bs-example-modal-lg" id="ModalProducto" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal fade bs-example-modal-lg" id="ModalEdiarProducto" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-lg">
-                <div class="modal-content" align="center">
+                <div class="modal-content" >
 
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
@@ -291,81 +498,74 @@
                     <h4 class="modal-title" id="myModalLabel2">Editar Producto</h4>
                   </div>
                 <div class="modal-body">
-                      <form class="form-horizontal form-label-left" novalidate>
-
-                    <p>Formulario de ingreso de productos</p>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre del producto" required="required" type="text">
-                      </div>
-                    </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Descripción </span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <textarea class="form-control" rows="3" placeholder='descripcion del producto'></textarea>
-                      </div>
-                    </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12" >Valor <span class="required">*</span>
-                      </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input type="number" id="number" name="number" required="required" class="form-control col-md-7 col-xs-12">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Categoria </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                        <select class="form-control" required>
-                          <option value="">Categoria 1</option>
-                          <option value="press">Categoria 2</option>
-                          <option value="net">Categoria 3</option>
-                          <option value="mouth">Categoria 4</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Hacer control de Stock </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12">
-                          <label>
-                            <input type="checkbox" class="flat" checked="checked">
-                          </label>                          
-                      </div>
-                    </div>
-                    <div class="ln_solid"></div>
-                    <div class="form-group">
-                      <div class="col-md-6 col-md-offset-3">
-                        <button id="send" type="submit" class="btn btn-success">Guardar</button>
-                      </div>
-                    </div>
+                      <form  data-toggle="validator" class="form-horizontal form-label-left" novalidate>
+                        <p>Formulario para editar productos</p>
+                        <input type="text" id ="id_producto_edit" value="" style="display:none">
+                        <input type="text"  value="" style="display:none">
+                        <div class="item form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="nombre_producto_edit" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre del producto" required="required" type="text">
+                          </div>
+                        </div>
+                        <div class="item form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Descripción </span>
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea id="descripcion_producto_edit" class="form-control" rows="3" placeholder='descripcion del producto' required="required"></textarea>
+                          </div>
+                        </div>
+                        <div class="item form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12" >Valor <span class="required">*</span>
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="number" id="valor_producto_edit" name="number" required="required" class="form-control col-md-7 col-xs-12">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Categoria </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="categoria_producto_edit" class="form-control categorias" required="required">                         
+                            </select>
+                          </div>
+                        </div>
+                        <div class="item form-group">
+                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Hacer control de Stock </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                              <label>
+                                <input id="stock_producto_edit" type="checkbox" class="flat" name="editar-stock" value="1" checked="checked">
+                              </label>                          
+                          </div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                          <button id="editar_producto" type="submit" class="btn btn-success disabled" onclick="confirmarEditar()">Confirmar</button>
+                        </div>
                   </form>  
-                </div>
-                  <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success">Confirmar</button>
-                  </div>
+                </div>                  
                 </div>
               </div>
             </div>
             <!-- /modal editar producto  -->
 
-            <!-- /modal confirmar eliminar producto -->
+           <!-- /modal confirmar eliminar producto -->
           <div class="modal fade bs-example-modal-sm" id="ModalConfirmar" tabindex="-1" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-sm">
                 <div class="modal-content" align="center">
                 <div class="modal-body">
-                  <h4>¿Esta seguro de eliminar este Producto?</h4>
+                  <h4>¿Esta seguro de eliminar este producto?</h4>
                 </div>
+                <input type="text" id ="id_producto_remove" value="" style="display:none">
                   <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success">Confirmar</button>
+                        <button id="confirmar" type="button" class="btn btn-success" onclick="confirmarEliminar()">Confirmar</button>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- /modal confirmar eliminar producto-->
+            <!-- /modal confirmar eliminar mesa-->
 
         </div>
         <br />       
@@ -438,105 +638,29 @@
         <script src="js/datatables/responsive.bootstrap.min.js"></script>
         <script src="js/datatables/dataTables.scroller.min.js"></script>
 
-   <!-- pace -->
+  <script src="js/validator.min.js"></script>
+
+        <!-- pace -->
         <script src="js/pace/pace.min.js"></script>
+        
         <script>
-          var handleDataTableButtons = function() {
-              "use strict";
-              0 !== $("#datatable-buttons").length && $("#datatable-buttons").DataTable({
-                dom: "Bfrtip",
-                buttons: [{
-                  extend: "copy",
-                  className: "btn-sm"
-                }, {
-                  extend: "csv",
-                  className: "btn-sm"
-                }, {
-                  extend: "excel",
-                  className: "btn-sm"
-                }, {
-                  extend: "pdf",
-                  className: "btn-sm"
-                }, {
-                  extend: "print",
-                  className: "btn-sm"
-                }],
-                responsive: !0
-              })
-            },
-            TableManageButtons = function() {
-              "use strict";
-              return {
-                init: function() {
-                  handleDataTableButtons()
-                }
-              }
-            }();
-        </script>
-        <script type="text/javascript">
-          $(document).ready(function() {
-            $('#datatable').dataTable();
-            $('#datatable-keytable').DataTable({
-              keys: true
-            });
-            $('#datatable-responsive').DataTable();
-            $('#datatable-scroller').DataTable({
-              ajax: "js/datatables/json/scroller-demo.json",
-              deferRender: true,
-              scrollY: 380,
-              scrollCollapse: true,
-              scroller: true
-            });
-            var table = $('#datatable-fixed-header').DataTable({
-              fixedHeader: true
-            });
-          });
-          TableManageButtons.init();
-        </script>
-  <script src="js/pace/pace.min.js"></script>
-  <script src="js/validator/validator.js"></script>
-  <script>
-    // initialize the validator function
-    validator.message['date'] = 'not a real date';
-
-    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
-    $('form')
-      .on('blur', 'input[required], input.optional, select.required', validator.checkField)
-      .on('change', 'select.required', validator.checkField)
-      .on('keypress', 'input[required][pattern]', validator.keypress);
-
-    $('.multi.required')
-      .on('keyup blur', 'input', function() {
-        validator.checkField.apply($(this).siblings().last()[0]);
-      });
-
-    // bind the validation to the form submit event
-    //$('#send').click('submit');//.prop('disabled', true);
-
-    $('form').submit(function(e) {
-      e.preventDefault();
-      var submit = true;
-      // evaluate the form using generic validaing
-      if (!validator.checkAll($(this))) {
-        submit = false;
-      }
-
-      if (submit)
-        this.submit();
-      return false;
-    });
-
-    /* FOR DEMO ONLY */
-    $('#vfields').change(function() {
-      $('form').toggleClass('mode2');
-    }).prop('checked', false);
-
-    $('#alerts').change(function() {
-      validator.defaults.alerts = (this.checked) ? false : true;
-      if (this.checked)
-        $('form .alert').remove();
-    }).prop('checked', false);
-  </script>
+          var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+            showLeftPush = document.getElementById( 'showLeftPush' ),
+            body = document.body;
+            
+          showLeftPush.onclick = function() {
+            classie.toggle( this, 'active' );
+            classie.toggle( body, 'cbp-spmenu-push-toright' );
+            classie.toggle( menuLeft, 'cbp-spmenu-open' );
+            disableOther( 'showLeftPush' );
+          };
+          
+          function disableOther( button ) {
+            if( button !== 'showLeftPush' ) {
+              classie.toggle( showLeftPush, 'disabled' );
+            }
+        }
+        </script> 
  
 </body>
 
