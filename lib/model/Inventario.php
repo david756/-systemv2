@@ -22,7 +22,12 @@ class Inventario {
     //Nombre de la inventario
     private $descripcion;
     //Nombre de la inventario
-    private $accion; 
+    private $accion;
+    //fecha inicio de la consulta del inventario
+    private $fechaInicio;
+    //fecha final de la consulta del inventario
+    private $fechaFin;
+    
     
    /**
     * Metodo constructor de la clase Inventario 
@@ -69,6 +74,53 @@ class Inventario {
                 $result['costo'], $result['descripcion'], $result['fk_accion']);
         return $resultado;
     }
+    
+    
+    /**
+     * Metodo devuelve un array con la lista de inventarios en formato
+     * especifico.
+     * fecha,usuario,cantidad,accion,descripcion,unidad,total,proveedor
+     * @return Array <Inventario>
+     **/  
+    function getListaInventario(){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT i.fecha as fecha,u.usuario as usuario,i.cantidad, "
+                . "ai.descripcion as accion,i.descripcion as descripcion,i.costo as unidad,"
+                . "(i.cantidad*i.costo) as total,i.proveedor as proveedor "
+                . "FROM inventarios i LEFT JOIN usuarios u ON i.fk_empleado=u.id "
+                . "LEFT JOIN accion_inventarios ai on i.fk_accion=ai.id "
+                . "WHERE i.fk_producto=?";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->producto);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();         
+        return $result;
+    }
+    
+    /**
+     * Metodo devuelve un array con la lista de items vendidos en formato
+     * especifico.
+     * fecha,usuario,descripcion,unidad,total
+     * @return Array <Inventario>
+     **/  
+    function getListaItemsVendidos(){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT a.horaPago as fecha,u.usuario as usuario,a.descripcion_estado,"
+                . "i.valor,(i.valor) as total FROM items i left JOIN atenciones a"
+                . " on i.fk_atencion=a.id left JOIN atencion_empleados ae "
+                . "on i.id=ae.fk_item LEFT JOIN usuarios u on ae.fk_usuario=u.id "
+                . "WHERE i.fk_producto=?";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->producto);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();         
+        return $result;
+    }
+    
     /**
      * Metodo devuelve un array con la lista de todas las inventarios
      * @return Array <Inventario>
@@ -279,6 +331,34 @@ class Inventario {
      */
     function setAccion($accion) {
         $this->accion = $accion;
+    }
+    /**
+     * Metodo que obtiene fecha de inicio
+     * @return fechaInicio
+     */
+    function getFechaInicio() {
+        return $this->fechaInicio;
+    }
+    /**
+     * Metodo que obtiene la fecha final
+     * @return fechaFinal
+     */
+    function getFechaFin() {
+        return $this->fechaFin;
+    }
+    /**
+     * Metodo setFechaInicio de la clase Inventario
+     * @param Date $FechaInicio
+     */
+    function setFechaInicio($fechaInicio) {
+        $this->fechaInicio = $fechaInicio;
+    }
+    /**
+     * Metodo setFechaFin de la clase Inventario
+     * @param Date $FechaFIn
+     */
+    function setFechaFin($fechaFin) {
+        $this->fechaFin = $fechaFin;
     }
 
 }

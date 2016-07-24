@@ -32,8 +32,29 @@
   <link href="js/datatables/responsive.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
 
-
   <script src="js/jquery.min.js"></script>
+
+
+   <script>
+            $(document).ready(function() {      
+              mostrarLista();              
+            });
+  </script>
+
+   <script type="text/javascript">
+      function mostrarLista(){         
+                  $.post("controller/Inventario.php", 
+                  {metodo: "listaInventario",
+                  id:39,
+                  fecha1:1,
+                  fecha2:2}
+                  ,function(tabla){
+                    $('#tabla').html(tabla);
+                    $('#datatable').dataTable(); 
+                  }
+                  );
+      }
+  </script>
 
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -126,7 +147,7 @@
                                 <b>Costo promedio:</b> $9.500
                                 <br><br>
                               </div>
-                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                        <table id="datatable" class="table table-striped table-bordered">
                           <thead>
                             <tr>
                               <th>Fecha</th>
@@ -134,38 +155,13 @@
                               <th>Cantidad</th>
                               <th>Accion</th>
                               <th>Descripcion</th>
-                              <th>Costo</th>
+                              <th>Unidad</th>
+                              <th>Total</th>
                               <th>Proveedor</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            <tr>
-                              <td>23/marzo/2016 12:02 pm</td>
-                              <td>Juan</td>
-                              <td>12</td>
-                              <td><button type="button" class="btn btn-success btn-xs">ingresado</button></td>
-                              <td>productos ingresados normalmente al inventario</td>
-                              <td>$12.500</td>
-                              <td>Babaria</td>
-                            </tr>
-                            <tr>
-                              <td>25/junio/2016 10:02 pm</td>
-                              <td>pedro</td>
-                              <td>10</td>
-                              <td><button type="button" class="btn btn-info btn-xs">Vendido</button></td>
-                              <td>productos sacados del inventario</td>
-                              <td>$10.500</td>
-                              <td>Colombina</td>
-                            </tr> 
-                            <tr>
-                              <td>25/junio/2016 10:02 pm</td>
-                              <td>pedro</td>
-                              <td>10</td>
-                              <td><button type="button" class="btn btn-danger btn-xs">eliminado</button></td>
-                              <td>productos sacados del inventario</td>
-                              <td>$10.500</td>
-                              <td>Colombina</td>
-                            </tr>                           
+                          <tbody id="tabla">
+                                                 
                           </tbody>
                         </table>
                       </div>
@@ -306,140 +302,9 @@
 
         <!-- pace -->
         <script src="js/pace/pace.min.js"></script>
-        <script>
-          var handleDataTableButtons = function() {
-              "use strict";
-              0 !== $("#datatable-buttons").length && $("#datatable-buttons").DataTable({
-                dom: "Bfrtip",
-                buttons: [{
-                  extend: "copy",
-                  className: "btn-sm"
-                }, {
-                  extend: "csv",
-                  className: "btn-sm"
-                }, {
-                  extend: "excel",
-                  className: "btn-sm"
-                }, {
-                  extend: "pdf",
-                  className: "btn-sm"
-                }, {
-                  extend: "print",
-                  className: "btn-sm"
-                }],
-                responsive: !0
-              })
-            },
-            TableManageButtons = function() {
-              "use strict";
-              return {
-                init: function() {
-                  handleDataTableButtons()
-                }
-              }
-            }();
-        </script>
-        <script type="text/javascript">
-          $(document).ready(function() {
-            $('#datatable').dataTable();
-            $('#datatable-keytable').DataTable({
-              keys: true
-            });
-            $('#datatable-responsive').DataTable();
-            $('#datatable-scroller').DataTable({
-              ajax: "js/datatables/json/scroller-demo.json",
-              deferRender: true,
-              scrollY: 380,
-              scrollCollapse: true,
-              scroller: true
-            });
-            var table = $('#datatable-fixed-header').DataTable({
-              fixedHeader: true
-            });
-          });
-          TableManageButtons.init();
-        </script>
 
-         <!-- datepicker -->
-  <script type="text/javascript">
-    $(document).ready(function() {
 
-      var cb = function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange_right span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        //alert("Callback has fired: [" + start.format('MMMM D, YYYY') + " to " + end.format('MMMM D, YYYY') + ", label = " + label + "]");
-      }
 
-      var optionSet1 = {
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: {
-          days: 60
-        },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        buttonClasses: ['btn btn-default'],
-        applyClass: 'btn-small btn-primary',
-        cancelClass: 'btn-small',
-        format: 'MM/DD/YYYY',
-        separator: ' to ',
-        locale: {
-          applyLabel: 'Submit',
-          cancelLabel: 'Clear',
-          fromLabel: 'From',
-          toLabel: 'To',
-          customRangeLabel: 'Custom',
-          daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-          monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-          firstDay: 1
-        }
-      };
-
-      $('#reportrange_right span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-      $('#reportrange_right').daterangepicker(optionSet1, cb);
-
-      $('#reportrange_right').on('show.daterangepicker', function() {
-        console.log("show event fired");
-      });
-      $('#reportrange_right').on('hide.daterangepicker', function() {
-        console.log("hide event fired");
-      });
-      $('#reportrange_right').on('apply.daterangepicker', function(ev, picker) {
-        console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
-      });
-      $('#reportrange_right').on('cancel.daterangepicker', function(ev, picker) {
-        console.log("cancel event fired");
-      });
-
-      $('#options1').click(function() {
-        $('#reportrange_right').data('daterangepicker').setOptions(optionSet1, cb);
-      });
-
-      $('#options2').click(function() {
-        $('#reportrange_right').data('daterangepicker').setOptions(optionSet2, cb);
-      });
-
-      $('#destroy').click(function() {
-        $('#reportrange_right').data('daterangepicker').remove();
-      });
-
-    });
-  </script>
   <!-- datepicker -->
   <script type="text/javascript">
     $(document).ready(function() {
