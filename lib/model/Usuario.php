@@ -78,7 +78,7 @@ class Usuario {
     function getUsuarioClave() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select * from usuarios where usuario=? and clave=?";
+        $query = "select * from usuarios where usuario=? and clave=? and fk_estado=1";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->usuario);
         $stmt->bindParam(2, $this->clave);

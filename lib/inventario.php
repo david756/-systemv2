@@ -132,14 +132,19 @@
       }
       function datosInventario(){         
        var producto=$("#productoBuscar option:selected").val();
-        if (!(producto === undefined || producto === null || producto == "")) {          
+        if (!(producto === undefined || producto === null || producto == "")) {         
             $.ajax({
                    type   : 'POST',
                    url    : 'controller/Inventario.php',
-                   data  : {metodo: "datosInventario",producto: producto},
+                   data  : {metodo: "datosInventario"
+                          ,producto: producto},
                    dataType : 'json',
                    success  : function(data){
+                      $('#productoNombre').html(data.productoNombre);
                       $('#disponibles').html(data.disponibles);
+                      $('#cantidad_ingresados').html(data.cantidad_ingresados);
+                      $('#cantidad_vendidos').html(data.cantidad_vendidos);
+                      $('#cantidad_eliminados').html(data.cantidad_eliminados);
                       $('#valorPromedio').html(data.valorPromedio);
                       $('#costoPromedio').html(data.costoPromedio); 
                   },
@@ -237,18 +242,24 @@
              <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>Producto <small>Inventario</small></h2>
+                  <h2><sp id="productoNombre">Producto</sp><small>Inventario</small></h2>
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
 
                         <div class="col-sm-12 invoice-col">
-                                <b>Unidades disponibles: <span id="disponibles">0</span></b>
+                                <b>Unidades disponibles:</b> <span id="disponibles">0</span>
                                 <br>
                                 <br>
+                                <b>Total ingresados: </b> <span id="cantidad_ingresados">0</span>
+                                <br>
+                                <b>Total vendidos: </b> <span id="cantidad_vendidos">0</span>
+                                <br>
+                                <b>Total eliminados: </b> <span id="cantidad_eliminados">0</span>
+                                <br><br>
                                 <b>Valor de venta promedio: $</b> <span id="valorPromedio">0</span>
                                 <br>
-                                <b>Costo promedio: </b>$<span id="costoPromedio">0</span>
+                                <b>Costo promedio: $ </b><span id="costoPromedio">0</span>
                                 <br><br>
                               </div>
                         <table id="datatable" class="table table-striped table-bordered">
@@ -259,7 +270,7 @@
                               <th>Cantidad</th>
                               <th>Accion</th>
                               <th>Descripcion</th>
-                              <th>Unidad</th>
+                              <th>V.Unidad</th>
                               <th>Total</th>
                               <th>Proveedor</th>
                             </tr>

@@ -102,7 +102,7 @@ class Inventario {
     }
     
     /**
-     * Metodo devuelve un array con la lista de items vendidos en formato
+     * Metodo devuelve la lista de items vendidos en formato
      * especifico.
      * fecha,usuario,descripcion,unidad,total
      * @return Array <Inventario>
@@ -114,7 +114,7 @@ class Inventario {
                 . "i.valor,(i.valor) as total FROM items i left JOIN atenciones a"
                 . " on i.fk_atencion=a.id left JOIN atencion_empleados ae "
                 . "on i.id=ae.fk_item LEFT JOIN usuarios u on ae.fk_usuario=u.id "
-                . "WHERE i.fk_producto=?"
+                . "WHERE i.fk_producto=? and a.fk_estado <>1 "
                 . "and a.horaPago BETWEEN ? AND ?";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->producto);
@@ -214,15 +214,60 @@ class Inventario {
      * @return type resultado
      */
     function getDisponibles(){
-        return 5;
+        try {
+            require_once "database.php";
+            $pdo = Database::connect();
+            $query = "SELECT p.nombre as producto, sum(i.cantidad) as cantidad_ingresados , "
+                    . "(SELECT count(ap.fk_producto) as cantidad_Vendidos from items as ap "
+                    . "WHERE ap.fk_producto=i.fk_producto GROUP BY ap.fk_producto) as "
+                    . "cantidad_vendidos , (SELECT sum(i2.cantidad) as cantidad_eliminados"
+                    . " from inventarios as i2 WHERE i2.fk_accion=2 and i2.fk_producto=i.fk_producto"
+                    . " GROUP BY i2.fk_producto) as cantidad_eliminados from inventarios as i "
+                    . "inner join productos as p on p.id=i.fk_producto WHERE i.fk_accion=1 "
+                    . "and i.fk_producto=? GROUP BY i.fk_producto";
+            
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(1, $this->producto->getIdProducto());
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            Database::disconnect();
+            $cantidad_ingresados=$result['cantidad_ingresados'];
+            $cantidad_vendidos=$result['cantidad_vendidos'];
+            $cantidad_eliminados=$result['cantidad_eliminados'];            
+            $disponibles=$cantidad_ingresados-$cantidad_vendidos-$cantidad_eliminados;
+            $data = array();
+            $data['cantidad_ingresados'] =$cantidad_ingresados;
+            $data['cantidad_vendidos'] = $cantidad_vendidos;
+            $data['cantidad_eliminados'] = $cantidad_eliminados;
+            $data['disponibles'] = $disponibles;            
+            return $data;
+        } catch (Exception $e) {
+            return "*1* error al obtener unidades disponibles de inventario ";
+        }
     }
     /**
-     * retorna el valor promedio de determinado producto
+     * retorna el valor promedio de venta de  determinado producto
      * en el inventario
      * @return type resultado
      */
     function getValorPromedio(){
-         return 2500;
+         try {
+            require_once "database.php";
+            $pdo = Database::connect();
+            $query = "SELECT AVG (items.valor) as promedio from items INNER JOIN "
+                    . "atenciones on items.fk_atencion=atenciones.id"
+                    . " WHERE fk_producto=? and atenciones.fk_estado<>1";
+            
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(1, $this->producto->getIdProducto());
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            Database::disconnect();
+            $promedio=0+$result['promedio'];
+            return $promedio;
+        } catch (Exception $e) {
+            return "*1* error al obtener unidades disponibles de inventario ";
+        }
     }
     /**
      * retorna el costo promedio de compra de determinado producto
@@ -230,7 +275,22 @@ class Inventario {
      * @return type resultado
      */
     function getCostoPromedio(){
-         return 7000;
+         try {
+            require_once "database.php";
+            $pdo = Database::connect();
+            $query = "SELECT AVG(costo) as promedio FROM inventarios"
+                    . " WHERE fk_accion = 1 and fk_producto=?";
+            
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(1, $this->producto->getIdProducto());
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            Database::disconnect();
+            $promedio=0+$result['promedio'];
+            return $promedio;
+        } catch (Exception $e) {
+            return "*1* error al obtener promedio de costo de inventario ";
+        }
     }
     
     /**

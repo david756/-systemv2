@@ -35,8 +35,8 @@ switch ($metodo) {
         productos();
         break;
     case "datosInventario":
+        verificarUser();
         datosInventario();
-        productos();
         break;
     
     
@@ -98,7 +98,13 @@ function listaInventario(){
     $inventarioConsulta->setFechaFin($fecha2);
     $consulta=$inventarioConsulta->getListaInventario(); 
          
-    foreach ($consulta as $inventario) {
+    $meses = array("Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic");
+    
+    foreach ($consulta as $inventario) {        
+        $f = date_create($inventario['fecha']);        
+        $fecha= date_format($f,'d')." de ".$meses[date_format($f,'n')-1].
+                " del ".date_format($f,'Y'). " - ". date_format($f,'g:i a');
+
         if ($inventario['accion']=="Agregar"){
             $claseEstado="success";
             $accion="agregado";
@@ -108,7 +114,7 @@ function listaInventario(){
             $accion="eliminado";
         }
         echo '<tr>
-                <td>'.$inventario['fecha'].'</td>
+                <td>'.$fecha.'</td>
                 <td>'.$inventario['usuario'].'</td>
                 <td>'.$inventario['cantidad'].'</td>
                 <td><button type="button" class="btn btn-'.$claseEstado.' btn-xs">'.$accion.'</button></td>
@@ -121,13 +127,17 @@ function listaInventario(){
     
     $consulta=$inventarioConsulta->getListaItemsVendidos();     
     foreach ($consulta as $inventario) {
+        $f = date_create($inventario['fecha']);        
+        $fecha= date_format($f,'d')." de ".$meses[date_format($f,'n')-1].
+                " del ".date_format($f,'Y'). " - ". date_format($f,'g:i a');
+        
         echo '<tr>
-                <td>'.$inventario['fecha'].'</td>
+                <td>'.$fecha.'</td>
                 <td>'.$inventario['usuario'].'</td>
                 <td>1</td>
                 <td><button type="button" class="btn btn-info btn-xs">Vendido</button></td>
-                <td>'.$inventario['descripcion'].'</td>
-                <td>'.$inventario['unidad'].'</td>
+                <td>'.$inventario['descripcion_estado'].'</td>
+                <td>'.$inventario['total'].'</td>
                 <td>'.$inventario['total'].'</td>
                 <td></td>
               </tr>';
@@ -141,9 +151,15 @@ function listaInventario(){
         $producto= new Producto($producto);
         $producto=$producto->getProducto();        
         $inventario->setProducto($producto);
-        $data['disponibles'] = $inventario->getDisponibles();
+        
+        $data['disponibles'] = $inventario->getDisponibles()['disponibles'];
+        $data['cantidad_ingresados'] =0+ $inventario->getDisponibles()['cantidad_ingresados'];
+        $data['cantidad_vendidos'] = 0+$inventario->getDisponibles()['cantidad_vendidos'];
+        $data['cantidad_eliminados'] = 0+$inventario->getDisponibles()['cantidad_eliminados'];
+        
         $data['valorPromedio'] = $inventario->getValorPromedio();
         $data['costoPromedio'] = $inventario->getCostoPromedio();
+        $data['productoNombre'] = $producto->getNombre();
         
         echo json_encode($data);
     }
