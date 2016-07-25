@@ -638,7 +638,7 @@
         <script src="js/datatables/responsive.bootstrap.min.js"></script>
         <script src="js/datatables/dataTables.scroller.min.js"></script>
 
-  <script src="js/validator.min.js"></script>
+        <script src="js/validator.min.js"></script>
 
         <!-- pace -->
         <script src="js/pace/pace.min.js"></script>

@@ -4,6 +4,7 @@
  * a la base de datos
  */
 include "../model/Inventario.php";
+include "../model/Producto.php";
 include "../model/Usuario.php";
 /**
  * recibe por POST el metodo segun
@@ -29,6 +30,17 @@ switch ($metodo) {
         verificarUser();
         listaInventario();
         break;
+    case "productos":
+        verificarUser();
+        productos();
+        break;
+    case "datosInventario":
+        datosInventario();
+        productos();
+        break;
+    
+    
+    
     default:
         die ('302:Error, no se encontro dirección');
 }
@@ -40,13 +52,16 @@ switch ($metodo) {
  */
 function crear(){
 $producto = $_POST["producto"];
-$usuario = $_POST["usuario"];
-$fecha = $_POST["fecha"];
+$fecha= date('Y-m-d H:i:s');
 $cantidad = $_POST["cantidad"];
 $proveedor = $_POST["proveedor"];
 $valor = $_POST["valor"];
 $descripcion= $_POST["descripcion"];
 $accion= $_POST["accion"];
+$usuario = new Usuario();
+$usuario= $usuario->getSesion();
+$producto= new Producto($producto);
+$producto=$producto->getProducto();
 
 
 $inventario = new Inventario(null,$producto,$usuario,$fecha,$cantidad,$proveedor,$valor,$descripcion);
@@ -57,7 +72,7 @@ else{
     $respuesta=$inventario->bajarInventario();
 }
 if (is_object($respuesta)) {
-    echo "exito";
+    echo "Exito";
 } else {
     echo "$respuesta";
 }
@@ -71,12 +86,18 @@ function listaInventario(){
     
     $id = $_POST["id"];
     $fecha1=$_POST["fecha1"];
-    $fecha2=$_POST["fecha2"];    
+    $fecha2=$_POST["fecha2"];        
+    $fecha1 = strtotime($fecha1);
+    $fecha1 = date('Y-m-d',$fecha1);    
+    $fecha2 = strtotime("$fecha2 + 1 days");
+    $fecha2 = date('Y-m-d',$fecha2);
+    
     $inventarioConsulta= new Inventario();
     $inventarioConsulta->setProducto($id);
     $inventarioConsulta->setFechaInicio($fecha1);
     $inventarioConsulta->setFechaFin($fecha2);
-    $consulta=$inventarioConsulta->getListaInventario();     
+    $consulta=$inventarioConsulta->getListaInventario(); 
+         
     foreach ($consulta as $inventario) {
         if ($inventario['accion']=="Agregar"){
             $claseEstado="success";
@@ -97,7 +118,7 @@ function listaInventario(){
                 <td>'.$inventario['proveedor'].'</td>
               </tr>';
         } 
-        
+    
     $consulta=$inventarioConsulta->getListaItemsVendidos();     
     foreach ($consulta as $inventario) {
         echo '<tr>
@@ -111,8 +132,20 @@ function listaInventario(){
                 <td></td>
               </tr>';
         } 
+    }
+    
+    function datosInventario(){
+        $data = array();
+        $producto = $_POST["producto"];
+        $inventario = new Inventario();     
+        $producto= new Producto($producto);
+        $producto=$producto->getProducto();        
+        $inventario->setProducto($producto);
+        $data['disponibles'] = $inventario->getDisponibles();
+        $data['valorPromedio'] = $inventario->getValorPromedio();
+        $data['costoPromedio'] = $inventario->getCostoPromedio();
         
-        
+        echo json_encode($data);
     }
     
     /**
@@ -127,6 +160,17 @@ function listaInventario(){
             die ('Por favor inicie sesion para continuar');
         }
     }
-    
+     /**
+    * retorna la lista de todos los productos en inventario
+    * para mostrarlo en el select y ver el inventario
+    */
+    function productos(){
+        $productoConsulta= new Producto();
+        $consulta=$productoConsulta->getProductosInventario();  
+        echo '<option value="">Seleccione un producto</option>';
+        foreach ($consulta as $producto) {        
+        echo '<option value="'.$producto["id"].'">'.$producto["nombre"].'</option>';
+        } 
+    }
   
 ?>

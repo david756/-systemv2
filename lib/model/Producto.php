@@ -73,6 +73,19 @@ class Producto {
         Database::disconnect();
         return $result;
     }
+    
+    /**
+     * Metodo devuelve un array con la lista de todas los productos
+     * @return Array <Producto>
+     */
+    function getProductosInventario() {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT * FROM productos WHERE control_stock=1";
+        $result = $pdo->query($query);
+        Database::disconnect();
+        return $result;
+    }
 
     /**
      * Metodo que verifica si se han hecho atenciones del producto

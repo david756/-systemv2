@@ -85,14 +85,16 @@ class Inventario {
     function getListaInventario(){
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "SELECT i.fecha as fecha,u.usuario as usuario,i.cantidad, "
-                . "ai.descripcion as accion,i.descripcion as descripcion,i.costo as unidad,"
-                . "(i.cantidad*i.costo) as total,i.proveedor as proveedor "
-                . "FROM inventarios i LEFT JOIN usuarios u ON i.fk_empleado=u.id "
-                . "LEFT JOIN accion_inventarios ai on i.fk_accion=ai.id "
-                . "WHERE i.fk_producto=?";
+        $query = "SELECT i.fecha as fecha,u.usuario as usuario,i.cantidad,"
+                . " ai.descripcion as accion,i.descripcion as descripcion,i.costo as unidad,"
+                . "(i.cantidad*i.costo) as total,i.proveedor as proveedor FROM inventarios i "
+                . "LEFT JOIN usuarios u ON i.fk_empleado=u.id LEFT JOIN accion_inventarios ai "
+                . "on i.fk_accion=ai.id WHERE i.fk_producto=? "
+                . "and i.fecha BETWEEN ? AND ?";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->producto);
+        $stmt->bindParam(2, $this->getFechaInicio());
+        $stmt->bindParam(3, $this->getFechaFin());
         $stmt->execute();
         $result = $stmt->fetchAll();
         Database::disconnect();         
@@ -112,9 +114,12 @@ class Inventario {
                 . "i.valor,(i.valor) as total FROM items i left JOIN atenciones a"
                 . " on i.fk_atencion=a.id left JOIN atencion_empleados ae "
                 . "on i.id=ae.fk_item LEFT JOIN usuarios u on ae.fk_usuario=u.id "
-                . "WHERE i.fk_producto=?";
+                . "WHERE i.fk_producto=?"
+                . "and a.horaPago BETWEEN ? AND ?";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->producto);
+        $stmt->bindParam(2, $this->getFechaInicio());
+        $stmt->bindParam(3, $this->getFechaFin());
         $stmt->execute();
         $result = $stmt->fetchAll();
         Database::disconnect();         
@@ -203,8 +208,32 @@ class Inventario {
             echo "*2* Error al tratar de eliminar Inventario:  " . $e->getMessage();
         }
     }
-        
-/**
+    /**
+     * Retorna las unidades disponibles de este producto
+     * en el inventario
+     * @return type resultado
+     */
+    function getDisponibles(){
+        return 5;
+    }
+    /**
+     * retorna el valor promedio de determinado producto
+     * en el inventario
+     * @return type resultado
+     */
+    function getValorPromedio(){
+         return 2500;
+    }
+    /**
+     * retorna el costo promedio de compra de determinado producto
+     * en el inventario
+     * @return type resultado
+     */
+    function getCostoPromedio(){
+         return 7000;
+    }
+    
+    /**
      * Metodo que obtiene el id de una inventario
      * @return idInventario
      */
