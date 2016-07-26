@@ -344,23 +344,21 @@
                         <div class="col-md-4">
                         <button type="button" class="btn btn-info btn-sm">Guardar</button>
                         <button type="button" class="btn btn-default btn-sm">Cancelar</button><hr>
-                          <table class="table table-bordered">
+                          <table  class="table datatable">
                                     <thead>
                                       <tr>
-                                        <th>Cantindad</th>
-                                        <th>Producto</th>
-                                        <th>Anexo</th>
-                                        <th>valor</th>
-                                        <th>Total</th>
-                                        <th>Accion</th>
+                                        <th width=15% >Cant</th>
+                                        <th width=30% >Producto</th>
+                                        <th width=5% ></th>
+                                        <th width=20% >Total</th>
+                                        <th width=20% >Accion</th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                       <tr>
                                         <th scope="row">1</th>
                                         <td>Producto</td>
-                                        <td>Anexo</td>
-                                        <td>2500</td>
+                                        <td></td>
                                         <td>2500</td>
                                         <td><button type="button" class="btn btn-default btn-xs">Borrar</button></td>
 
@@ -368,8 +366,7 @@
                                       <tr>
                                         <th scope="row">2</th>
                                         <td>Producto</td>
-                                        <td>Anexo</td>
-                                        <td>2500</td>
+                                        <td >*</td>
                                         <td>2500</td>
                                         <td><button type="button" class="btn btn-default btn-xs">Borrar</button></td>
 
@@ -377,8 +374,7 @@
                                       <tr>
                                         <th scope="row">1</th>
                                         <td>Producto</td>
-                                        <td>Anexo</td>
-                                        <td>2500</td>
+                                        <td >*</td>
                                         <td>2500</td>
                                         <td><button type="button" class="btn btn-default btn-xs">Borrar</button></td>
 

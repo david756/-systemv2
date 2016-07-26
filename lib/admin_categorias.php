@@ -183,7 +183,7 @@
         <div class="left_col scroll-view">
 
           <div class="navbar nav_title" style="border: 0;">
-            <a href="index.html" class="site_title"><i class="fa fa-glass"></i> <span>Mantil System</span></a>
+            <a href="menu_principal.php" class="site_title"><i class="fa fa-glass"></i> <span>Mantil System</span></a>
           </div>
           <div class="clearfix"></div>
 
@@ -207,31 +207,31 @@
             <div class="menu_section">
               <h3>Administrador</h3><br>
               <ul class="nav side-menu">
-              <li><a><i class="fa fa-home"></i> Inicio </a></li>
-                <li><a><i class="fa fa-users"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
+              <li ><a href="admin_inicio.php"><i class="fa fa-home"></i> Inicio </a></li>
+               <li><a><i class="fa fa-users"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li><a href="empty.html">Empleados</a></li>                    
-                    <li><a href="empty.html">Administradores</a></li>                    
+                    <li><a href="admin_user_emp.php">Empleados</a></li>                    
+                    <li><a href="admin_user_admin.php">Administradores</a></li>                    
                   </ul>
                 </li>
                 <li><a><i class="fa fa-th-large"></i> Mesas <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li><a href="empty.html">Administrar</a></li>               
+                    <li><a href="admin_mesas.php">Administrar</a></li>               
                   </ul>
                 </li>
-                <li><a><i class="fa fa-folder-o"></i> Categorias <span class="fa fa-chevron-down"></span></a>
+                <li class="active"><a><i class="fa fa-folder-o"></i> Categorias <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                  <li><a href="empty.html">Administrar</a></li>             
+                  <li class="current-page"><a href="admin_categorias.php">Administrar</a></li>             
                   </ul>
                 </li>
                 <li><a><i class="fa fa-beer"></i> Productos <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li><a href="empty.html">Administrar</a></li>            
+                    <li><a href="admin_productos.php">Administrar</a></li>            
                   </ul>
                 </li>
                 <li><a><i class="fa fa-edit"></i> Atenciones <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li><a href="empty.html">Administrar</a></li>                  
+                    <li><a href="admin_atenciones.php">Administrar</a></li>                  
                   </ul>
                 </li>
                 <li><a><i class="fa fa-bar-chart"></i> Presentacion de datos <span class="fa fa-chevron-down"></span></a>

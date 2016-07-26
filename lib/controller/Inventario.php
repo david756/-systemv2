@@ -125,7 +125,8 @@ function listaInventario(){
               </tr>';
         } 
     
-    $consulta=$inventarioConsulta->getListaItemsVendidos();     
+    $consulta=$inventarioConsulta->getListaItemsVendidos(); 
+    print_r($consulta) ;
     foreach ($consulta as $inventario) {
         $f = date_create($inventario['fecha']);        
         $fecha= date_format($f,'d')." de ".$meses[date_format($f,'n')-1].

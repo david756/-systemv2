@@ -110,7 +110,7 @@ class Inventario {
     function getListaItemsVendidos(){
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "SELECT a.horaPago as fecha,u.usuario as usuario,a.descripcion_estado,"
+        $query = "SELECT i.hora_pedido as fecha,u.usuario as usuario,a.descripcion_estado,"
                 . "i.valor,(i.valor) as total FROM items i left JOIN atenciones a"
                 . " on i.fk_atencion=a.id left JOIN atencion_empleados ae "
                 . "on i.id=ae.fk_item LEFT JOIN usuarios u on ae.fk_usuario=u.id "
@@ -219,7 +219,8 @@ class Inventario {
             $pdo = Database::connect();
             $query = "SELECT p.nombre as producto, sum(i.cantidad) as cantidad_ingresados , "
                     . "(SELECT count(ap.fk_producto) as cantidad_Vendidos from items as ap "
-                    . "WHERE ap.fk_producto=i.fk_producto GROUP BY ap.fk_producto) as "
+                    . "inner join atenciones as a on ap.fk_atencion=a.id "
+                    . "WHERE ap.fk_producto=i.fk_producto and a.fk_estado<>1 GROUP BY ap.fk_producto) as "
                     . "cantidad_vendidos , (SELECT sum(i2.cantidad) as cantidad_eliminados"
                     . " from inventarios as i2 WHERE i2.fk_accion=2 and i2.fk_producto=i.fk_producto"
                     . " GROUP BY i2.fk_producto) as cantidad_eliminados from inventarios as i "

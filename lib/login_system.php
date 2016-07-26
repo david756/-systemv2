@@ -55,8 +55,8 @@
                                    if (response=="Exito") {
                                     $('input[name=usuario]').val("");
                                     $('input[name=clave]').val("");
-                                    $('#resultado').html("Inicio exitoso: por favor espere ...");
-                                    $('#resultado').attr("class","alert alert-info");
+                                    $('#resultado').html("Ingreso exitoso: por favor espere ...");
+                                    $('#resultado').attr("class","alert alert-success");
                                     $('#resultado').show("slow").delay(4000).hide("slow");
                                     setTimeout(function(){window.location.href = "menu_principal.php"}, 1200);
 
@@ -104,7 +104,7 @@
             <h1>Formulario de ingreso</h1>
             <div class="row">
                 <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
-              </div>
+            </div>
             <div>
               <input type="text" class="form-control" placeholder="Usuario" name="usuario" required="" />
             </div>

@@ -362,8 +362,8 @@ switch ($metodo) {
             }
             if ($usuario->getPrivilegios()[3]==1) {
             echo '<div class="col-md-3 col-sm-6" align="center">
-                           <h5 >Cocinero</h5>
-                           <a href="cocina.php"><img src="images/comida.png" WIDTH=120 HEIGHT=120
+                           <h5 >Cocina</h5>
+                           <a href="cocina.php"><img src="images/pedido.png" WIDTH=120 HEIGHT=120
                            class="img-responsive" alt="Responsive image"></a><br>
                   </div>';
             }
