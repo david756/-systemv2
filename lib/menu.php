@@ -1,5 +1,6 @@
 <script>
             $(document).ready(function() {
+              notificacionesBarra();              
                 $.ajax({
                    type   : 'POST',
                    url    : 'controller/Usuario.php',
@@ -17,7 +18,6 @@
 <script>
          
         function salidaSegura(){
-          console.log("salidaSegura");
                 var data = {                        
                     'metodo'      : "cerrarSesion"
                 };
@@ -36,10 +36,21 @@
                                 else{
                                    new PNotify({title: 'Oh No!',text: response,type: 'error'});
                                 }                                   
-                        },
+                    },
 
-                });
-              }
+            });
+        }     
+
+       function notificacionesBarra(){         
+                  $.post("controller/Usuario.php", 
+                  {metodo: "notificacionesBarra"}
+                  ,function(tabla){
+                    $('#menu1').html(tabla);
+                    var total= $("#menu1 li").size()-1;
+                    $('#totalNotificaciones').html(total);
+                  }
+                  );
+      }
 
   </script> 
 <!-- top Menu navigation-->
@@ -54,7 +65,7 @@
             <ul class="nav navbar-nav navbar-right">
               <li class="">
                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <img src="images/img.jpg" alt=""><span id="usernameUser1"></span>
+                  <img src="images/userMale.png" alt=""><span id="usernameUser1"></span>
                   <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
@@ -68,31 +79,10 @@
               <li role="presentation" class="dropdown">
                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-bell-o"></i>
-                  <span class="badge bg-green">6</span>
+                  <span class="badge bg-green" id="totalNotificaciones"></span>
                 </a>
                 <ul id="menu1" class="dropdown-menu list-unstyled msg_list animated fadeInDown" role="menu">
-                  <li>
-                    <a>
-                      <span class="image">
-                                        <img src="images/img.jpg" alt="Profile Image" />
-                                    </span>
-                      <span>
-                                        <span>John Smith</span>
-                      <span class="time">3 mins ago</span>
-                      </span>
-                      <span class="message">
-                                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                                    </span>
-                    </a>
-                  </li>                  
-                  <li>
-                    <div class="text-center">
-                      <a>
-                        <strong>Ver todas las alertas</strong>
-                        <i class="fa fa-angle-right"></i>
-                      </a>
-                    </div>
-                  </li>
+                  
                 </ul>
               </li>
 

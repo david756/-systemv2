@@ -81,6 +81,10 @@ switch ($metodo) {
         verificarUser();
         listaUsuario();
         break; 
+    case "notificacionesBarra":
+        verificarUser();
+        notificacionesBarra();
+        break; 
     default:
         die ('302:Error, no se encontro dirección');
     }
@@ -418,7 +422,7 @@ switch ($metodo) {
 
                 print '<li class="media event">
                         <a class="pull-left border-aero profile_thumb">
-                          <i class="fa fa-user green"></i>
+                          <i class="fa fa-user"></i>
                         </a>
                         <div class="message_wrapper">
                           <b>'.$n['usuario'].'</b>
@@ -435,12 +439,53 @@ switch ($metodo) {
        
      }
      
+     /**
+      * lista de usuarios para el select
+      */
      function listaUsuario(){
          $usuario = new Usuario();
          $lista=$usuario->getUsuarios();
          foreach ($lista as $l) { 
             print ' <option value="'.$l['id'].'">'.$l['usuario'].'</option>';
         }
+     }
+     
+     /**
+      * notificaciones barra,muestra las ultimas notificaciones en la barra de menu
+      * en todas las paginas
+      */
+     function notificacionesBarra(){
+         $usuario = new Usuario(); 
+         $usuario= $usuario->getSesion();
+         $lista=$usuario->notificacionesBarra();
+         $meses = array("Enero","Feb","Marzo","Abril","Mayo","Jun","Jul","Ago","Sept","Oct","Nov","Dic");
+         foreach ($lista as $n) { 
+             $f = date_create($n['fecha']);
+             $fecha= date_format($f,'d')." de ".$meses[date_format($f,'n')-1]. 
+                     " del ".date_format($f,'Y'). " - ". date_format($f,'g:i a');
+           echo '<li>
+                    <a>
+                      <span class="image">
+                            <img src="images/userMale.png" alt="Profile Image" />
+                            </span>
+                      <span>
+                            <span>'.$n['usuario'].'</span>
+                            <span class="time">'.$fecha.'</span>
+                      </span>
+                      <span class="message">
+                             '.$n['mensaje'].'
+                      </span>
+                    </a>
+                  </li>';
+        }
+        echo '<li>
+                    <div class="text-center">
+                      <a href="perfil_usuario.php">
+                        <strong>Ver todas las alertas</strong>
+                        <i class="fa fa-angle-right"></i>
+                      </a>
+                    </div>
+                  </li>';
      }
      
     /**

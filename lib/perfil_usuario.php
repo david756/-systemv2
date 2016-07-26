@@ -237,7 +237,7 @@
                                    <div class="row">
                                       <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
                                     </div>
-                                <br><button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#ModalNuevoMsj"><i class="fa fa-bell"></i> Nueva Notificación</button><hr>
+                                <br><button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#ModalNuevoMsj"><i class="fa fa-bell"></i> Nueva Notificación</button><hr>
                                   <!-- start recent activity -->
                                   <ul id="notificaciones" class="messages list-unstyled top_profiles scroll-view">                                                 
                                   </ul>
