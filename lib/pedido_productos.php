@@ -31,14 +31,19 @@
 
   <script src="js/jquery.min.js"></script>
 
-  <style type="text/css">
-    
+  <style type="text/css">    
     .categoria{
       float: left;
       margin: 5px;
       width: 150px;
       height: 155px;
       }
+    .prod {
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #f2f5f7;
+      border-radius: 10px;
+    }
   </style>
 
   <!--[if lt IE 9]>
@@ -107,6 +112,16 @@
                     $(".categoria").hide();
                     $( "div[name="+idCategoria+"]" ).show();
       }
+
+      function modalAnexo(id){
+                  $('#idProductoAnexo').val(id);
+                  $('#modalAnexo').modal('show');
+       }
+       function modalDetalleProducto(nombre,detalle){                 
+                  $('#nombreProducto').html(nombre);
+                  $('#detalleProducto').html(detalle);
+                  $('#modalDetalleProducto').modal('show');
+       }
 
   </script>      
 
@@ -251,39 +266,59 @@
                             </table>
                         </div>
                     </div>
-                    <!-- /modals -->
-                    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+                    <!-- /modals anexo del producto -->
+                    <div id="modalAnexo" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-sm">
                           <div class="modal-content">
-
                             <div class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                               </button>
                               <h4 class="modal-title" id="myModalLabel2">Ingresar Anexo</h4>
                             </div>
+
+                            <div class="modal-body">
                               <form>
-                                <div class="form-group">
-                                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Anexo</label>
-                                  <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="Anexo">
-                                  </div>
-                                </div>
-                                <div class="form-group">
-                                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Cantidad</label>
-                                  <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="number" class="form-control" placeholder="Cantidad">
-                                  </div>
+                                    <input type="text" id ="idProductoAnexo" value="" style="display:none">
+                                      <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Anexo</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                          <textarea class="form-control" rows="2" maxlength="25" placeholder='Anexo de este producto' required="required"></textarea><br>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Cantidad</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                          <input type="number" class="form-control" placeholder="Cantidad"><br>
+                                        </div>
+                                      </div> 
+                                    <div class="clearfix"></div>                            
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-info">Guardar</button>
                                 </div>
                               </form>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-info">Guardar</button>
                             </div>
-
                           </div>
                         </div>
                     </div>
-                    <!-- /modals -->
+                    <!-- /modals anexo producto -->
+
+                    <!-- /modal detalle del producto -->
+                      <div class="modal fade bs-example-modal-sm" id="modalDetalleProducto" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-sm">
+                          <div class="modal-content" align="center">
+                          <div class="modal-body">
+                            <h2 id="nombreProducto"></h2>
+                            <h5 id="detalleProducto"></h5>
+                          </div>                          
+                            <div class="modal-footer">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- /modal detalle de producto-->
+
                 </div>
                 <!-- /x_content End dv -->
               </div>

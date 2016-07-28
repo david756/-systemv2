@@ -131,20 +131,18 @@ switch ($metodo) {
     foreach ($consulta as $producto) {
         echo '<!-- producto-->
                 <div class="categoria" style="display:none" name="'.$producto["id_categoria"].'">
-                    <div class="well" align="center">
-                     <h2>'.$producto["nombre"].'</h2>  
-                     <h5>$ '.$producto["valor"].'</h5>                                  
-                      <div class="btn-group  btn-group-sm">
-                      <button class="btn btn-default" type="button"><i class="fa fa-plus"></i></button>
-                      <button class="btn btn bg-green" type="button"><i class="glyphicon glyphicon-ok"></i></button>
-                      <button class="btn btn-default" type="button"><i class="fa fa-comment"></i></button>
-                    </div>  
+                    <div class="well prod" align="center">
+                    <h5><span class="badge badge-success">$ '.$producto["valor"].'</span></h5>
+                     <h4>'.$producto["nombre"].'</h4>  
+                    <button onclick="modalDetalleProducto(\''.$producto["nombre"].'\',\''.$producto["descripcion"].'\')" type="button" class="btn btn-round btn-success btn-xs"><i class="fa fa-plus"></i></button>
+                  <button onclick="modalAnexo('.$producto["id"].')" type="button" class="btn btn-round btn-info"><i class="fa fa-comment"></i></button>
                   </div>
                 </div>
              <!-- End producto-->';
         }
     }
     /**
+     * 
      * DatosAtencion, obtiene los datos de la atencion actual en la mesa 
      * especificada
      * @Return datos de la atencion 
