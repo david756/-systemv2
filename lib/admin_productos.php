@@ -411,7 +411,7 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="crear-nombre" placeholder="ingrese nombre del producto" required="required" type="text">
+                        <input id="name" class="form-control col-md-7 col-xs-12" maxlength="20" data-validate-length-range="20"  name="crear-nombre" placeholder="ingrese nombre del producto" required="required" type="text">
                       </div>
                     </div>
                     <div class="item form-group">
@@ -506,7 +506,7 @@
                           <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
                           </label>
                           <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input id="nombre_producto_edit" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="name" placeholder="ingrese nombre del producto" required="required" type="text">
+                            <input id="nombre_producto_edit" class="form-control col-md-7 col-xs-12" maxlength="20" data-validate-length-range="20"  name="name" placeholder="ingrese nombre del producto" required="required" type="text">
                           </div>
                         </div>
                         <div class="item form-group">

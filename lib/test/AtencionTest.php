@@ -18,7 +18,7 @@
         
         
        //agregar($atencion);
-       // consultar(991977);
+       //consultar(15);
        //consultarAll();
        //actualizar(991977, "descripcion 2",3000,$cajero,$mesa,$fecha,2);
        //eliminar(991977);

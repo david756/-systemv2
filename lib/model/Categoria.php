@@ -51,6 +51,22 @@ class Categoria {
         Database::disconnect();
         return $result;
     }
+    
+    /**
+     * Metodo devuelve un array con la lista de todas las categorias
+     * y el numero de productos que tiene cada una
+     * @return Array <Categoria>
+     */
+    function getCategoriasProductos() {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "select c.id,c.nombre,COUNT(p.id) as cantidad "
+                . "from categorias c left JOIN productos "
+                . "p on c.id=p.fk_categoria GROUP by c.id";
+        $result = $pdo->query($query);
+        Database::disconnect();
+        return $result;
+    }
 
     /**
      * Metodo que verifica si la categoria tiene productos

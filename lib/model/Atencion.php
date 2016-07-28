@@ -53,7 +53,7 @@ class Atencion {
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         Database::disconnect();
-        $resultado = New Atencion($result['id'], $result['descripcion_estado'], $result['fk_cajero'], $result['fk_mesa']
+        $resultado = New Atencion($result['id'], $result['descripcion_estado'],$result['descuento'], $result['fk_cajero'], $result['fk_mesa']
                 , $result['horaPago'], $result['fk_estado']);
         return $resultado;
     }
@@ -177,6 +177,66 @@ class Atencion {
         } else {
             return "*3* Error al tratar de eliminar Atencion: La atencion tiene productos registrados";
         }
+    }
+    /**
+     * retorna la atencion actual de la mesa, si la mesa no tiene una atencion
+     * en el momento, retorna la atencion vacia.
+     * @return array disponibilidad de la mesa, id de la atencion
+     */
+    function atencionMesa(){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT atenciones.fk_estado as disponibilidad,atenciones.id as"
+                . " idAtencion FROM mesas inner join"
+                . " atenciones on mesas.id = atenciones.fk_mesa WHERE mesas.id=? "
+                . "ORDER BY atenciones.fk_estado ASC LIMIT 1";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->mesa->getIdMesa());
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+        return $result;
+    }
+    
+    /**
+     * retorna el nombre de la mesa,el subtotal,descuento, valor total de la atencion, cajero
+     * horaPago,descripcion de la atencion 
+     * @return total de la atencion
+     */
+    function getDatosAtencion(){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT m.descripcion as mesa,sum(ap.valor) as subtotal,a.fk_cajero as cajero,"
+                . "(a.descuento) as dcto, (sum(ap.valor)-(a.descuento))as total ,"
+                . "horaPago,ea.descripcion FROM items AS ap INNER JOIN atenciones"
+                . " AS a ON (ap.fk_atencion=a.id) INNER JOIN mesas AS m ON (m.id=a.fk_mesa)"
+                . " INNER JOIN estados_atencion as ea on ea.id=a.fk_estado WHERE(a.id=?)";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->idAtencion);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+        return $result;
+    }
+    
+    /**
+     * retorna el nombre de la mesa,el subtotal,descuento, valor total de la atencion, cajero
+     * horaPago,descripcion de la atencion 
+     * @return total de la atencion
+     */
+    function pedidoCompleto(){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "select COUNT(i.fk_producto) cantidad,p.nombre,i.anexos,p.valor subtotal,"
+                . "(COUNT(i.fk_producto)*p.valor) total from atenciones a INNER JOIN"
+                . " items i on a.id=i.fk_atencion INNER JOIN productos p on"
+                . " p.id=i.fk_producto WHERE a.id=? GROUP by i.fk_producto,i.anexos";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->idAtencion);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();
+        return $result;
     }
 
     /**

@@ -1,3 +1,11 @@
+<?php
+        if (isset($_GET['mesa'])) {
+               $idMesa=$_GET['mesa'];
+        }else{
+            $idMesa="N/A";
+        }
+
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,8 +29,17 @@
   <link href="css/custom.css" rel="stylesheet">
   <link href="css/icheck/flat/green.css" rel="stylesheet">
 
-
   <script src="js/jquery.min.js"></script>
+
+  <style type="text/css">
+    
+    .categoria{
+      float: left;
+      margin: 5px;
+      width: 150px;
+      height: 155px;
+      }
+  </style>
 
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -33,6 +50,65 @@
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+  <script>
+            $(document).ready(function() {
+               datosAtencion();
+               pedidoCompleto();
+               categorias();
+               productos();
+
+            });
+  </script>
+  <script type="text/javascript">
+  var idMesa=<?php echo $idMesa; ?> ;
+      function datosAtencion(){ 
+              $.ajax({
+                   type   : 'POST',
+                   url    : 'controller/Atencion.php',
+                   data  : {metodo: "datosAtencion",mesa: idMesa },
+                   dataType : 'json',
+                   success  : function(data){
+                      $('#totalPedido').html(data.totalPedido);
+                      $('#mesa').html(data.mesa);
+                      $('#estadoMesa').html(data.estadoMesa); 
+                      $('#urlDetallle').prop("href", data.urlDetalle);
+                  },
+                   error  : function(data){
+                    console.log(data);
+                  }
+               });
+      }
+      function categorias(){         
+                  $.post("controller/Atencion.php", 
+                  {metodo: "listaCategorias"}
+                  ,function(tabla){
+                    $('#categorias').html(tabla);
+                  }
+                  );
+      }
+      function productos(){         
+                  $.post("controller/Atencion.php", 
+                  {metodo: "listaProductos"}
+                  ,function(tabla){
+                    $('#productos').html(tabla);
+                  }
+                  );
+      }
+      function pedidoCompleto(){         
+                  $.post("controller/Atencion.php", 
+                  {metodo: "pedidoCompleto",mesa:idMesa}
+                  ,function(tabla){
+                    $('#pedidoCompleto').html(tabla);
+                  }
+                  );
+      }
+
+      function verProductos(idCategoria) {
+                    $(".categoria").hide();
+                    $( "div[name="+idCategoria+"]" ).show();
+      }
+
+  </script>      
 
 </head>
 <body style="background:#F7F7F7;">
@@ -67,15 +143,18 @@
                     <div>
                         <div class="title_left">
                           <div class="pull-left">
-                            <h3>Nuevo Pedido : Mesa 4</h3>
+                            <h2>Nuevo Pedido : <span id="mesa"></span></h2>
                             <small>
-                              <h4>Ocupada : Ver detalle</h4>
+                              <h4> <span id="estadoMesa"></span> :<a id="urlDetallle" href="">Ver detalle</a></h4>
                             </small>
                           </div>
                         </div>
                         <div class="title_right">
                           <div class="pull-right">
-                            <h3>Total Pedido: $32.000</h3>
+                            <h2>Total Pedido: $ <span id="totalPedido">0</span></h2>
+                            <small>
+                              <h4>Esta orden : $ <span id="totalOrden">0</span></h4>
+                            </small>
                           </div>
                         </div>
                     </div>
@@ -90,38 +169,18 @@
                           </a>
                             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                   <div class="panel-body">
-                                  <table class="table table-bordered">
+                                  <table class="table datatable">
                                     <thead>
                                       <tr>
-                                        <th>Cantindad</th>
+                                        <th>Cant</th>
                                         <th>Producto</th>
-                                        <th>Anexo</th>
-                                        <th>valor</th>
+                                        <th></th>
+                                        <th>Sub-total</th>
                                         <th>Total</th>
                                       </tr>
                                     </thead>
-                                    <tbody>
-                                      <tr>
-                                        <th scope="row">1</th>
-                                        <td>Producto</td>
-                                        <td>Anexo</td>
-                                        <td>2500</td>
-                                        <td>2500</td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">2</th>
-                                        <td>Producto</td>
-                                        <td>Anexo</td>
-                                        <td>2500</td>
-                                        <td>2500</td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">1</th>
-                                        <td>Producto</td>
-                                        <td>Anexo</td>
-                                        <td>2500</td>
-                                        <td>2500</td>
-                                      </tr>
+                                    <tbody id="pedidoCompleto">
+                                      
                                     </tbody>
                                   </table>
                                 </div>
@@ -134,224 +193,33 @@
 
                     <div class="row">
                         <!-- div que agrupa categorias y productos-->
-                        <div class="col-md-8">
+                        <div class="col-md-8 col-xs-12 ">
 
 
                               <!-- div que agrupa categorias-->
-                              <div class="col-md-12">
-                                  <a class="btn btn-app">
-                                    <i class="fa fa-inbox"></i> Categoria 1
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <span class="badge bg-orange">4</span>
-                                    <i class="fa fa-inbox"></i> Categoria 2
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <span class="badge bg-orange">4</span>
-                                    <i class="fa fa-inbox"></i> Categoria 3
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <i class="fa fa-inbox"></i> Categoria 4
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <span class="badge bg-orange">4</span>
-                                    <i class="fa fa-inbox"></i> Categoria 5
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <span class="badge bg-orange">4</span>
-                                    <i class="fa fa-inbox"></i> Categoria 6
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <i class="fa fa-inbox"></i> Categoria 7
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <span class="badge bg-orange">4</span>
-                                    <i class="fa fa-inbox"></i> Categoria 8
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <i class="fa fa-inbox"></i> Categoria 1
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <i class="fa fa-inbox"></i> Categoria 2
-                                  </a>
-                                  <a class="btn btn-app">
-                                    <span class="badge bg-orange">4</span>
-                                    <i class="fa fa-inbox"></i> Categoria 3
-                                  </a>
+                              <div id="categorias">
+                                 
                               </div><div class="clearfix"></div><br>
 
 
                               <!-- div que agrupa productos-->
-                              <div class="col-md-12">
-                                    <!-- producto-->
-                                    <div class="col-md-3 col-sm-4 col-xs-8">
-                                      <div class="x_panel ui-ribbon-container">
-                                        <div class="x_content" align="center">
-                                         <h4>Perro caliente</h4>  
-                                         <h2>$5.500</h2>                                  
-                                          <div class="flex">
-                                            <ul class="list-inline widget_profile_box">                                        
-                                              <li>
-                                                <img src="images/comida.png" class="profile_img">
-                                              </li>
-                                              <li>
-                                                <a>
-                                                  <i class="fa fa-paperclip" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-sm"></i>
-                                                </a>
-                                              </li>
-                                            </ul>
-                                          </div>                                    
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- End producto-->  
-                                    <!-- producto-->
-                                    <div class="col-md-3 col-sm-4 col-xs-8">
-                                      <div class="x_panel ui-ribbon-container">
-                                        <div class="x_content" align="center">
-                                         <h4>Perro caliente</h4>  
-                                         <h2>$5.500</h2>                                  
-                                          <div class="flex">
-                                            <ul class="list-inline widget_profile_box">                                        
-                                              <li>
-                                                <img src="images/comida.png" class="profile_img">
-                                              </li>
-                                              <li>
-                                                <a>
-                                                  <i class="fa fa-paperclip"></i>
-                                                </a>
-                                              </li>
-                                            </ul>
-                                          </div>                                    
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- End producto-->
-                                    <!-- producto-->
-                                    <div class="col-md-3 col-sm-4 col-xs-8">
-                                      <div class="x_panel ui-ribbon-container">
-                                        <div class="x_content" align="center">
-                                         <h4>Perro caliente</h4>  
-                                         <h2>$5.500</h2>                                  
-                                          <div class="flex">
-                                            <ul class="list-inline widget_profile_box">                                        
-                                              <li>
-                                                <img src="images/comida.png" class="profile_img">
-                                              </li>
-                                              <li>
-                                                <a>
-                                                  <i class="fa fa-paperclip"></i>
-                                                </a>
-                                              </li>
-                                            </ul>
-                                          </div>                                    
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- End producto-->
-                                    <!-- producto-->
-                                    <div class="col-md-3 col-sm-4 col-xs-8">
-                                      <div class="x_panel ui-ribbon-container">
-                                        <div class="x_content" align="center">
-                                         <h4>Perro caliente</h4>  
-                                         <h2>$5.500</h2>                                  
-                                          <div class="flex">
-                                            <ul class="list-inline widget_profile_box">                                        
-                                              <li>
-                                                <img src="images/comida.png" class="profile_img">
-                                              </li>
-                                              <li>
-                                                <a>
-                                                  <i class="fa fa-paperclip"></i>
-                                                </a>
-                                              </li>
-                                            </ul>
-                                          </div>                                    
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- End producto-->
-                                    <!-- producto-->
-                                    <div class="col-md-3 col-sm-4 col-xs-8">
-                                      <div class="x_panel ui-ribbon-container">
-                                        <div class="x_content" align="center">
-                                         <h4>Perro caliente</h4>  
-                                         <h2>$5.500</h2>                                  
-                                          <div class="flex">
-                                            <ul class="list-inline widget_profile_box">                                        
-                                              <li>
-                                                <img src="images/comida.png" class="profile_img">
-                                              </li>
-                                              <li>
-                                                <a>
-                                                  <i class="fa fa-paperclip"></i>
-                                                </a>
-                                              </li>
-                                            </ul>
-                                          </div>                                    
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- End producto-->
-                                    <!-- producto-->
-                                    <div class="col-md-3 col-sm-4 col-xs-8">
-                                      <div class="x_panel ui-ribbon-container">
-                                        <div class="x_content" align="center">
-                                         <h4>Perro caliente</h4>  
-                                         <h2>$5.500</h2>                                  
-                                          <div class="flex">
-                                            <ul class="list-inline widget_profile_box">                                        
-                                              <li>
-                                                <img src="images/comida.png" class="profile_img">
-                                              </li>
-                                              <li>
-                                                <a>
-                                                  <i class="fa fa-paperclip"></i>
-                                                </a>
-                                              </li>
-                                            </ul>
-                                          </div>                                    
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- End producto-->
-                                    <!-- producto-->
-                                    <div class="col-md-3 col-sm-4 col-xs-8">
-                                      <div class="x_panel ui-ribbon-container">
-                                        <div class="x_content" align="center">
-                                         <h4>Perro caliente</h4>  
-                                         <h2>$5.500</h2>                                  
-                                          <div class="flex">
-                                            <ul class="list-inline widget_profile_box">                                        
-                                              <li>
-                                                <img src="images/comida.png" class="profile_img">
-                                              </li>
-                                              <li>
-                                                <a>
-                                                  <i class="fa fa-paperclip"></i>
-                                                </a>
-                                              </li>
-                                            </ul>
-                                          </div>                                    
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- End producto-->                                  
+                              <div id="productos">
+                                                      
                               </div>
                         </div>
 
                         <!-- div que agrupa listado -->
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-xs-12 ">
                         <button type="button" class="btn btn-info btn-sm">Guardar</button>
                         <button type="button" class="btn btn-default btn-sm">Cancelar</button><hr>
-                          <table  class="table datatable">
+                          <table  class="table datatable" id="tablaOrden">
                                     <thead>
                                       <tr>
                                         <th width=15% >Cant</th>
                                         <th width=30% >Producto</th>
                                         <th width=5% ></th>
                                         <th width=20% >Total</th>
-                                        <th width=20% >Accion</th>
+                                        <th width=20% >Del</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -359,8 +227,8 @@
                                         <th scope="row">1</th>
                                         <td>Producto</td>
                                         <td></td>
-                                        <td>2500</td>
-                                        <td><button type="button" class="btn btn-default btn-xs">Borrar</button></td>
+                                        <td>2500</td>                                        
+                                        <td><a class="fa fa-remove"></a></td>
 
                                       </tr>
                                       <tr>
@@ -368,7 +236,7 @@
                                         <td>Producto</td>
                                         <td >*</td>
                                         <td>2500</td>
-                                        <td><button type="button" class="btn btn-default btn-xs">Borrar</button></td>
+                                        <td><a class="fa fa-remove"></a></td>
 
                                       </tr>
                                       <tr>
@@ -376,7 +244,7 @@
                                         <td>Producto</td>
                                         <td >*</td>
                                         <td>2500</td>
-                                        <td><button type="button" class="btn btn-default btn-xs">Borrar</button></td>
+                                        <td><a class="fa fa-remove"></a></td>
 
                                       </tr>
                                     </tbody>
