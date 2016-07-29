@@ -129,11 +129,19 @@ switch ($metodo) {
     $consulta=$productosConsulta->getProductos();  
     
     foreach ($consulta as $producto) {
+        $total= $producto["valor"];
+        $valor= $producto["valor"];
+        $valor=number_format($valor, 0, ",", ".");
         echo '<!-- producto-->
                 <div class="categoria" style="display:none" name="'.$producto["id_categoria"].'">
-                    <div class="well prod" align="center">
-                    <h5><span class="badge badge-success">$ '.$producto["valor"].'</span></h5>
-                     <h4>'.$producto["nombre"].'</h4>  
+                    <div  class="well prod" align="center" >
+                    <div onclick="agregarFila(['.$producto["id"].',1,\''.$producto["nombre"].'\','.$producto["valor"].','.$total.',\'\'])" style="cursor: pointer">
+                     <h5>
+                     <span class="badge badge-success">$ '.$valor.'</span>
+                     <span style="display:none" class="badge bg-red check'.$producto["id"].'"><i class="fa fa-check"></i></span>
+                     </h5>
+                     <h4>'.$producto["nombre"].'</h4> 
+                    </div>
                     <button onclick="modalDetalleProducto(\''.$producto["nombre"].'\',\''.$producto["descripcion"].'\')" type="button" class="btn btn-round btn-success btn-xs"><i class="fa fa-plus"></i></button>
                   <button onclick="modalAnexo('.$producto["id"].')" type="button" class="btn btn-round btn-info"><i class="fa fa-comment"></i></button>
                   </div>

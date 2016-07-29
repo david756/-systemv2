@@ -171,9 +171,10 @@ function pedido_mesas(){
                     $claseEstado="mesa_disponible";
                     $estado="Disponible";
                 }
-                echo '<div class="col-md-3 col-sm-6 '.$claseEstado.'">
+                $direccion='\'pedido_productos.php?mesa='.$mesa['id'].'\'';
+                echo '<div onClick="location.href='.$direccion.'" style="cursor: pointer" class="col-md-3 col-sm-6 '.$claseEstado.'">
                                    <h5>'.$mesa['descripcion'].'</h5>
-                                   <a href="pedido_productos.php?mesa='.$mesa['id'].'"><img src="images/mesa.png"></a>
+                                   <a><img src="images/mesa.png"></a>
                                    <h4>'.$estado.'</h4>
                       </div>';
                 } 

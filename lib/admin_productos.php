@@ -85,10 +85,11 @@
                                 stock=1;
                                 console.log("entro");
                               }
-                              
+                              var descripcion=$('#crear-descripcion').val();
+                              descripcion = descripcion.replace(/\n/g, "<br>");
                               var data = {
                                   'nombre_producto'     : $('input[name=crear-nombre]').val(),
-                                  'descripcion_producto' : $('#crear-descripcion').val(),
+                                  'descripcion_producto' : descripcion,
                                   'valor_producto'     : $('input[name=crear-valor]').val(),
                                   'categoria_producto'     : $("#categorias option:selected").val(),
                                   'stock_producto'     : stock,
@@ -167,13 +168,13 @@
                   $('#ModalConfirmar').modal('show');
        }
 
-       function modalEditarProducto(id,nombre,descripcion,valor,Categoria){
+       function modalEditarProducto(id,nombre,descripcion1,valor,Categoria){
 
-                  var textoId=$('#id_producto_edit').val(id);  
-                  var textoNombre=$('#nombre_producto_edit').val(nombre);
-                  var textoDescripcion=$('#descripcion_producto_edit').val(descripcion);
-                  var textoValor=$('#valor_producto_edit').val(valor);
-                  var textoCategoria=$('#categoria_producto_edit > option[value='+Categoria+']').attr('selected', 'selected');
+                  $('#id_producto_edit').val(id);  
+                  $('#nombre_producto_edit').val(nombre);
+                  $('#descripcion_producto_edit').val(descripcion1);
+                  $('#valor_producto_edit').val(valor);
+                  $('#categoria_producto_edit > option[value='+Categoria+']').attr('selected', 'selected');
 
                   $('#ModalEdiarProducto').modal('show');
        }
@@ -219,9 +220,12 @@
        }
        function confirmarEditar(){
         if (!$("#editar_producto").hasClass( "disabled" )) {
+
+            var descripcion=$('#descripcion_producto_edit').val();
+            descripcion = descripcion.replace(/\n/g, "<br>");
             productoId=$('#id_producto_edit').val();
             productoNombre=$('#nombre_producto_edit').val();
-            productoDescripcion=$('#descripcion_producto_edit').val();
+            productoDescripcion=descripcion;
             productoValor=$('#valor_producto_edit').val();
             productoCategoria=$('#categoria_producto_edit option:selected').val();
             productoStock=$('#stock_producto_edit').val();
@@ -244,6 +248,7 @@
                             $('#ModalEdiarProducto').modal('hide');
                             if (respuesta=="Exito") {
                               mostrarLista();
+                              $('#descripcion_producto_edit').html("");
                               $('#resultado').html("el producto fue editado!");
                               $('#resultado').attr("class","alert alert-success");
                               $('#resultado').show("slow").delay(4000).hide("slow");

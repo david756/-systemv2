@@ -61,9 +61,9 @@
                pedidoCompleto();
                categorias();
                productos();
-
             });
   </script>
+
   <script type="text/javascript">
   var idMesa=<?php echo $idMesa; ?> ;
       function datosAtencion(){ 
@@ -73,7 +73,11 @@
                    data  : {metodo: "datosAtencion",mesa: idMesa },
                    dataType : 'json',
                    success  : function(data){
-                      $('#totalPedido').html(data.totalPedido);
+                    var total=data.totalPedido;
+                    total=parseInt(total);
+                     $('#totalPedido').attr("valor",total);
+                      var num = total.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                      $('#totalPedido').html(num);
                       $('#mesa').html(data.mesa);
                       $('#estadoMesa').html(data.estadoMesa); 
                       $('#urlDetallle').prop("href", data.urlDetalle);
@@ -113,9 +117,10 @@
                     $( "div[name="+idCategoria+"]" ).show();
       }
 
-      function modalAnexo(id){
+      function modalAnexo(id){            
                   $('#idProductoAnexo').val(id);
                   $('#modalAnexo').modal('show');
+
        }
        function modalDetalleProducto(nombre,detalle){                 
                   $('#nombreProducto').html(nombre);
@@ -123,7 +128,115 @@
                   $('#modalDetalleProducto').modal('show');
        }
 
-  </script>      
+  </script>     
+
+
+  <!-- Script para manejar la lista de productos -->
+  <script type="text/javascript">
+      
+        /**
+          param(dataArr)
+          dataArr[idProducto,cantidad,nombreProducto,valor,total,anexos];
+          dataArr[0]=id
+          dataArr[1]=cantidad
+          dataArr[2]=producto
+          dataArr[3]=valor
+          dataArr[4]=total
+          dataArr[5]=anexos
+        **/
+        function agregarFila(dataArr){ 
+
+              idProducto=dataArr[0];
+              $('.check' + idProducto).show(120).delay(150).hide(100);
+                tabla = document.getElementById("myTable");
+
+                for(var i = 1; tabla.rows[i]; i++){
+                  if (tabla.rows[i].cells[0].innerHTML==idProducto) {
+                      dataArr[1]=dataArr[1]+parseInt(tabla.rows[i].cells[1].innerHTML);
+                      dataArr[4]=(1+parseInt(tabla.rows[i].cells[1].innerHTML))*parseInt(tabla.rows[i].cells[3].innerHTML)
+                      deleteRow(idProducto);
+                  }
+
+                }
+
+              var tr=document.createElement('tr');
+              var len=dataArr.length;
+
+              if (dataArr[5]!="") {
+                dataArr[5]="***";
+              }
+              for(var i=0;i<len;i++){
+                  var td=document.createElement('td');
+                  if (i==0) {
+                   td.style.display="none";
+                  }
+                  td.appendChild(document.createTextNode(dataArr[i]));
+                  tr.appendChild(td);
+              }
+
+              var td=document.createElement('td');
+
+              var btn = document.createElement("a");   
+              btn.className = "fa fa-remove";
+
+              btn.setAttribute("onclick", 'eliminarProductoLista('+idProducto+')');
+              btn.id=idProducto;
+                                       
+              td.appendChild(btn); 
+              tr.appendChild(td);
+              sumarTotales(dataArr);
+              document.getElementById('tbl_bdy').appendChild(tr);              
+              
+              return true; 
+          }
+
+          function sumarTotales(dataArr){
+                  var total =0;
+                  tabla = document.getElementById("myTable");
+                  var cuenta=dataArr[4];
+
+                  for(var i = 1; tabla.rows[i]; i++){
+                        cuenta =cuenta+parseInt(tabla.rows[i].cells[4].innerHTML);
+                   }
+
+                total=cuenta;
+                pedidoCompleto=$('#totalPedido').attr("valor");
+                pedidoCompleto=parseInt(pedidoCompleto)+total;
+                var num = pedidoCompleto.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                $('#totalPedido').html(num);
+                num = total.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                var t = document.getElementById("total");                
+                t.innerHTML=num; 
+            }
+
+          function deleteRow(id) {
+
+             tabla = document.getElementById("myTable");
+             for(var i = 1; tabla.rows[i]; i++){
+                  if (tabla.rows[i].cells[0].innerHTML==id) {
+                      tabla.deleteRow(i); 
+                  }
+                }
+              }
+
+
+          function eliminarProductoLista(id) {
+
+              tabla = document.getElementById("myTable");
+               for(var i = 1; tabla.rows[i]; i++){
+
+                    if (tabla.rows[i].cells[0].innerHTML==id && tabla.rows[i].cells[1].innerHTML>1) {
+                        tabla.rows[i].cells[1].innerHTML=(tabla.rows[i].cells[1].innerHTML)-1;
+                        tabla.rows[i].cells[4].innerHTML=(tabla.rows[i].cells[1].innerHTML)*(tabla.rows[i].cells[3].innerHTML);
+                    }
+                   else if (tabla.rows[i].cells[0].innerHTML==id && tabla.rows[i].cells[1].innerHTML==1) {
+                        tabla.deleteRow(i); 
+                    }
+                  }
+              sumarTotales([0,0,0,0,0,0,0]);
+          }
+
+      </script>  
 
 </head>
 <body style="background:#F7F7F7;">
@@ -160,15 +273,15 @@
                           <div class="pull-left">
                             <h2>Nuevo Pedido : <span id="mesa"></span></h2>
                             <small>
-                              <h4> <span id="estadoMesa"></span> :<a id="urlDetallle" href="">Ver detalle</a></h4>
+                              <h4> <span id="estadoMesa"></span> :  <a id="urlDetallle" href="">Ver detalle</a></h4>
                             </small>
                           </div>
                         </div>
                         <div class="title_right">
                           <div class="pull-right">
-                            <h2>Total Pedido: $ <span id="totalPedido">0</span></h2>
+                            <h2>Total Pedido: $ <span id="totalPedido" valor="">0</span></h2>
                             <small>
-                              <h4>Esta orden : $ <span id="totalOrden">0</span></h4>
+                              <h4>Esta orden : $ <span id="total">0</span></h4>
                             </small>
                           </div>
                         </div>
@@ -203,6 +316,11 @@
                       </div>
                   </div>   
                     <!-- end accordion -->
+                    <div align="right">
+                            <br> <button type="button" class="btn btn-info btn-sm">Guardar</button>
+                            <a href="pedido_mesas.php" type="button" class="btn btn-default btn-sm">Cancelar</a>
+                          
+                    </div>                  
 
                     <hr> <!-- Separador -->
 
@@ -224,45 +342,20 @@
                         </div>
 
                         <!-- div que agrupa listado -->
-                        <div class="col-md-4 col-xs-12 ">
-                        <button type="button" class="btn btn-info btn-sm">Guardar</button>
-                        <button type="button" class="btn btn-default btn-sm">Cancelar</button><hr>
-                          <table  class="table datatable" id="tablaOrden">
+                        <div class="col-md-4 col-xs-12 ">                        
+                          <table  class="table datatable" id="myTable">
                                     <thead>
                                       <tr>
-                                        <th width=15% >Cant</th>
-                                        <th width=30% >Producto</th>
-                                        <th width=5% ></th>
-                                        <th width=20% >Total</th>
-                                        <th width=20% >Del</th>
+                                        <th style="display:none">Cod</th>
+                                        <th>Cant</th>
+                                         <th>Producto</th>                  
+                                         <th>Precio</th>             
+                                         <th>total</th>
+                                         <th>Anexo</th>
+                                         <th>accion</th>
                                       </tr>
                                     </thead>
-                                    <tbody>
-                                      <tr>
-                                        <th scope="row">1</th>
-                                        <td>Producto</td>
-                                        <td></td>
-                                        <td>2500</td>                                        
-                                        <td><a class="fa fa-remove"></a></td>
-
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">2</th>
-                                        <td>Producto</td>
-                                        <td >*</td>
-                                        <td>2500</td>
-                                        <td><a class="fa fa-remove"></a></td>
-
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">1</th>
-                                        <td>Producto</td>
-                                        <td >*</td>
-                                        <td>2500</td>
-                                        <td><a class="fa fa-remove"></a></td>
-
-                                      </tr>
-                                    </tbody>
+                                    <tbody id="tbl_bdy"> </tbody>
                             </table>
                         </div>
                     </div>
