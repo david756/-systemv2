@@ -117,8 +117,10 @@
                     $( "div[name="+idCategoria+"]" ).show();
       }
 
-      function modalAnexo(id){            
+      function modalAnexo(id,nombre,valor){            
                   $('#idProductoAnexo').val(id);
+                  $('#nombreProductoAnexo').val(nombre);
+                  $('#valorProductoAnexo').val(valor);
                   $('#modalAnexo').modal('show');
 
        }
@@ -147,24 +149,22 @@
         function agregarFila(dataArr){ 
 
               idProducto=dataArr[0];
+
               $('.check' + idProducto).show(120).delay(150).hide(100);
                 tabla = document.getElementById("myTable");
 
                 for(var i = 1; tabla.rows[i]; i++){
-                  if (tabla.rows[i].cells[0].innerHTML==idProducto) {
+                  if (tabla.rows[i].cells[0].innerHTML==idProducto && tabla.rows[i].cells[5].innerHTML==dataArr[5]) {
                       dataArr[1]=dataArr[1]+parseInt(tabla.rows[i].cells[1].innerHTML);
-                      dataArr[4]=(1+parseInt(tabla.rows[i].cells[1].innerHTML))*parseInt(tabla.rows[i].cells[3].innerHTML)
-                      deleteRow(idProducto);
+                      dataArr[4]=(1+parseInt(tabla.rows[i].cells[1].innerHTML))*parseInt(tabla.rows[i].cells[3].innerHTML);
+                      deleteRow(idProducto,dataArr[5]);
                   }
-
                 }
 
               var tr=document.createElement('tr');
               var len=dataArr.length;
 
-              if (dataArr[5]!="") {
-                dataArr[5]="***";
-              }
+              
               for(var i=0;i<len;i++){
                   var td=document.createElement('td');
                   if (i==0) {
@@ -179,7 +179,7 @@
               var btn = document.createElement("a");   
               btn.className = "fa fa-remove";
 
-              btn.setAttribute("onclick", 'eliminarProductoLista('+idProducto+')');
+              btn.setAttribute("onclick", 'eliminarProductoLista('+idProducto+',"'+dataArr[5]+'")');
               btn.id=idProducto;
                                        
               td.appendChild(btn); 
@@ -188,6 +188,19 @@
               document.getElementById('tbl_bdy').appendChild(tr);              
               
               return true; 
+          }
+
+          function agregarAnexo(){
+            productoId=$('#idProductoAnexo').val();
+            anexoDescripcion=$('#anexoDescripcion').val();
+            cantidad=parseInt($('#cantidadAnexo').val());
+            nombre=$('#nombreProductoAnexo').val();
+            valor=parseInt($('#valorProductoAnexo').val());
+            total=parseInt(valor*cantidad);
+
+            array=[productoId,cantidad,nombre,valor,total,anexoDescripcion];
+            agregarFila(array);
+            $('#modalAnexo').modal('hide');
           }
 
           function sumarTotales(dataArr){
@@ -209,32 +222,102 @@
                 t.innerHTML=num; 
             }
 
-          function deleteRow(id) {
+          function deleteRow(id,anexo) {
 
              tabla = document.getElementById("myTable");
              for(var i = 1; tabla.rows[i]; i++){
-                  if (tabla.rows[i].cells[0].innerHTML==id) {
+                  if (tabla.rows[i].cells[0].innerHTML==id && tabla.rows[i].cells[5].innerHTML==anexo) {
                       tabla.deleteRow(i); 
                   }
                 }
               }
 
 
-          function eliminarProductoLista(id) {
+          function eliminarProductoLista(id,anexo) {
 
               tabla = document.getElementById("myTable");
                for(var i = 1; tabla.rows[i]; i++){
 
-                    if (tabla.rows[i].cells[0].innerHTML==id && tabla.rows[i].cells[1].innerHTML>1) {
+                    if (tabla.rows[i].cells[0].innerHTML==id && tabla.rows[i].cells[1].innerHTML>1 && tabla.rows[i].cells[5].innerHTML==anexo) {
                         tabla.rows[i].cells[1].innerHTML=(tabla.rows[i].cells[1].innerHTML)-1;
                         tabla.rows[i].cells[4].innerHTML=(tabla.rows[i].cells[1].innerHTML)*(tabla.rows[i].cells[3].innerHTML);
                     }
-                   else if (tabla.rows[i].cells[0].innerHTML==id && tabla.rows[i].cells[1].innerHTML==1) {
-                        tabla.deleteRow(i); 
+                   else if (tabla.rows[i].cells[0].innerHTML==id && tabla.rows[i].cells[1].innerHTML==1 && tabla.rows[i].cells[5].innerHTML==anexo) {
+                        tabla.deleteRow(i,tabla.rows[i].cells[5].innerHTML); 
                     }
                   }
               sumarTotales([0,0,0,0,0,0,0]);
           }
+
+         /**
+            guardar Producto , controller Atencion
+            jsonPedido= "{  
+              "mesa": *,
+              "pedido": [
+                {"id":*,      
+                  "cantidad":*,
+                  "anexo": "***", 
+                },
+                {"id":*,
+                  "cantidad":*,
+                  "anexo": "***",
+                },
+                {"id":*,
+                  "cantidad":*,
+                  "anexo": "***",
+                }
+              ]
+            }"    
+         **/
+          function guardarPedido(){
+
+              tabla = document.getElementById("myTable");
+                      var mesa=<?php echo $idMesa; ?> ; 
+                      var jsonPedido={};
+                      jsonPedido['mesa']=mesa;
+                      jsonPedido['pedido']=[];
+
+                      var hayProductos=0;
+                        for(var j = 1; tabla.rows[j]; j++){                                
+                                hayProductos=1;                                  
+                                var id=tabla.rows[j].cells[0].innerHTML;
+                                var cantidad=tabla.rows[j].cells[1].innerHTML;
+                                var anexo=tabla.rows[j].cells[5].innerHTML;
+                                jsonPedido.pedido.push({"id":id,"cantidad":cantidad,"anexo":anexo});                          
+                         }  
+
+                        if (hayProductos){
+                           $.ajax({
+                                    type:  'POST',
+                                    url:   'controller/Atencion.php',
+                                    data:{'jsonPedido' : jsonPedido,
+                                          'metodo'   : "create"}, 
+
+                                    error: function(jqXHR, textStatus, errorThrown) {
+                                     $('#resultado').attr("class","alert alert-danger");
+                                     $('#resultado').html('<o>201:Ocurrio un error </p>');
+                                     $('#resultado').show("slow").delay(4000).hide("slow");
+                                    },
+                                    success:  function (response,estado,objeto) {
+                                       if (response=="Exito") {
+                                        $('input[name=crear-nombre]').val("")
+                                        $('#resultado').html("El pedido se guardo con exito!");
+                                        $('#resultado').attr("class","alert alert-success");
+                                        $('#resultado').show("slow").delay(4000).hide("slow");
+                                        setTimeout(function(){window.location.href = "pedido_mesas.php"}, 1000);
+                                       }
+                                       else{
+                                         $('#resultado').attr("class","alert alert-danger");
+                                         $('#resultado').html("202:Ocurrio un error: ");
+                                         $('#resultado').html(response);
+                                         $('#resultado').show("slow").delay(4000).hide("slow");
+                                       } 
+                                    }
+
+                            });   
+                        }   
+
+            }
 
       </script>  
 
@@ -302,7 +385,7 @@
                                       <tr>
                                         <th>Cant</th>
                                         <th>Producto</th>
-                                        <th></th>
+                                        <th>Anexo</th>
                                         <th>Sub-total</th>
                                         <th>Total</th>
                                       </tr>
@@ -317,10 +400,13 @@
                   </div>   
                     <!-- end accordion -->
                     <div align="right">
-                            <br> <button type="button" class="btn btn-info btn-sm">Guardar</button>
+                            <br><button type="button" onclick="guardarPedido()" class="btn btn-info btn-sm">Guardar</button>
                             <a href="pedido_mesas.php" type="button" class="btn btn-default btn-sm">Cancelar</a>
                           
-                    </div>                  
+                    </div> 
+                    <div class="row">
+                      <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+                    </div>                 
 
                     <hr> <!-- Separador -->
 
@@ -372,22 +458,25 @@
                             <div class="modal-body">
                               <form>
                                     <input type="text" id ="idProductoAnexo" value="" style="display:none">
+                                    <input type="text" id ="nombreProductoAnexo" value="" style="display:none">
+                                    <input type="text" id ="valorProductoAnexo" value="" style="display:none">
+
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Anexo</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <textarea class="form-control" rows="2" maxlength="25" placeholder='Anexo de este producto' required="required"></textarea><br>
+                                          <textarea id="anexoDescripcion" class="form-control" rows="2" maxlength="25" placeholder='Anexo de este producto' required="required"></textarea><br>
                                         </div>
                                       </div>
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Cantidad</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <input type="number" class="form-control" placeholder="Cantidad"><br>
+                                          <input id="cantidadAnexo" type="number" class="form-control" value="1" placeholder="Cantidad"><br>
                                         </div>
                                       </div> 
                                     <div class="clearfix"></div>                            
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-info">Guardar</button>
+                                    <button type="button" onclick="agregarAnexo()" class="btn btn-info">Guardar</button>
                                 </div>
                               </form>
                             </div>

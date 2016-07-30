@@ -8,6 +8,7 @@ include "../model/Categoria.php";
 include "../model/Mesa.php";
 include "../model/Usuario.php";
 include "../model/Producto.php";
+include "../model/Item.php";
 /**
  * recibe por POST el metodo segun
  * el proceso que valla a realizar
@@ -55,15 +56,49 @@ switch ($metodo) {
      * @param Post atencion e items de la atencion que va a ser creada
      */
     function crear(){
-    $nombre = $_POST["nombre_categoria"];
-    $categoria = new Categoria(null,$nombre);
-    $respuesta = $categoria->createCategoria();
-
-    if (is_object($respuesta)) {
-        echo "exito";
-    } else {
-        echo "$respuesta";
-    }
+        $pedido=$_POST["jsonPedido"];
+        $mesa = new Mesa($pedido['mesa']);
+        $mesa=$mesa->getMesa();
+        if ($mesa->getEstado()!=1) {
+            die ('301:Error, no puede hacer pedidos en esta mesa');
+        }
+        $atencion= new Atencion();
+        $atencion->setMesa($mesa);
+        $idAtencion=$atencion->atencionMesa()['idAtencion'];
+        $atencion->setIdAtencion($idAtencion);
+        $atencion=$atencion->getAtencion();
+        $cajero=new Usuario(null);
+        if ($idAtencion=="") {  
+            $a = new Atencion(null,"pedido",0,$cajero,$mesa,null,1); 
+            $atencion=$a->createAtencion();
+        }
+        if (is_object($atencion)) {
+            $items=$pedido['pedido'];
+            foreach ($items as $p) {
+                $producto=new Producto($p['id']);
+                $producto=$producto->getProducto();                
+                $valor=$producto->getValor();
+                $fecha= date('Y-m-d H:i:s');
+                $anexo=$p['anexo'];
+                
+                for ($index = 0; $index < $p['cantidad']; $index++) {
+                    //creando un nuevo atencionProducto
+                    $usuario = new Usuario();
+                    $usuario= $usuario->getSesion();
+                    $cocinero=new $usuario(null);
+                    $atencionProducto = new Item(null,$producto,$atencion,$usuario,$valor,$fecha,1,
+                    $anexo,null,null,1,$cocinero);
+                    $atencionProducto->createAtencionProducto();
+                    if (!is_object($atencionProducto)) {
+                        die ('302:Error fatal al tratar de agregar item: '.$atencionProducto);
+                    }                    
+                }              
+            }
+        }
+        else{
+            die ('303:Error al tratar de crear atencion: '.$atencion);
+        }
+      echo "Exito";
     }
     /**
      * Lista de  categorias
@@ -103,16 +138,11 @@ switch ($metodo) {
     $consulta=$atencion->pedidoCompleto() ;
     
     foreach ($consulta as $pedido) {
-        $anexo=$pedido['anexos'];
-        if ($anexo!="") {
-            $anexo="*";
-        }else{
-            $anexo="";
-        }
+        
         echo '<tr>
                 <th scope="row">'.$pedido['cantidad'].'</th>
                 <td>'.$pedido['nombre'].'</td>
-                <td>'.$anexo.'</td>
+                <td>'.$pedido['anexos'].'</td>
                 <td>'.$pedido['subtotal'].'</td>
                 <td>'.$pedido['total'].'</td>
               </tr>';
@@ -129,6 +159,8 @@ switch ($metodo) {
     $consulta=$productosConsulta->getProductos();  
     
     foreach ($consulta as $producto) {
+        if ($producto["estado"]=="activo") {           
+        
         $total= $producto["valor"];
         $valor= $producto["valor"];
         $valor=number_format($valor, 0, ",", ".");
@@ -143,11 +175,12 @@ switch ($metodo) {
                      <h4>'.$producto["nombre"].'</h4> 
                     </div>
                     <button onclick="modalDetalleProducto(\''.$producto["nombre"].'\',\''.$producto["descripcion"].'\')" type="button" class="btn btn-round btn-success btn-xs"><i class="fa fa-plus"></i></button>
-                  <button onclick="modalAnexo('.$producto["id"].')" type="button" class="btn btn-round btn-info"><i class="fa fa-comment"></i></button>
+                    <button onclick="modalAnexo('.$producto["id"].',\''.$producto["nombre"].'\','.$producto["valor"].')" type="button" class="btn btn-round btn-info"><i class="fa fa-comment"></i></button>
                   </div>
                 </div>
              <!-- End producto-->';
         }
+       }
     }
     /**
      * 

@@ -160,7 +160,8 @@ function pedido_mesas(){
     $consulta=$mesasConsulta->getMesas();  
     
     foreach ($consulta as $mesa) {
-        if ($mesa['estado']=="activa") {        
+        if ($mesa["estado"]=="activa") {        
+          if ($mesa['estado']=="activa") {        
                 $mesaDis=new Mesa($mesa['id']);
                 $disponibilidad=$mesaDis->getMesaDisponiblidad();
                 if ($disponibilidad==1){
@@ -178,7 +179,8 @@ function pedido_mesas(){
                                    <h4>'.$estado.'</h4>
                       </div>';
                 } 
-        }   
+            }
+        }
     }
     /**
     * confirma que exista la sesion de usuario y que sea administrador

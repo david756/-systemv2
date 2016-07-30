@@ -1,30 +1,17 @@
 $json= "{  
-   "mesa": 1,
-   "atencion": null,
+  "mesa": 1,
   "pedido": [
-    {"id":1,
-      "mesero":"12",
-      "producto":3,
-      "valor":500000,
-      "anexo": "anexo",
+    {"id":1,      
       "cantidad":1,
-      "horaPedido":"3:04:09"
+      "anexo": "anexo",	
     },
     {"id":2,
-      "mesero":"12",
-      "producto":2,
-      "valor":300000,
-      "anexo":"anexo",
-      "cantidad":2,
-      "horaPedido":"3:04:09"
+      "cantidad":1,
+      "anexo": "anexo",
     },
     {"id":3,
-      "mesero":"12",
-      "producto":5,
-      "valor":400000,
-      "anexo":"anexo",
       "cantidad":1,
-      "horaPedido":"3:04:09"
+      "anexo": "anexo",
     }
   ]
 }"		
