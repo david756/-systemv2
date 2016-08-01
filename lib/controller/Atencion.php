@@ -42,9 +42,37 @@ switch ($metodo) {
         verificarUser();
         datosAtencion();
         break;
+    
+    case "datosAtencion2":
+        verificarUser();
+        datosAtencion2();
+        break;
+    
     case "pedidoCompleto":
         verificarUser();
         pedidoCompleto();
+        break;
+    
+    case "pedidoCompleto2":
+        verificarUser();
+        pedidoCompleto2();
+        break;
+    
+    case "descuento":
+        verificarUser();
+        agregarDescuento();
+        break;
+    case "pagar":
+        verificarUser();
+        pagar();
+        break;
+    case "aplazar":
+        verificarUser();
+        aplazar();
+        break;
+    case "cortesia":
+        verificarUser();
+        cortesia();
         break;
     
     default:
@@ -68,7 +96,7 @@ switch ($metodo) {
         $atencion->setIdAtencion($idAtencion);
         $atencion=$atencion->getAtencion();
         $cajero=new Usuario(null);
-        if ($idAtencion=="") {  
+        if ($idAtencion=="" || $atencion->getEstado()!=1) {  
             $a = new Atencion(null,"pedido",0,$cajero,$mesa,null,1); 
             $atencion=$a->createAtencion();
         }
@@ -123,6 +151,7 @@ switch ($metodo) {
     }
     /**
      * retorna el pedido completo de la atencion
+     * recibe por parametro post el id de la mesa
      * @Return pedido completo
      * cantidad producto anexo total
      * formato HTML tabla
@@ -132,13 +161,13 @@ switch ($metodo) {
     $mesa=new Mesa($idMesa);
     $atencion= new Atencion();
     $atencion->setMesa($mesa);
-    $idAtencion=$atencion->atencionMesa()['idAtencion'];
-    
+    $idAtencion=$atencion->atencionMesa()['idAtencion'];    
     $atencion->setIdAtencion($idAtencion);
-    $consulta=$atencion->pedidoCompleto() ;
     
-    foreach ($consulta as $pedido) {
-        
+    $atencion=$atencion->getAtencion();
+    if ($atencion->getEstado()==1) {
+       $consulta=$atencion->pedidoCompleto() ;
+        foreach ($consulta as $pedido) {        
         echo '<tr>
                 <th scope="row">'.$pedido['cantidad'].'</th>
                 <td>'.$pedido['nombre'].'</td>
@@ -146,7 +175,31 @@ switch ($metodo) {
                 <td>'.$pedido['subtotal'].'</td>
                 <td>'.$pedido['total'].'</td>
               </tr>';
-        }    
+        }   
+    }
+     
+    }
+    /**
+     * retorna el pedido completo de la atencion
+     * recibe por parametro post el id de la atencion
+     * @Return pedido completo
+     * cantidad producto anexo total
+     * formato HTML tabla
+     */
+    function pedidoCompleto2(){   
+    $idAtencion=$_POST["atencion"];    
+    $atencion= new Atencion($idAtencion);    
+    $atencion=$atencion->getAtencion();
+       $consulta=$atencion->pedidoCompleto() ;
+        foreach ($consulta as $pedido) {        
+        echo '<tr>
+                <th scope="row">'.$pedido['cantidad'].'</th>
+                <td>'.$pedido['nombre'].'</td>
+                <td>'.$pedido['anexos'].'</td>
+                <td>'.$pedido['subtotal'].'</td>
+                <td>'.$pedido['total'].'</td>
+              </tr>';
+        }   
     }
     /**
      * Lista de productos
@@ -183,7 +236,7 @@ switch ($metodo) {
        }
     }
     /**
-     * 
+     * recibe por parametro post el id de la mesa
      * DatosAtencion, obtiene los datos de la atencion actual en la mesa 
      * especificada
      * @Return datos de la atencion 
@@ -209,6 +262,7 @@ switch ($metodo) {
     }else {
         $estado="Disponible";
         $url='#';
+        $total=0;
     }
     
     
@@ -220,6 +274,125 @@ switch ($metodo) {
         
         echo json_encode($data);
   
+    }
+    
+    /**
+     * recibe por parametro post el id de la atencion
+     * DatosAtencion, obtiene los datos de la atencion actual en la mesa 
+     * especificada
+     * @Return datos de la atencion 
+     * formato Json
+     */
+    function datosAtencion2(){
+    $id=$_POST["atencion"];
+    $atencion= new Atencion($id);
+    $atencion=$atencion->getAtencion();
+    $total=$atencion->getDatosAtencion()['total'];
+    $subtotal=$atencion->getDatosAtencion()['subtotal'];
+    $descuento=$atencion->getDatosAtencion()['dcto'];
+    if ($total=="") {
+        $total=0;
+    }       
+    $nombreMesa=$atencion->getDatosAtencion()['mesa'];
+    $horaInicio=$atencion->getDatosAtencion()['horaInicio'];
+    $cajero=new Usuario($atencion->getDatosAtencion()['cajero']);
+    $cajero=$cajero->getUsuario();
+    $cajero=$cajero->getUserName();
+    $idMesa=$atencion->getMesa();
+    $horaPago=$atencion->getDatosAtencion()['horaPago'];
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    if ($horaPago!=null) {
+        $horaPago = date_create($horaPago);
+        $horaPago= date_format($horaPago,'d')." ".$meses[date_format($horaPago,'n')-1]. 
+            " ".date_format($horaPago,'Y'). " , ". date_format($horaPago,'g:i a');
+    }
+    else{
+        $horaPago="Aun no se ha tarifado";
+    }    
+    $estado=$atencion->getDatosAtencion()['estadoAtencion'];
+    $horaInicio = date_create($horaInicio);
+    $horaInicio= date_format($horaInicio,'d')." ".$meses[date_format($horaInicio,'n')-1]. 
+            " ".date_format($horaInicio,'Y'). " , ". date_format($horaInicio,'g:i a');
+    
+    
+    
+    $data = array();
+        $data['mesa'] = $nombreMesa;
+        $data['subtotal'] = $subtotal;
+        $data['totalPedido'] = $total ;
+        $data['estadoAtencion'] = $estado;
+        $data['descuento'] = $descuento;
+        $data['cajero'] = $cajero;
+        $data['horaPago'] = $horaPago;
+        $data['idAtencion'] = $id;
+        $data['idMesa'] = $idMesa;
+        $data['horaInicio'] = $horaInicio;
+        
+        
+        echo json_encode($data);
+  
+    }
+    
+    /**
+     * agrega descuento a una atencion cuando esta aplazada o 
+     * en estado pedido.
+     */
+    function agregarDescuento(){
+        $id=$_POST["idAtencion"];
+        $descuento=$_POST["descuento"];
+        $atencion= new Atencion($id);
+        $atencion=$atencion->getAtencion();
+        if ($atencion->getEstado()!=1 && $atencion->getEstado()!=4) {
+            die('Error : El pedido ya fue facturado') ;
+        }
+        if (!is_numeric($descuento)) {
+            die('Error : Descuento no valido') ;
+        }
+        $estado= $atencion->agregarDescuento($descuento);
+        echo $estado;
+    }
+    
+    /**
+     * pagar una atencion.
+     */
+    function pagar(){
+        $id=$_POST["idAtencion"];
+        $detalle=$_POST["detalle"];
+        $atencion= new Atencion($id);
+        $atencion=$atencion->getAtencion();
+        if ($atencion->getEstado()!=1 && $atencion->getEstado()!=4) {
+            die('Error : El pedido ya fue facturado') ;
+        }
+        $estado= $atencion->pagar($detalle);
+        echo $estado;
+    }
+     /**
+     * pagar una atencion.
+     */
+    function aplazar(){
+        $id=$_POST["idAtencion"];
+        $detalle=$_POST["detalle"];
+        $atencion= new Atencion($id);
+        $atencion=$atencion->getAtencion();
+        if ($atencion->getEstado()!=1 && $atencion->getEstado()!=4) {
+            die('Error : El pedido ya fue facturado') ;
+        }
+        $estado= $atencion->aplazar($detalle);
+        echo $estado;
+    }
+     /**
+     * pagar una atencion.
+     */
+    function cortesia(){
+        $id=$_POST["idAtencion"];
+        $detalle=$_POST["detalle"];
+        $atencion= new Atencion($id);
+        $atencion=$atencion->getAtencion();
+        if ($atencion->getEstado()!=1 && $atencion->getEstado()!=4) {
+            die('Error : El pedido ya fue facturado') ;
+        }
+        $estado= $atencion->cortesia($detalle);
+        echo $estado;
     }
     
     /**

@@ -208,7 +208,7 @@ class Atencion {
         $pdo = Database::connect();
         $query = "SELECT m.descripcion as mesa,sum(ap.valor) as subtotal,a.fk_cajero as cajero,"
                 . "(a.descuento) as dcto, (sum(ap.valor)-(a.descuento))as total ,"
-                . "horaPago,ea.descripcion FROM items AS ap INNER JOIN atenciones"
+                . "horaPago,horaInicio,ea.descripcion estadoAtencion FROM items AS ap INNER JOIN atenciones"
                 . " AS a ON (ap.fk_atencion=a.id) INNER JOIN mesas AS m ON (m.id=a.fk_mesa)"
                 . " INNER JOIN estados_atencion as ea on ea.id=a.fk_estado WHERE(a.id=?)";
         $stmt = $pdo->prepare($query);
@@ -237,6 +237,80 @@ class Atencion {
         $result = $stmt->fetchAll();
         Database::disconnect();
         return $result;
+    }
+    
+    function agregarDescuento($descuento){
+        try {
+                require_once "database.php";
+                $pdo = Database::connect();
+                $query =  "UPDATE atenciones SET descuento = ? WHERE atenciones.id = ?";
+                $stmt = $pdo->prepare($query);
+                $stmt->bindParam(1, $descuento);
+                $stmt->bindParam(2, $this->idAtencion);
+                Database::disconnect();
+                if ($stmt->execute()) {
+                    return "Exito";
+                } else {
+                    return "*1* Error al tratar de eliminar Atencion";
+                }
+            } catch (Exception $e) {
+                echo "*2* Error al tratar de eliminar Atencion:  " . $e->getMessage();
+            }
+    }
+    
+     function pagar($detalle){
+        try {
+                require_once "database.php";
+                $pdo = Database::connect();
+                $query =  "UPDATE atenciones SET fk_estado = 2,descripcion_estado = ? WHERE atenciones.id = ?";
+                $stmt = $pdo->prepare($query);
+                $stmt->bindParam(1, $detalle);
+                $stmt->bindParam(2, $this->idAtencion);
+                Database::disconnect();
+                if ($stmt->execute()) {
+                    return "Exito";
+                } else {
+                    return "*1* Error al tratar pagar Atencion";
+                }
+            } catch (Exception $e) {
+                echo "*2* Error al tratar pagar Atencion:  " . $e->getMessage();
+            }
+    }
+    function aplazar($detalle){
+        try {
+                require_once "database.php";
+                $pdo = Database::connect();
+                $query =  "UPDATE atenciones SET fk_estado = 4,descripcion_estado = ? WHERE atenciones.id = ?";
+                $stmt = $pdo->prepare($query);
+                $stmt->bindParam(1, $detalle);
+                $stmt->bindParam(2, $this->idAtencion);
+                Database::disconnect();
+                if ($stmt->execute()) {
+                    return "Exito";
+                } else {
+                    return "*1* Error al tratar aplazar Atencion";
+                }
+            } catch (Exception $e) {
+                echo "*2* Error al tratar aplazar Atencion:  " . $e->getMessage();
+            }
+    }
+    function cortesia($detalle){
+        try {
+                require_once "database.php";
+                $pdo = Database::connect();
+                $query =  "UPDATE atenciones SET fk_estado = 3,descripcion_estado = ? WHERE atenciones.id = ?";
+                $stmt = $pdo->prepare($query);
+                $stmt->bindParam(1, $detalle);
+                $stmt->bindParam(2, $this->idAtencion);
+                Database::disconnect();
+                if ($stmt->execute()) {
+                    return "Exito";
+                } else {
+                    return "*1* Error al tratar agregar cortesia a Atencion";
+                }
+            } catch (Exception $e) {
+                echo "*2* Error al tratar de agregar cortesia a Atencion:  " . $e->getMessage();
+            }
     }
 
     /**

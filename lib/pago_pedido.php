@@ -1,5 +1,13 @@
+<?php
+        if (isset($_GET['atencion'])) {
+               $idAtencion=$_GET['atencion'];
+        }else{
+            $idAtencion="N/A";
+        }
+
+ ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -20,12 +28,21 @@
   <!-- Custom styling plus plugins -->
   <link href="css/custom.css" rel="stylesheet">
   <link href="css/icheck/flat/green.css" rel="stylesheet">
+  <script src="js/jquery.min.js"></script>
+
   <style type="text/css">
       @media screen {         
        #factura { display: none; }
        #informe { display: none; }
       }       
-    </style>
+    </style>  
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+               datosAtencion();
+               pedidoCompleto();
+        });
+    </script>  
     <script type="text/javascript">
       function imprSelec(muestra)
       {
@@ -37,10 +54,142 @@
         ventimp.close();
       }
     </script>
+    <script type="text/javascript">
+      var idAtencion=<?php echo $idAtencion; ?> ;
+      function datosAtencion(){ 
+              $.ajax({
+                   type   : 'POST',
+                   url    : 'controller/Atencion.php',
+                   data  : {metodo: "datosAtencion2",atencion: idAtencion },
+                   dataType : 'json',
+                   success  : function(data){
+                    var total=data.totalPedido;
+                    total=parseInt(total);
+                    var total = total.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                    subtotal=parseInt(data.subtotal);
+                    var subtotal = subtotal.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                    descuento=parseInt(data.descuento);
+                    var descuento = descuento.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                    var urlDetallle="detalle_pedido.php?id="+idAtencion;
+                      $('.totalPedido').html(total);
+                      $('.mesa').html(data.mesa);
+                      $('.estadoAtencion').html(data.estadoAtencion);
+                      $('.descuento').html(descuento);
+                      $('.cajero').html(data.cajero);
+                      $('.horaPago').html(data.horaPago);
+                      $('.horaInicio').html(data.horaInicio);
+                      $('.subtotal').html(subtotal);
+                      $('.idAtencion').html(data.idAtencion);
+                      $('#urlDetallle').prop("href", urlDetallle);
 
+                  },
+                   error  : function(data){
+                    console.log(data);
+                  }
+               });
+      }
 
-  <script src="js/jquery.min.js"></script>
+       function pedidoCompleto(){         
+                  $.post("controller/Atencion.php", 
+                  {metodo: "pedidoCompleto2",atencion:idAtencion}
+                  ,function(tabla){
+                    $('.pedidoCompleto').html(tabla);
+                  }
+                  );
+      }
 
+      function descuento(){
+
+            var descuento=$('#descuento_atencion').val();            
+            $.post("controller/Atencion.php", 
+                    {metodo: "descuento",
+                     idAtencion: idAtencion,descuento:descuento},function(respuesta){
+                      $('#ModalDescuento').modal('hide');
+                      if (respuesta=="Exito") {
+                        $('#descuento_atencion').val(0);
+                        $('#resultado').html("se agrego descuento al pedido!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                        datosAtencion();
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              ); 
+       }
+       function pagar(){
+
+            var detalle=$('#descripcion_pagar').val();            
+            $.post("controller/Atencion.php", 
+                    {metodo: "pagar",
+                     idAtencion: idAtencion,detalle: detalle},function(respuesta){
+                      $('#ModalPago').modal('hide');
+                      if (respuesta=="Exito") {
+                        $('#resultado').html("Se registro el pago del pedido correctamente!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                        datosAtencion();
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              ); 
+       }
+       function aplazar(){
+
+            var detalle=$('#descripcion_aplazar').val();            
+            $.post("controller/Atencion.php", 
+                    {metodo: "aplazar",
+                     idAtencion: idAtencion,detalle: detalle},function(respuesta){
+                      $('#ModalAplazar').modal('hide');
+                      if (respuesta=="Exito") {
+                        $('#resultado').html("Se aplazo el pago del pedido!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                        datosAtencion();
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              ); 
+       }
+       function cortesia(){
+
+            var detalle=$('#descripcion_cortesia').val();            
+            $.post("controller/Atencion.php", 
+                    {metodo: "cortesia",
+                     idAtencion: idAtencion,detalle: detalle},function(respuesta){
+                      $('#ModalCortesia').modal('hide');
+                      if (respuesta=="Exito") {
+                        $('#resultado').html("Se facturo como cortesia!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                        datosAtencion();
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              ); 
+       }
+
+    </script>
+ 
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
         <![endif]-->
@@ -81,36 +230,36 @@
                     <div>
                         <div class="title_left">
                           <div class="pull-left">
-                            <h3>Pedido : Mesa 4</h3>
+                            <h2>Pedido : <span class="mesa"></span></h2>
                             <small>
-                              <h4>Cajero : Admin</h4>
+                              <h4>Cajero : <span class="cajero"></span></h4>
                             </small>
                           </div>
                         </div>
                         <div class="title_right">
                           <div class="pull-right">
-                            <h3>Total: $32.000</h3>
+                            <h2>Total: $ <span class="totalPedido"></span></h2>
                             <small>
-                              <h4>06 Junio 2016 , 12:57 pm</h4>
+                              <h4><span class="horaInicio"></span></h4>
                             </small>
                           </div>
                         </div>
                     </div>
                     <div class="clearfix"></div>
                     <hr> <!-- Separador -->
-
+                    <div class="row">
+                      <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+                    </div>
                     <div class="row">
                         <!-- div que listado de productos-->
                         <div class="col-md-7">
                               <div class="col-sm-12 invoice-col">
-                                <b>Orden ID #007612</b>
+                                <b>Orden ID #<span class="idAtencion"></span></b>
                                 <br>
                                 <br>
-                                <b>Estado:</b> Pago
+                                <b>Estado:  </b><span class="estadoAtencion"></span>
                                 <br>
-                                <b>Fecha de pago:</b> 2/22/2014
-                                <br>
-                                <b>Hora de pago:</b> 9:57 pm
+                                <b>Fecha de pago:  </b><span class="horaPago"></span>                                
                                 <br><br>
                               </div>
 
@@ -119,38 +268,15 @@
                                   <tr>
                                     <th>Cant</th>
                                     <th>Producto</th>
-                                    <th>Valor</th>
-                                    <th>Subtotal</th>
+                                    <th>Anexo</th>
+                                    <th>Sub-total</th>
+                                    <th>Total</th>
                                   </tr>
                                 </thead>
-                                <tbody>
-                                  <tr>
-                                    <td>1</td>
-                                    <td>pedido prod</td>
-                                    <td>$5.000</td>
-                                    <td>$64.500</td>
-                                  </tr>
-                                  <tr>
-                                    <td>1</td>
-                                    <td>pedido prod</td>
-                                    <td>$10.000</td>
-                                    <td>$50.000</td>
-                                  </tr>
-                                  <tr>
-                                    <td>1</td>
-                                    <td>pedido prod</td>
-                                    <td>$7000</td>
-                                    <td>$10.070</td>
-                                  </tr>
-                                  <tr>
-                                    <td>2</td>
-                                    <td>pedido prod</td>
-                                    <td>$8.000</td>
-                                    <td>$25.099</td>
-                                  </tr>
+                                <tbody class="pedidoCompleto">
                                 </tbody>
                             </table>
-                            <button type="button" class="btn btn-info btn-sm"><i class="fa fa-plus-square"></i>  Mas detalles</button><hr>
+                            <a type="button" class="btn btn-info btn-sm" id="urlDetallle" href="#"><i class="fa fa-plus-square"></i>  Mas detalles</a><hr>
                         </div>
 
                         <!-- div que agrupa totales y botones -->
@@ -164,19 +290,15 @@
                                   <tbody>
                                     <tr>
                                       <th style="width:50%">Subtotal:</th>
-                                      <td>$32.000</td>
+                                      <td>$<span class="subtotal"></span></td>
                                     </tr>
                                     <tr>
                                       <th>Descuento:</th>
-                                      <td>$7.000</td>
-                                    </tr>
-                                    <tr>
-                                      <th>Impuesto (9.3%):</th>
-                                      <td>$950</td>
+                                      <td>$<span class="descuento"></span></td>
                                     </tr>
                                     <tr>
                                       <th>Total:</th>
-                                      <td>$265.24</td>
+                                      <td>$<span class="totalPedido"></span></td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -197,7 +319,7 @@
                                   <a class="btn btn-app" data-toggle="modal" data-target="#ModalCortesia">
                                     <i class="fa fa-gift"></i> Cortesia
                                   </a>
-                                  <a class="btn btn-app" href="javascript:imprSelec('informe')" >
+                                  <a class="btn btn-app" href="javascript:imprSelec('factura')" >
                                     <span class="badge bg-orange fa fa-check"></span>
                                     <i class="fa fa-print"></i> Imprimir
                                   </a>
@@ -221,14 +343,14 @@
                                 <div class="form-group">
                                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Detalle : </label>
                                   <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="Descripción" value="Pago simple">
+                                    <input id="descripcion_pagar" type="text" class="form-control" placeholder="Descripción" value="Pago simple">
                                   </div>
                                   <br><br>
                                 </div>
                               </form>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-info">Confirmar</button>
+                              <button type="button" onclick="pagar()" class="btn btn-info">Confirmar</button>
                             </div>
                           </div>
                         </div>
@@ -251,14 +373,14 @@
                                 <div class="form-group">
                                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Detalle : </label>
                                   <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="escriba una descripción" required>
+                                    <input id="descripcion_cortesia" type="text" class="form-control" placeholder="escriba una descripción" required>
                                   </div>
                                   <br><br>
                                 </div>
                               </form>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-info">Confirmar</button>
+                              <button type="button" onclick="cortesia()" class="btn btn-info">Confirmar</button>
                             </div>
                           </div>
                         </div>
@@ -282,14 +404,14 @@
                                 <div class="form-group">
                                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Detalle : </label>
                                   <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="escriba una descripción" required>
+                                    <input type="text" id="descripcion_aplazar" class="form-control" placeholder="escriba una descripción" required>
                                   </div>
                                   <br><br>
                                 </div>
                               </form>
                             <div class="modal-footer">
                               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-info">Confirmar</button>
+                              <button type="button" onclick="aplazar()" class="btn btn-info">Confirmar</button>
                             </div>
                           </div>
                         </div>
@@ -312,15 +434,16 @@
                                 <div class="form-group">
                                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Descuento: </label>
                                   <div class="col-md-9 col-sm-9 col-xs-12">
-                                    <input type="text" class="form-control" placeholder="ej: 2500">
+                                    <input type="number" id="descuento_atencion" class="form-control" value="0">
                                   </div>
                                   <br><br>
-                                </div>
+                                </div>                                
                               </form>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-info">Confirmar</button>
-                            </div>
+                              <div class="modal-footer">
+                                  <button type="button"  class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                  <button type="button" onclick="descuento()" class="btn btn-info">Confirmar</button>
+                                </div>
+                            
                           </div>
                         </div>
                     </div>
@@ -344,14 +467,13 @@
                                       <!-- /.col -->
                                       <div class="col-sm-12 invoice-col">
                                           <br>
-                                          <b>Factura de venta  #007612</b>
+                                          <b>Factura de venta  #<span class="idAtencion"></span></b>
                                           <br>
                                           <br>
-                                          <b>Cajero:</b> JuanDavid
+                                          <b>Cajero:</b> <span class="cajero"></span>
                                           <br>
-                                          <b>Fecha:</b> 2 noviembre 2016
+                                          <b>Fecha:</b> <span class="horaPago"></span>
                                           <br>
-                                          <b>hora:</b> 12:15 pm
                                           <br><hr>
                                       </div>
                                       <!-- /.col -->
@@ -364,30 +486,13 @@
                                             <thead>
                                               <tr>
                                                 <th style="width: 10%">Cant</th>
-                                                <th style="width: 50%">Producto</th>
-                                                <th style="width: 20%">valor</th>
-                                                <th style="width: 20%">Subtotal</th>
+                                                <th>Producto</th>
+                                                <th>Anexo</th>
+                                                <th>Subtotal</th>
+                                                <th>Total</th>
                                               </tr>
                                             </thead>
-                                            <tbody>
-                                              <tr>
-                                                <td>1</td>
-                                                <td>Nombre del producto</td>
-                                                <td>$25.000</td>
-                                                <td>$35.000</td>
-                                              </tr>
-                                              <tr>
-                                                <td>2</td>
-                                                <td>nombreso</td>
-                                                <td>$55.000</td>
-                                                <td>$135.000</td>
-                                              </tr>
-                                              <tr>
-                                                <td>7</td>
-                                                <td>Product</td>
-                                                <td>$12.000</td>
-                                                <td>$189.000</td>
-                                              </tr>
+                                            <tbody class="pedidoCompleto">                                             
                                             </tbody>
                                           </table>
                                     </div>
@@ -399,11 +504,11 @@
                                 <div class="col-sm-12 invoice-col">
                                     <br>
                                     <br>
-                                    <b>Subtotal:</b> $250.030
+                                    <b>Subtotal:</b> <span class="subtotal"></span>
                                     <br>
-                                    <b>Descuento:</b> $5.880
+                                    <b>Descuento:</b> <span class="descuento"></span>
                                     <br><br>
-                                    <b>TOTAL NETO: $265.024</b>
+                                    <b>TOTAL NETO: <span class="totalPedido"></span></b>
                                     <br><br><hr>
                                 </div>
                                 <!-- /.col -->
@@ -423,9 +528,9 @@
                                         <tbody>
                                           <tr>
                                             <td>8.0 %</td>
-                                            <td>$32.000</td>
-                                            <td>$31.200</td>
-                                            <td>$1.800</td>
+                                            <td>$0</td>
+                                            <td>$0</td>
+                                            <td>$0</td>
                                           </tr>
                                         </tbody>
                                       </table>

@@ -7,7 +7,7 @@
 
  ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -65,7 +65,7 @@
   </script>
 
   <script type="text/javascript">
-  var idMesa=<?php echo $idMesa; ?> ;
+      var idMesa=<?php echo $idMesa; ?> ;
       function datosAtencion(){ 
               $.ajax({
                    type   : 'POST',
