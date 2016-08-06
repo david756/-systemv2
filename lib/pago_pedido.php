@@ -44,8 +44,12 @@
         });
     </script>  
     <script type="text/javascript">
-      function imprSelec(muestra)
+      function imprSelec()
       {
+        muestra="informe";
+        if ($('.estadoAtencion').html()=="pago") {
+          muestra="factura";
+        }
         var ficha=document.getElementById(muestra);
         var ventimp=window.open(' ','popimpr');
         ventimp.document.write(ficha.innerHTML);
@@ -56,6 +60,7 @@
     </script>
     <script type="text/javascript">
       var idAtencion=<?php echo $idAtencion; ?> ;
+      var estadoAtencion;
       function datosAtencion(){ 
               $.ajax({
                    type   : 'POST',
@@ -71,6 +76,7 @@
                     descuento=parseInt(data.descuento);
                     var descuento = descuento.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
                     var urlDetallle="detalle_pedido.php?id="+idAtencion;
+                    estadoAtencion=estadoAtencion;
                       $('.totalPedido').html(total);
                       $('.mesa').html(data.mesa);
                       $('.estadoAtencion').html(data.estadoAtencion);
@@ -80,7 +86,9 @@
                       $('.horaInicio').html(data.horaInicio);
                       $('.subtotal').html(subtotal);
                       $('.idAtencion').html(data.idAtencion);
-                      $('#urlDetallle').prop("href", urlDetallle);
+                      $('.impuesto').html(data.impuesto);
+
+
 
                   },
                    error  : function(data){
@@ -123,7 +131,8 @@
        }
        function pagar(){
 
-            var detalle=$('#descripcion_pagar').val();            
+            var detalle=$('#descripcion_pagar').val();
+            if (detalle!="") { 
             $.post("controller/Atencion.php", 
                     {metodo: "pagar",
                      idAtencion: idAtencion,detalle: detalle},function(respuesta){
@@ -132,7 +141,10 @@
                         $('#resultado').html("Se registro el pago del pedido correctamente!");
                         $('#resultado').attr("class","alert alert-success");
                         $('#resultado').show("slow").delay(4000).hide("slow");
+                        $('.estadoAtencion').html("pago");
                         datosAtencion();
+                        $('#btnImprimir')[0].click();
+
                       }
                       else{
                         $('#resultado').html(respuesta);
@@ -142,10 +154,12 @@
                       
                     }
               ); 
+            }
        }
        function aplazar(){
 
-            var detalle=$('#descripcion_aplazar').val();            
+            var detalle=$('#descripcion_aplazar').val();
+            if (detalle!="") {             
             $.post("controller/Atencion.php", 
                     {metodo: "aplazar",
                      idAtencion: idAtencion,detalle: detalle},function(respuesta){
@@ -164,10 +178,12 @@
                       
                     }
               ); 
+          }
        }
        function cortesia(){
 
-            var detalle=$('#descripcion_cortesia').val();            
+            var detalle=$('#descripcion_cortesia').val(); 
+            if (detalle!="") {            
             $.post("controller/Atencion.php", 
                     {metodo: "cortesia",
                      idAtencion: idAtencion,detalle: detalle},function(respuesta){
@@ -181,11 +197,12 @@
                       else{
                         $('#resultado').html(respuesta);
                         $('#resultado').attr("class","alert alert-danger");
-                        $('#resultado').show("slow").delay(4000).hide("slow");
+                        $('#resultado').show("slow").delay(4000).hide("slow");                        
                       }
                       
                     }
               ); 
+          }
        }
 
     </script>
@@ -319,7 +336,7 @@
                                   <a class="btn btn-app" data-toggle="modal" data-target="#ModalCortesia">
                                     <i class="fa fa-gift"></i> Cortesia
                                   </a>
-                                  <a class="btn btn-app" href="javascript:imprSelec('factura')" >
+                                  <a id="btnImprimir" class="btn btn-app" href="javascript:imprSelec()" >
                                     <span class="badge bg-orange fa fa-check"></span>
                                     <i class="fa fa-print"></i> Imprimir
                                   </a>
@@ -468,7 +485,7 @@
                                       <div class="col-sm-12 invoice-col">
                                           <br>
                                           <b>Factura de venta  #<span class="idAtencion"></span></b>
-                                          <br>
+                                          <br>                                          
                                           <br>
                                           <b>Cajero:</b> <span class="cajero"></span>
                                           <br>
@@ -528,9 +545,9 @@
                                         <tbody>
                                           <tr>
                                             <td>8.0 %</td>
-                                            <td>$0</td>
-                                            <td>$0</td>
-                                            <td>$0</td>
+                                            <td>$ <span class="totalPedido"></span></td>
+                                            <td>$ <span class="totalPedido"></span></td>
+                                            <td>$ <span class="impuesto"></span></td>
                                           </tr>
                                         </tbody>
                                       </table>
@@ -563,9 +580,13 @@
                                       <!-- /.col -->
                                       <div class="col-sm-12 invoice-col">
                                           <br>
-                                          <b>Id de pedido: 007612</b>
+                                          <b>Id de pedido: # <span class="idAtencion"></span></b>
                                           <br>
-                                          <b>Mesa:</b> Mesa 5
+                                          <b>Estado:</b> <span class="estadoAtencion"></span>
+                                          <br>
+                                          <b>Fecha pedido:</b> <span class="horaInicio"></span>
+                                          <br>
+                                          <b>Mesa:</b> <span class="mesa"></span>
                                           <br>
                                           <br><hr>
                                       </div>
@@ -579,30 +600,13 @@
                                             <thead>
                                               <tr>
                                                 <th style="width: 10%">Cant</th>
-                                                <th style="width: 50%">Producto</th>
-                                                <th style="width: 20%">valor</th>
-                                                <th style="width: 20%">Subtotal</th>
+                                                <th>Producto</th>
+                                                <th>Anexo</th>
+                                                <th>Subtotal</th>
+                                                <th>Total</th>
                                               </tr>
                                             </thead>
-                                            <tbody>
-                                              <tr>
-                                                <td>1</td>
-                                                <td>Nombre del producto</td>
-                                                <td>$25.000</td>
-                                                <td>$35.000</td>
-                                              </tr>
-                                              <tr>
-                                                <td>2</td>
-                                                <td>nombreso</td>
-                                                <td>$55.000</td>
-                                                <td>$135.000</td>
-                                              </tr>
-                                              <tr>
-                                                <td>7</td>
-                                                <td>Product</td>
-                                                <td>$12.000</td>
-                                                <td>$189.000</td>
-                                              </tr>
+                                            <tbody class="pedidoCompleto">                                         
                                             </tbody>
                                           </table>
                                     </div>
@@ -614,11 +618,11 @@
                                 <div class="col-sm-12 invoice-col">
                                     <br>
                                     <br>
-                                    <b>Subtotal:</b> $250.030
+                                    <b>Subtotal:</b> $<span class="subtotal"></span>
                                     <br>
-                                    <b>Descuento:</b> $5.880
+                                    <b>Descuento:</b> $<span class="descuento"></span>
                                     <br><br>
-                                    <b>TOTAL NETO: $265.024</b>
+                                    <b>TOTAL NETO: $<span class="totalPedido"></span></b>
                                     <br><br>
                                 </div>
                                 <!-- /.col -->

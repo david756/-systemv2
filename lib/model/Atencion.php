@@ -261,11 +261,15 @@ class Atencion {
      function pagar($detalle){
         try {
                 require_once "database.php";
+                $fecha= date('Y-m-d H:i:s');
+                $usuario=$this->getCajero()->getIdUsuario();
                 $pdo = Database::connect();
-                $query =  "UPDATE atenciones SET fk_estado = 2,descripcion_estado = ? WHERE atenciones.id = ?";
+                $query =  "UPDATE atenciones SET fk_estado = 2,descripcion_estado = ?,horaPago =?,fk_cajero=? WHERE atenciones.id = ?";
                 $stmt = $pdo->prepare($query);
                 $stmt->bindParam(1, $detalle);
-                $stmt->bindParam(2, $this->idAtencion);
+                $stmt->bindParam(2, $fecha);
+                $stmt->bindParam(3, $usuario);
+                $stmt->bindParam(4, $this->idAtencion);
                 Database::disconnect();
                 if ($stmt->execute()) {
                     return "Exito";
@@ -279,11 +283,15 @@ class Atencion {
     function aplazar($detalle){
         try {
                 require_once "database.php";
+                $fecha= date('Y-m-d H:i:s');
+                $usuario=$this->cajero->getIdUsuario();
                 $pdo = Database::connect();
-                $query =  "UPDATE atenciones SET fk_estado = 4,descripcion_estado = ? WHERE atenciones.id = ?";
+                $query =  "UPDATE atenciones SET fk_estado = 4,descripcion_estado = ?,horaPago =?,fk_cajero=? WHERE atenciones.id = ?";
                 $stmt = $pdo->prepare($query);
                 $stmt->bindParam(1, $detalle);
-                $stmt->bindParam(2, $this->idAtencion);
+                $stmt->bindParam(2, $fecha);
+                $stmt->bindParam(3, $usuario);
+                $stmt->bindParam(4, $this->idAtencion);
                 Database::disconnect();
                 if ($stmt->execute()) {
                     return "Exito";
@@ -295,13 +303,17 @@ class Atencion {
             }
     }
     function cortesia($detalle){
-        try {
+        try {   
                 require_once "database.php";
+                $usuario=$this->getCajero()->getIdUsuario();
+                $fecha= date('Y-m-d H:i:s');
                 $pdo = Database::connect();
-                $query =  "UPDATE atenciones SET fk_estado = 3,descripcion_estado = ? WHERE atenciones.id = ?";
+                $query =  "UPDATE atenciones SET fk_estado = 3,descripcion_estado = ?,horaPago =?,fk_cajero=? WHERE atenciones.id = ?";
                 $stmt = $pdo->prepare($query);
                 $stmt->bindParam(1, $detalle);
-                $stmt->bindParam(2, $this->idAtencion);
+                $stmt->bindParam(2, $fecha);
+                $stmt->bindParam(3, $usuario);
+                $stmt->bindParam(4, $this->idAtencion);
                 Database::disconnect();
                 if ($stmt->execute()) {
                     return "Exito";
@@ -311,6 +323,32 @@ class Atencion {
             } catch (Exception $e) {
                 echo "*2* Error al tratar de agregar cortesia a Atencion:  " . $e->getMessage();
             }
+    }
+    
+    /**
+     *  
+     * @return resultado con los pedidos de caja de las ultimas horas
+     */
+    function pedidosCaja(){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT m.descripcion as mesa,SUM(ap.valor)"
+                . " as total,a.id,a.fk_estado as estado,ea.descripcion"
+                . ",a.descuento as descuento,a.horaInicio,a.horaPago "
+                . "FROM atenciones AS a INNER JOIN estados_atencion AS ea ON"
+                . " (a.fk_estado=ea.id) INNER JOIN items AS ap ON (ap.fk_atencion=a.id)"
+                . " INNER JOIN productos AS p ON (p.id=ap.fk_producto) INNER JOIN "
+                . "categorias AS c ON (p.fk_categoria=c.id) INNER JOIN atencion_empleados AS "
+                . "eat ON (eat.fk_item=ap.id) INNER JOIN usuarios AS e ON (e.id=eat.fk_usuario) "
+                . "INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN estado_items AS ep ON "
+                . "(ep.id=ap.fk_estado_item) WHERE (ap.hora_pedido)<(DATE_SUB(NOW(), INTERVAL 0 hour))"
+                . " and (ap.hora_pedido)>(DATE_SUB(NOW(), INTERVAL 10 hour)) "
+                . "group by m.descripcion,a.id ORDER BY ap.hora_pedido DESC";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();
+        return $result;
     }
 
     /**

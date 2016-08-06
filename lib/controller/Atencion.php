@@ -74,6 +74,10 @@ switch ($metodo) {
         verificarUser();
         cortesia();
         break;
+    case "pedidosCaja":
+        verificarUser();
+        pedidosCaja();
+        break;
     
     default:
         die ('302:Error, no se encontro dirección');
@@ -299,6 +303,7 @@ switch ($metodo) {
     $cajero=$cajero->getUsuario();
     $cajero=$cajero->getUserName();
     $idMesa=$atencion->getMesa();
+    $impuesto=$total*(8/100);
     $horaPago=$atencion->getDatosAtencion()['horaPago'];
     $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
     if ($horaPago!=null) {
@@ -327,6 +332,7 @@ switch ($metodo) {
         $data['idAtencion'] = $id;
         $data['idMesa'] = $idMesa;
         $data['horaInicio'] = $horaInicio;
+        $data['impuesto'] = $impuesto;
         
         
         echo json_encode($data);
@@ -358,8 +364,11 @@ switch ($metodo) {
     function pagar(){
         $id=$_POST["idAtencion"];
         $detalle=$_POST["detalle"];
+        $cajero = new Usuario();
+        $cajero= $cajero->getSesion();
         $atencion= new Atencion($id);
         $atencion=$atencion->getAtencion();
+        $atencion->setCajero($cajero);
         if ($atencion->getEstado()!=1 && $atencion->getEstado()!=4) {
             die('Error : El pedido ya fue facturado') ;
         }
@@ -372,8 +381,11 @@ switch ($metodo) {
     function aplazar(){
         $id=$_POST["idAtencion"];
         $detalle=$_POST["detalle"];
+        $cajero = new Usuario();
+        $cajero= $cajero->getSesion();
         $atencion= new Atencion($id);
         $atencion=$atencion->getAtencion();
+        $atencion->setCajero($cajero);
         if ($atencion->getEstado()!=1 && $atencion->getEstado()!=4) {
             die('Error : El pedido ya fue facturado') ;
         }
@@ -386,8 +398,11 @@ switch ($metodo) {
     function cortesia(){
         $id=$_POST["idAtencion"];
         $detalle=$_POST["detalle"];
+        $cajero = new Usuario();
+        $cajero= $cajero->getSesion();
         $atencion= new Atencion($id);
         $atencion=$atencion->getAtencion();
+        $atencion->setCajero($cajero);
         if ($atencion->getEstado()!=1 && $atencion->getEstado()!=4) {
             die('Error : El pedido ya fue facturado') ;
         }
@@ -421,5 +436,51 @@ switch ($metodo) {
         if (!is_object($usuario)) {
             die ('Por favor inicie sesion para continuar');
         }
+    }
+    
+    /**
+     * Metodo lista de pedidos para mostrar en el modulo de caja
+     * @return Html tabla para mostrar los pedidos en modulo de caja
+     */
+    function pedidosCaja(){
+    
+    $atencion=new Atencion();
+    $consulta=$atencion->pedidosCaja();
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    foreach ($consulta as $a) {              
+        
+        $subtotal= $a["total"];
+        $descuento= $a["descuento"];
+        $total= $subtotal-$descuento;
+        $horaInicio=$a["horaInicio"];
+        $horaInicio = date_create($horaInicio);
+        $horaInicio= date_format($horaInicio,'d')." ".$meses[date_format($horaInicio,'n')-1]. 
+            " ".date_format($horaInicio,'Y'). " , ". date_format($horaInicio,'g:i a');
+        $horaPago=$a["horaPago"];
+        if ($horaPago!="") {
+            $horaPago = date_create($horaPago);
+            $horaPago= date_format($horaPago,'d')." ".$meses[date_format($horaPago,'n')-1]. 
+            " ".date_format($horaPago,'Y'). " , ". date_format($horaPago,'g:i a');
+        }        
+        $id=$a["id"];
+        $estado=$a["descripcion"]; 
+        $mesa=$a["mesa"]; 
+        $total=number_format($total, 0, ",", ".");
+        
+        
+        echo '<tr> 
+                <td>'.$horaInicio.'</td> 
+                <td>'.$mesa.'</td>
+                 <td>'.$subtotal.'</td>
+                <td>'.$descuento.'</td>                    
+                <td>'.$total.'</td>
+                <td>'.$estado.'</td>                
+                <td>'.$horaPago.'</td>
+                <td><a href="pago_pedido.php?atencion='.$id.'">
+                    <button type="button" class="btn btn-success btn-xs">Pagar</button></a>
+                  </td>
+                </tr>';
+     
+       }
     }
 ?>
