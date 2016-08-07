@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * incluye el modelo categoria, con los metodos y acceso 
  * a la base de datos
@@ -77,8 +77,7 @@ switch ($metodo) {
     case "pedidosCaja":
         verificarUser();
         pedidosCaja();
-        break;
-    
+        break;    
     default:
         die ('302:Error, no se encontro dirección');
 }
@@ -408,8 +407,60 @@ switch ($metodo) {
         }
         $estado= $atencion->cortesia($detalle);
         echo $estado;
-    }
+    }   
     
+    
+    /**
+     * Metodo lista de pedidos para mostrar en el modulo de caja
+     * @return Html tabla para mostrar los pedidos en modulo de caja
+     */
+    function pedidosCaja(){
+        
+    $atencion=new Atencion();
+    $consulta=$atencion->pedidosCaja();
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    foreach ($consulta as $a) {              
+        
+        $subtotal= $a["total"];
+        $descuento= $a["descuento"];
+        $total= $subtotal-$descuento;
+        $horaInicio=$a["horaInicio"];
+        $horaInicio = date_create($horaInicio);
+        $horaInicio= date_format($horaInicio,'d')." ".$meses[date_format($horaInicio,'n')-1]. 
+            " ".date_format($horaInicio,'Y'). " , ". date_format($horaInicio,'g:i a');
+        $horaPago=$a["horaPago"];
+        if ($horaPago!="") {
+            $horaPago = date_create($horaPago);
+            $horaPago= date_format($horaPago,'d')." ".$meses[date_format($horaPago,'n')-1]. 
+            " ".date_format($horaPago,'Y'). " , ". date_format($horaPago,'g:i a');
+        }        
+        $id=$a["id"];
+        $estado=$a["descripcion"]; 
+        $mesa=$a["mesa"]; 
+        $total=number_format($total, 0, ",", ".");
+        if ($estado=="pedido") {
+            $class="success";
+            $accion="pagar";
+        }else{
+            $class="info";
+            $accion="ver";
+        }
+        
+        echo '<tr> 
+                <td>'.$horaInicio.'</td> 
+                <td>'.$mesa.'</td>
+                 <td>'.$subtotal.'</td>
+                <td>'.$descuento.'</td>                    
+                <td>'.$total.'</td>
+                <td>'.$estado.'</td>                
+                <td>'.$horaPago.'</td>
+                <td><a href="pago_pedido.php?atencion='.$id.'">
+                    <button type="button" class="btn btn-'.$class.' btn-xs">'.$accion.'</button></a>
+                  </td>
+                </tr>';
+     
+       }
+    }
     /**
     * confirma que exista la sesion de usuario y que sea administrador
     * para poder realizar cambios propios de este privilegio
@@ -436,51 +487,5 @@ switch ($metodo) {
         if (!is_object($usuario)) {
             die ('Por favor inicie sesion para continuar');
         }
-    }
-    
-    /**
-     * Metodo lista de pedidos para mostrar en el modulo de caja
-     * @return Html tabla para mostrar los pedidos en modulo de caja
-     */
-    function pedidosCaja(){
-    
-    $atencion=new Atencion();
-    $consulta=$atencion->pedidosCaja();
-    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-    foreach ($consulta as $a) {              
-        
-        $subtotal= $a["total"];
-        $descuento= $a["descuento"];
-        $total= $subtotal-$descuento;
-        $horaInicio=$a["horaInicio"];
-        $horaInicio = date_create($horaInicio);
-        $horaInicio= date_format($horaInicio,'d')." ".$meses[date_format($horaInicio,'n')-1]. 
-            " ".date_format($horaInicio,'Y'). " , ". date_format($horaInicio,'g:i a');
-        $horaPago=$a["horaPago"];
-        if ($horaPago!="") {
-            $horaPago = date_create($horaPago);
-            $horaPago= date_format($horaPago,'d')." ".$meses[date_format($horaPago,'n')-1]. 
-            " ".date_format($horaPago,'Y'). " , ". date_format($horaPago,'g:i a');
-        }        
-        $id=$a["id"];
-        $estado=$a["descripcion"]; 
-        $mesa=$a["mesa"]; 
-        $total=number_format($total, 0, ",", ".");
-        
-        
-        echo '<tr> 
-                <td>'.$horaInicio.'</td> 
-                <td>'.$mesa.'</td>
-                 <td>'.$subtotal.'</td>
-                <td>'.$descuento.'</td>                    
-                <td>'.$total.'</td>
-                <td>'.$estado.'</td>                
-                <td>'.$horaPago.'</td>
-                <td><a href="pago_pedido.php?atencion='.$id.'">
-                    <button type="button" class="btn btn-success btn-xs">Pagar</button></a>
-                  </td>
-                </tr>';
-     
-       }
     }
 ?>

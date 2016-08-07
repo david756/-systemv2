@@ -75,8 +75,9 @@
                     var subtotal = subtotal.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
                     descuento=parseInt(data.descuento);
                     var descuento = descuento.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
-                    var urlDetallle="detalle_pedido.php?id="+idAtencion;
+                    var urlDetallle="detalle_pedido.php?atencion="+idAtencion;
                     estadoAtencion=estadoAtencion;
+                      $('#urlDetallle').attr("href",urlDetallle);
                       $('.totalPedido').html(total);
                       $('.mesa').html(data.mesa);
                       $('.estadoAtencion').html(data.estadoAtencion);

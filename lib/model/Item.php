@@ -110,6 +110,48 @@ class Item {
         return $result;
     }
 
+     /**
+     * Metodo devuelve un array con la lista de todas los items de una atencion
+     * @return Array <items>.
+     */
+    function itemsAtencion() {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT ap.id,ap.valor,ap.anexos,ap.hora_pedido,ap.hora_preparacion, "
+                . "ap.hora_despacho,ep.descripcion estado,p.nombre producto,p.valor valorActual,"
+                . "ap.valor valorRegistrado,p.descripcion,e.usuario mesero,c.nombre categoria ,"
+                . "cocinero.usuario cocinero FROM items AS ap INNER JOIN atenciones as a "
+                . "on ap.fk_atencion=a.id INNER JOIN estados_atencion as ea on ea.id =a.fk_estado "
+                . "INNER JOIN productos as p on p.id=ap.fk_producto INNER JOIN atencion_empleados as ema"
+                . " ON ema.fk_item=ap.id INNER JOIN usuarios as e ON e.id=ema.fk_usuario INNER JOIN"
+                . " estado_items as ep ON ep.id= ap.fk_estado_item INNER JOIN categorias as c "
+                . "ON c.id = p.fk_categoria left JOIN usuarios as cocinero on ap.fk_cocinero=cocinero.id"
+                . " where a.id =?";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->atencion->getIdAtencion());
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();
+        return $result;
+    }
+    
+    /**
+     * Metodo que retorna el id de la atencion del actual item
+     * @param type $id
+     * @return Item
+     */
+    function getAtencionItem() {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "select * from items where items.id=?";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->idAtencionProducto);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+        $resultado = $result['fk_atencion'];
+        return $resultado;
+    }
     /**
      * Metodo que almacena la atencionProducto en la base de datos
      * la almacena la cantidad de veces que se especifique
@@ -218,7 +260,7 @@ class Item {
      * Metodo que Elimina la atencionProducto de la base de datos
      * @return string Resultado
      */
-    function deleteAtencionProducto() {
+    function deleteItem() {
         try {
             require_once "database.php";
             $pdo = Database::connect();
@@ -227,7 +269,7 @@ class Item {
             $stmt->bindParam(1, $this->idAtencionProducto);
             Database::disconnect();
             if ($stmt->execute()) {
-                return "exito";
+                return "Exito";
             } else {
                 return "*1* Error al tratar de eliminar AtencionProducto";
             }

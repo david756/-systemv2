@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+<?php
+        if (isset($_GET['atencion'])) {
+               $idAtencion=$_GET['atencion'];
+        }else{
+            $idAtencion="N/A";
+        }
+
+ ?>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -20,7 +28,7 @@
   <!-- Custom styling plus plugins -->
   <link href="css/custom.css" rel="stylesheet">
   <link href="css/icheck/flat/green.css" rel="stylesheet">
-
+    <script src="js/jquery.min.js"></script>
   <style type="text/css">
       @media screen { 
        #informe { display: none; }
@@ -37,8 +45,84 @@
         ventimp.close();
       }
     </script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+               datosAtencion();
+               detalleItems();
+        });
+    </script>
+    <script type="text/javascript">
 
-  <script src="js/jquery.min.js"></script>
+      var idAtencion=<?php echo $idAtencion; ?> ;
+      var estadoAtencion;
+      function datosAtencion(){ 
+              $.ajax({
+                   type   : 'POST',
+                   url    : 'controller/Atencion.php',
+                   data  : {metodo: "datosAtencion2",atencion: idAtencion },
+                   dataType : 'json',
+                   success  : function(data){
+                    var total=data.totalPedido;
+                    total=parseInt(total);
+                    var total = total.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                    subtotal=parseInt(data.subtotal);
+                    var subtotal = subtotal.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                    descuento=parseInt(data.descuento);
+                    var descuento = descuento.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+                    estadoAtencion=estadoAtencion;
+                      $('.totalPedido').html(total);
+                      $('.mesa').html(data.mesa);
+                      $('.estadoAtencion').html(data.estadoAtencion);
+                      $('.descuento').html(descuento);
+                      $('.cajero').html(data.cajero);
+                      $('.horaPago').html(data.horaPago);
+                      $('.horaInicio').html(data.horaInicio);
+                      $('.subtotal').html(subtotal);
+                      $('.idAtencion').html(data.idAtencion);
+                      $('.impuesto').html(data.impuesto);
+                  },
+                   error  : function(data){
+                    console.log(data);
+                  }
+               });
+      }
+
+      function detalleItems(){
+        $.post("controller/Item.php", 
+                  {metodo: "detalleItems",atencion:idAtencion}
+                  ,function(tabla){
+                    $('#detalleItems').html(tabla);
+                  }
+        );
+      }
+      function modalEliminarItem(id){
+                  var textoId=document.getElementById("id_item_remove");    
+                  textoId.setAttribute("value", id);
+                  $('#ModalConfirmar').modal('show');
+       }
+      function confirmarEliminar(){
+            itemId=$('#id_item_remove').attr("value");
+            $.post("controller/Item.php", 
+                    {metodo: "delete",
+                     id_item:  itemId},function(respuesta){
+                      $('#ModalConfirmar').modal('hide');
+                      if (respuesta=="Exito") {
+                        datosAtencion();
+                        detalleItems();
+                        $('#resultado').html("item eliminado!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              );  
+       }
+    </script>
 
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -68,14 +152,18 @@
               <h3>
                     Detalle de atencion
                     <small>
-                        Orden Id : 154785
-                    </small>
+                        Orden Id : <span class="idAtencion"></span>
+                    </small>                    
                 </h3>
+
             </div>
 
             <div class="title_right">
               <div class="pull-right">
                 <h2>Estado Atencion : Pago </h2>
+                <small>
+                   <h4><span class="horaInicio"></span></h4>
+                </small>
               </div>
             </div>
           </div>
@@ -86,17 +174,19 @@
               <div class="x_panel">
                 <!-- x_content-->                
                 <div class="x_content">
-
+                  <div class="row">
+                      <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+                  </div>
                     <div class="row">                      
                       <div class="col-md-6">                       
                         <h4>Detalle de la orden</h4>
-                              <b> Mesa :</b>  Mesa 2<br>
-                              <b> Cajero :</b>  juan<br>
-                              <b> sub total :</b> $15.000 <br>
-                              <b>Descuento Total :</b>  $3.000<br>
-                              <b>total:</b> $12.000<br>
-                              <b>Hora pago:</b> 27/Feb/2016 12:01:01 pm<br>                   
-                              <b> Estado :</b>  Pago <br><br>
+                              <b> Mesa :</b>  <span class="mesa"></span><br>
+                              <b> Cajero :</b> <span class="cajero"></span><br>
+                              <b> sub total :</b> $ <span class="subtotal"></span> <br>
+                              <b>Descuento Total :</b> $ <span class="descuento"></span><br>
+                              <b>total:</b> $ <span class="totalPedido"></span><br>
+                              <b>Hora pago:</b> <span class="horaPago"></span><br>                   
+                              <b> Estado :</b>  <span class="estadoAtencion"></span> <br><br>
                         <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#ModalOrden">Editar Orden</button>
                         <a type="button" class="btn btn-default btn-sm" href="javascript:imprSelec('informe')">Imprimir a detalle</a>
                         <hr>
@@ -105,63 +195,9 @@
 
                       <div class="col-md-6">   
                         <h4>Pedidos Atencion</h4> 
-                         <!-- start accordion -->
-                         <div class="accordion" id="accordion" role="tablist" aria-multiselectable="false">
-                            <div class="panel">
-                                  <a class="panel-heading collapsed" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                    <h4 class="panel-title"><strong>Producto 1 </strong><span class="fa fa-chevron-down"></span></h4>
-                                  </a>
-                                  <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                        <div class="panel-body">
-                                           <b> Valor Actual :</b>  $5.000 <br>
-                                            <b>Valor Registrado :</b>  $4.900 <br>
-                                            <b>Total:</b> $2.500<br>
-                                            <b> Mesero :</b>  juan<br>
-                                            <b>Descripcion :</b> pan jamon y queso <br>
-                                            <b> Anexos :</b>  anexo del pedido<br>
-                                            <b> Hora Pedido :</b> 27/Feb/2016 02:13:12 pm <br>
-                                            <b> Hora Inicio Preparacion :</b> 27/Feb/2016  02:18:12 pm <br>
-                                            <b> Hora Despacho :</b> 27/Feb/2016  02:25:12 pm <br>
-                                            <b> Tiempo Total :</b> 35 minutos  <br>
-                                            <b> Cocinero :</b>  Pedro <br>
-                                            <b> Categoria : </b> bebidas<br><br>
-                                            <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#Modalitem">Editar</button>
-                                            <button type="button" class="btn btn-default btn-xs">Eliminar</button><hr>
-                                        </div>
-                                  </div>
-                            </div>
-                          </div>   
-                          <!-- end accordion -->  
-
-                          <!-- start accordion -->
-                         <div class="accordion" id="accordion" role="tablist" aria-multiselectable="false">
-                            <div class="panel">
-                                  <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    <h4 class="panel-title"><strong>Producto 1 </strong><span class="fa fa-chevron-down" aling="right"></span></h4>
-                                  </a>
-                                  <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                        <div class="panel-body">
-                                           <b> Valor Actual :</b>  $5.000 <br>
-                                            <b>Valor Registrado :</b>  $4.900 <br>
-                                            <b>Total:</b> $2.500<br>
-                                            <b> Mesero :</b>  juan<br>
-                                            <b>Descripcion :</b> pan jamon y queso <br>
-                                            <b> Anexos :</b>  anexo del pedido<br>
-                                            <b> Hora Pedido :</b> 27/Feb/2016 02:13:12 pm <br>
-                                            <b> Hora Inicio Preparacion :</b> 27/Feb/2016  02:18:12 pm <br>
-                                            <b> Hora Despacho :</b> 27/Feb/2016  02:25:12 pm <br>
-                                            <b> Tiempo Total :</b> 35 minutos  <br>                                            
-                                            <b> Cocinero :</b>  Pedro <br>
-                                            <b> Categoria : </b> bebidas<br><br>
-                                            <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#Modalitem">Editar</button>
-                                            <button type="button" class="btn btn-default btn-xs">Eliminar</button><hr>
-                                        </div>
-                                  </div>
-                            </div>
-                          </div>   
-                          <!-- end accordion -->                               
-                       
-                  </div>
+                        <div id="detalleItems"></div>
+                        
+                      </div>
 
                   <!-- /modal editar Orden -->
                     <div class="modal fade bs-example-modal-lg" id="ModalOrden" tabindex="-1" role="dialog" aria-hidden="true">
@@ -214,51 +250,22 @@
                     </div>
                     <!-- /modal editar orden  -->
 
-                    <!-- /modal editar item pedido -->
-                    <div class="modal fade bs-example-modal-lg" id="Modalitem" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                          <div class="modal-content" align="center">
-
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-                              </button>
-                              <h4 class="modal-title" id="myModalLabel2">Modificar Pedido</h4>
-                            </div>
-                               <form class="form-horizontal form-label-left">                                    
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Producto</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <select class="form-control">
-                                            <option>Choose option</option>
-                                            <option>Option one</option>
-                                            <option>Option two</option>
-                                            <option>Option three</option>
-                                            <option>Option four</option>
-                                          </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Valor</label>
-                                      <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text" class="form-control" placeholder="Valor del producto">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Anexos<span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <textarea class="form-control" rows="3" placeholder='Anexos'></textarea>
-                                        </div>
-                                    </div>
-                                </form>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-info">Confirmar</button>
+                    <!-- /modal confirmar eliminar item -->
+                        <div class="modal fade bs-example-modal-sm" id="ModalConfirmar" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-sm">
+                              <div class="modal-content" align="center">
+                              <div class="modal-body">
+                                <h4>¿Esta seguro de eliminar este item?</h4>
+                              </div>
+                              <input type="text" id ="id_item_remove" value="" style="display:none">
+                                <div class="modal-footer">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                      <button id="confirmar" type="button" class="btn btn-success" onclick="confirmarEliminar()">Confirmar</button>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                    </div>
-                    <!-- /modal editar item pedido  -->
+                     <!-- /modal confirmar eliminar item-->
 
                     <!-- / informe de cuenta-->
                     <section id="informe" class="content invoice">
@@ -274,10 +281,9 @@
                                             <br>contacto@nombre.com <br><br>                                       
                                          </address>
                                         <address>
-                                                        <strong>Cuenta Detallada</strong>
-                                                        <br>Este ticket no remplaza la 
-                                                        factura de venta.                            
-                                                                                            
+                                              <strong>Cuenta Detallada</strong>
+                                              <br>Este ticket no remplaza la 
+                                              factura de venta.                           
                                          </address>
                                     </div>
                                       <!-- /.col -->
