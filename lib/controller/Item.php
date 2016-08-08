@@ -58,6 +58,13 @@ switch ($metodo) {
         $horaPedido=$a["hora_pedido"];
         $horaPreparacion=$a["hora_preparacion"];
         $horaDespacho=$a["hora_despacho"];
+        $tiempo="no disponible";
+        if ($horaDespacho!="") {
+            $tiempo=date("H:i:s", strtotime("00:00:00") + strtotime($horaDespacho) - strtotime($horaPedido) );
+            $horaDespacho = date_create($horaDespacho);
+            $horaDespacho= date_format($horaDespacho,'d')." ".$meses[date_format($horaDespacho,'n')-1]. 
+            " ".date_format($horaDespacho,'Y'). " , ". date_format($horaDespacho,'g:i a');
+        } 
         if ($horaPedido!="") {
             $horaPedido = date_create($horaPedido);
             $horaPedido= date_format($horaPedido,'d')." ".$meses[date_format($horaPedido,'n')-1]. 
@@ -68,12 +75,8 @@ switch ($metodo) {
             $horaPreparacion= date_format($horaPreparacion,'d')." ".$meses[date_format($horaPreparacion,'n')-1]. 
             " ".date_format($horaPreparacion,'Y'). " , ". date_format($horaPreparacion,'g:i a');
         }    
-        if ($horaDespacho!="") {
-            $horaDespacho = date_create($horaDespacho);
-            $horaDespacho= date_format($horaDespacho,'d')." ".$meses[date_format($horaDespacho,'n')-1]. 
-            " ".date_format($horaDespacho,'Y'). " , ". date_format($horaDespacho,'g:i a');
-        }    
-        $tiempo=25; 
+        
+        
         $cocinero=$a["cocinero"];
         $categoria=$a["categoria"];
                
@@ -94,10 +97,10 @@ switch ($metodo) {
                                   <b> Hora Pedido :</b> '.$horaPedido.' <br>
                                   <b> Hora Inicio Preparacion :</b> '.$horaPreparacion.' <br>
                                   <b> Hora Despacho :</b>'.$horaDespacho.' <br>
-                                  <b> Tiempo Total :</b> '.$tiempo.'  <br>                                            
+                                  <b> Tiempo total de espera :</b> '.$tiempo.'  <br>                                            
                                   <b> Cocinero :</b>  '.$cocinero.' <br>
                                   <b> Categoria : </b> '.$categoria.'<br><br>
-                                  <a type="button" onclick="modalEliminarItem('.$idItem.')" class="btn btn-info btn-xs">Eliminar</a><hr>
+                                  <a type="button" onclick="modalEliminarItem('.$idItem.')" class="eliminar btn btn-info btn-xs">Eliminar</a><hr>
                               </div>
                         </div>
                   </div>

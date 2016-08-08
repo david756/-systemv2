@@ -305,7 +305,9 @@ switch ($metodo) {
     $impuesto=$total*(8/100);
     $horaPago=$atencion->getDatosAtencion()['horaPago'];
     $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    $tiempo="no disponible";
     if ($horaPago!=null) {
+        $tiempo=date("H:i:s", strtotime("00:00:00") + strtotime($horaInicio) - strtotime($horaPago) );
         $horaPago = date_create($horaPago);
         $horaPago= date_format($horaPago,'d')." ".$meses[date_format($horaPago,'n')-1]. 
             " ".date_format($horaPago,'Y'). " , ". date_format($horaPago,'g:i a');
@@ -332,6 +334,7 @@ switch ($metodo) {
         $data['idMesa'] = $idMesa;
         $data['horaInicio'] = $horaInicio;
         $data['impuesto'] = $impuesto;
+        $data['tiempoTotal']=$tiempo;
         
         
         echo json_encode($data);

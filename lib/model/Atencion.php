@@ -341,9 +341,9 @@ class Atencion {
                 . "categorias AS c ON (p.fk_categoria=c.id) INNER JOIN atencion_empleados AS "
                 . "eat ON (eat.fk_item=ap.id) INNER JOIN usuarios AS e ON (e.id=eat.fk_usuario) "
                 . "INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN estado_items AS ep ON "
-                . "(ep.id=ap.fk_estado_item) WHERE (ap.hora_pedido)<(DATE_SUB(NOW(), INTERVAL 0 hour))"
-                . " and (ap.hora_pedido)>(DATE_SUB(NOW(), INTERVAL 10 hour)) "
-                . "group by m.descripcion,a.id ORDER BY ap.hora_pedido DESC";
+                . "(ep.id=ap.fk_estado_item) WHERE (a.horaInicio)<(DATE_SUB(NOW(), INTERVAL 0 hour))"
+                . " and (a.horaInicio)>(DATE_SUB(NOW(), INTERVAL 10 hour)) "
+                . "group by m.descripcion,a.id ORDER BY a.horaInicio DESC";
         $stmt = $pdo->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll();

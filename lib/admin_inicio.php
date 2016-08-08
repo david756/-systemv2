@@ -376,71 +376,16 @@
             <div class="dashboard_graph x_panel">
 
               <div class="row x_title">
-                <div class="col-md-6">
-                  <h3>Actividad<small>Ultima semana</small></h3>
+                <div class="col-md-12">
+                  <h3>Actividad<small>Ultimos dias</small></h3>
                 </div>
               </div>
-              <div class="col-md-4 col-sm-4 col-xs-12 widget_tally_box">
+              <div class="col-md-12 col-sm-12 col-xs-12 widget_tally_box">
                 <div class="x_content">
                   <h4>Ingresos</h4>
                   <div id="graph_bar" style="width:100%; height:200px;"></div>
-
-                  <div class="col-xs-12 bg-white progress_summary">
-
-                    <div class="row">
-                      <div class="progress_title">
-                        <span class="left">Escudor Wireless 1.0</span>
-                        <div class="clearfix"></div>
-                      </div>
-                      <div class="col-xs-8">
-                        <div class="progress progress_sm">
-                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="89"></div>
-                        </div>
-                      </div>
-                      <div class="col-xs-2 more_info">
-                        <span>89%</span>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="progress_title">
-                        <span class="left">Mobile Access</span>
-                        <div class="clearfix"></div>
-                      </div>
-                      <div class="col-xs-8">
-                        <div class="progress progress_sm">
-                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="79"></div>
-                        </div>
-                      </div>
-                      <div class="col-xs-2 more_info">
-                        <span>79%</span>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="progress_title">
-                        <span class="left">WAN access users</span>
-                        <div class="clearfix"></div>
-                      </div>
-                      <div class="col-xs-8">
-                        <div class="progress progress_sm">
-                          <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="69"></div>
-                        </div>
-                      </div>
-                      <div class="col-xs-2 more_info">
-                        <span>69%</span>
-                      </div>
-                    </div>
-
-                  </div>
                 </div>
             </div>
-              <div class="col-md-8 col-sm-8 col-xs-12">
-                <h5>Ingresos vs Ordenes</h5><br>
-                <div id="placeholder33" style="height: 260px; display: none" class="demo-placeholder"></div>
-                <div style="width: 100%;">
-                  <div id="canvas_dahs" class="demo-placeholder" style="width: 100%; height:400px;"></div>
-                </div>
-              </div>
-
               <div class="clearfix"></div>
             </div>
           </div>
@@ -635,6 +580,27 @@
   <script>
     $(function() {
       var day_data = [{
+        "period": "Dom",
+        "Hours worked": 400000
+      }, {
+        "period": "Lun",
+        "Hours worked": 250000
+      }, {
+        "period": "Mar",
+        "Hours worked": 960000
+      }, {
+        "period": "Mie",
+        "Hours worked": 325000
+      }, {
+        "period": "Jue",
+        "Hours worked": 265000
+      }, {
+        "period": "Vie",
+        "Hours worked": 265000
+      }, {
+        "period": "Sab",
+        "Hours worked": 314000
+      },{
         "period": "Dom",
         "Hours worked": 400000
       }, {

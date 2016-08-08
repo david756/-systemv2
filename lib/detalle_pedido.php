@@ -37,12 +37,14 @@
     <script type="text/javascript">
       function imprSelec(muestra)
       {
+        $(".eliminar").hide();
         var ficha=document.getElementById(muestra);
         var ventimp=window.open(' ','popimpr');
         ventimp.document.write(ficha.innerHTML);
         ventimp.document.close();
         ventimp.print();
         ventimp.close();
+        $(".eliminar").show();
       }
     </script>
     <script type="text/javascript">
@@ -80,6 +82,8 @@
                       $('.subtotal').html(subtotal);
                       $('.idAtencion').html(data.idAtencion);
                       $('.impuesto').html(data.impuesto);
+                      $('.tiempoTotal').html(data.tiempoTotal);
+
                   },
                    error  : function(data){
                     console.log(data);
@@ -91,7 +95,7 @@
         $.post("controller/Item.php", 
                   {metodo: "detalleItems",atencion:idAtencion}
                   ,function(tabla){
-                    $('#detalleItems').html(tabla);
+                    $('.detalleItems').html(tabla);
                   }
         );
       }
@@ -162,7 +166,7 @@
               <div class="pull-right">
                 <h2>Estado Atencion : Pago </h2>
                 <small>
-                   <h4><span class="horaInicio"></span></h4>
+                   <h5><span class="horaInicio"></span></h5>
                 </small>
               </div>
             </div>
@@ -186,7 +190,8 @@
                               <b>Descuento Total :</b> $ <span class="descuento"></span><br>
                               <b>total:</b> $ <span class="totalPedido"></span><br>
                               <b>Hora pago:</b> <span class="horaPago"></span><br>                   
-                              <b> Estado :</b>  <span class="estadoAtencion"></span> <br><br>
+                              <b> Estado :</b>  <span class="estadoAtencion"></span> <br>
+                              <b> Tiempo Total :</b>  <span class="tiempoTotal"></span> <br><br>
                         <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#ModalOrden">Editar Orden</button>
                         <a type="button" class="btn btn-default btn-sm" href="javascript:imprSelec('informe')">Imprimir a detalle</a>
                         <hr>
@@ -195,7 +200,7 @@
 
                       <div class="col-md-6">   
                         <h4>Pedidos Atencion</h4> 
-                        <div id="detalleItems"></div>
+                        <div class="detalleItems"></div>
                         
                       </div>
 
@@ -214,11 +219,11 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Mesa</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
                                           <select class="form-control">
-                                            <option>Choose option</option>
-                                            <option>Option one</option>
-                                            <option>Option two</option>
-                                            <option>Option three</option>
-                                            <option>Option four</option>
+                                            <option value="">Seleccione una opcion</option>
+                                            <option value="1">Pedido</option>
+                                            <option value="2">Pago</option>
+                                            <option value="3">Cortesia</option>
+                                            <option value="4">Aplazado</option>
                                           </select>
                                         </div>
                                     </div>
@@ -232,11 +237,11 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Estado</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
                                           <select class="form-control">
-                                            <option>Choose option</option>
-                                            <option>Option one</option>
-                                            <option>Option two</option>
-                                            <option>Option three</option>
-                                            <option>Option four</option>
+                                            <option>Seleccione Mesa</option>
+                                            <option value="">Option one</option>
+                                            <option value="">Option two</option>
+                                            <option value="">Option three</option>
+                                            <option value="">Option four</option>
                                           </select>
                                         </div>
                                     </div>
@@ -304,60 +309,16 @@
                               <!-- Table row -->
                               <div class="row">
                                  <h4>Detalle de la orden</h4>
-                                    <div class="">
-                                        <h4 class="panel-title"><strong>Producto 1</strong></h4>
-                                         <b> Valor Actual :</b>  $5.000 <br>
-                                            <b>Valor Registrado :</b>  $4.900 <br>
-                                            <b>Total:</b> $2.500<br>
-                                            <b> Mesero :</b>  juan<br>
-                                            <b>Descripcion :</b> pan jamon y queso <br>
-                                            <b> Anexos :</b>  anexo del pedido<br>
-                                            <b> Hora Pedido :</b> 27/Feb/2016 02:13:12 pm <br>
-                                            <b> Hora Inicio Preparacion :</b> 27/Feb/2016  02:18:12 pm <br>
-                                            <b> Hora Despacho :</b> 27/Feb/2016  02:25:12 pm <br>
-                                            <b> Tiempo Total :</b> 35 minutos  <br>                                            
-                                            <b> Cocinero :</b>  Pedro <br>
-                                            <b> Categoria : </b> bebidas<br><br> 
-                                    </div>
-
-                                    <div class="">
-                                        <h4 class="panel-title"><strong>Producto 1</strong></h4>
-                                         <b> Valor Actual :</b>  $5.000 <br>
-                                            <b>Valor Registrado :</b>  $4.900 <br>
-                                            <b>Total:</b> $2.500<br>
-                                            <b> Mesero :</b>  juan<br>
-                                            <b>Descripcion :</b> pan jamon y queso <br>
-                                            <b> Anexos :</b>  anexo del pedido<br>
-                                            <b> Hora Pedido :</b> 27/Feb/2016 02:13:12 pm <br>
-                                            <b> Hora Inicio Preparacion :</b> 27/Feb/2016  02:18:12 pm <br>
-                                            <b> Hora Despacho :</b> 27/Feb/2016  02:25:12 pm <br>
-                                            <b> Tiempo Total :</b> 35 minutos  <br>                                            
-                                            <b> Cocinero :</b>  Pedro <br>
-                                            <b> Categoria : </b> bebidas<br><br> 
-                                    </div>
-
-                                    <div class="">
-                                        <h4 class="panel-title"><strong>Producto 1</strong></h4>
-                                         <b> Valor Actual :</b>  $5.000 <br>
-                                            <b>Valor Registrado :</b>  $4.900 <br>
-                                            <b>Total:</b> $2.500<br>
-                                            <b> Mesero :</b>  juan<br>
-                                            <b>Descripcion :</b> pan jamon y queso <br>
-                                            <b> Anexos :</b>  anexo del pedido<br>
-                                            <b> Hora Pedido :</b> 27/Feb/2016 02:13:12 pm <br>
-                                            <b> Hora Inicio Preparacion :</b> 27/Feb/2016  02:18:12 pm <br>
-                                            <b> Hora Despacho :</b> 27/Feb/2016  02:25:12 pm <br>
-                                            <b> Tiempo Total :</b> 35 minutos  <br>                                            
-                                            <b> Cocinero :</b>  Pedro <br>
-                                            <b> Categoria : </b> bebidas<br><br> 
-                                    </div>
+                                    <div class="detalleItems">
+                                        
+                                    </div>                                   
                               </div>
                               <!-- /.row -->
                               <div class="row">
                                   <!-- /.col -->
                                 <div class="col-sm-12 invoice-col"><hr>
-                                    <b>Tiempo Total :</b>  27 minutos <br>
-                                    <b>Tiempo Prom. de espera :</b>  2 minutos <br>
+                                    <b>Tiempo Total :</b>  <span class="tiempoTotal"></span> <br>
+                                    <small>Basado en la hora de inicio y la hora de pago</small>
                                     <p align="center"><i>Trabajamos para mejorar nuestros servicios</i>
                                     <br><i>Gracias por preferirnos.</i></p>
                                 </div>
