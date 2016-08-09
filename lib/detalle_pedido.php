@@ -2,7 +2,7 @@
         if (isset($_GET['atencion'])) {
                $idAtencion=$_GET['atencion'];
         }else{
-            $idAtencion="N/A";
+            header('Location: menu_principal.php');
         }
 
  ?>
@@ -51,11 +51,13 @@
       $(document).ready(function() {
                datosAtencion();
                detalleItems();
+               listaMesas();
         });
     </script>
     <script type="text/javascript">
 
       var idAtencion=<?php echo $idAtencion; ?> ;
+
       var estadoAtencion;
       function datosAtencion(){ 
               $.ajax({
@@ -91,6 +93,15 @@
                });
       }
 
+      function listaMesas(){
+        $.post("controller/Mesa.php", 
+                  {metodo: "mesasSelect"}
+                  ,function(tabla){
+                    $('#mesas').html(tabla);
+                    
+                  }
+        );
+      }
       function detalleItems(){
         $.post("controller/Item.php", 
                   {metodo: "detalleItems",atencion:idAtencion}
@@ -125,6 +136,42 @@
                       
                     }
               );  
+       }
+       function confirmarEditar(){
+        if (!$("#editar_atencion").hasClass("disabled")) {
+            atencion=idAtencion;
+            mesa=$('#mesas').val();
+            descuento=$('#descuento').val();
+            estado=$('#estado').val();
+            if (mesa!="") {
+            $.post("controller/Atencion.php", 
+                    {metodo: "update",
+                     id_atencion:  atencion,
+                     mesa:  mesa,
+                     estado:  estado,
+                     descuento:  descuento
+                   },function(respuesta){
+                      $('#ModalOrden').modal('hide');
+                      if (respuesta=="Exito") {
+                        datosAtencion();
+                        $('#mesas').val("");
+                        listaMesas();
+                        $('#descuento').val(0);
+                        $('#estado').val("");
+                        $('#resultado').html("la atencion fue editada!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }
+                      
+                    }
+              );  }
+            }
+                  event.preventDefault();
        }
     </script>
 
@@ -214,15 +261,14 @@
                               </button>
                               <h4 class="modal-title" id="myModalLabel2">Modificar Atencion</h4>
                             </div>
-                            <form class="form-horizontal form-label-left">
+                            <div class="modal-body">
+                            <form data-toggle="validator" id="form_create" class="form-horizontal form-label-left" novalidate>
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Mesa</label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Cambiar estado</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <select class="form-control">
-                                            <option value="">Seleccione una opcion</option>
+                                          <select id="estado" class="form-control" required>
+                                            <option value="">Seleccione una opción</option>
                                             <option value="1">Pedido</option>
-                                            <option value="2">Pago</option>
-                                            <option value="3">Cortesia</option>
                                             <option value="4">Aplazado</option>
                                           </select>
                                         </div>
@@ -230,25 +276,21 @@
                                     <div class="form-group">
                                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Descuento</label>
                                       <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <input type="text" class="form-control" placeholder="Default Input">
+                                        <input type="text" id="descuento" class="form-control" placeholder="Agregar descuento" value="0" required>
                                       </div>
                                     </div> 
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Estado</label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Cambiar mesa</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <select class="form-control">
-                                            <option>Seleccione Mesa</option>
-                                            <option value="">Option one</option>
-                                            <option value="">Option two</option>
-                                            <option value="">Option three</option>
-                                            <option value="">Option four</option>
+                                          <select class="form-control" id="mesas" required>                                            
                                           </select>
                                         </div>
                                     </div>
-                            </form>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                              <button type="button" class="btn btn-info">Confirmar</button>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                      <button id="editar_atencion" type="submit" class="btn btn-success disabled" onclick="confirmarEditar()">Confirmar</button>
+                                    </div>
+                            </form>                            
                             </div>
                           </div>
                         </div>
@@ -363,9 +405,29 @@
 
   <script src="js/custom.js"></script>
 
-  <!-- pace -->
+  <script src="js/validator.min.js"></script>
+
+ <!-- pace -->
   <script src="js/pace/pace.min.js"></script>
 
-</body>
+          <script>
+            var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+              showLeftPush = document.getElementById( 'showLeftPush' ),
+              body = document.body;
+              
+            showLeftPush.onclick = function() {
+              classie.toggle( this, 'active' );
+              classie.toggle( body, 'cbp-spmenu-push-toright' );
+              classie.toggle( menuLeft, 'cbp-spmenu-open' );
+              disableOther( 'showLeftPush' );
+            };
+            
+            function disableOther( button ) {
+              if( button !== 'showLeftPush' ) {
+                classie.toggle( showLeftPush, 'disabled' );
+              }
+          }
+          </script>
+  </body>
 
 </html>

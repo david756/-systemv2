@@ -2,7 +2,7 @@
         if (isset($_GET['atencion'])) {
                $idAtencion=$_GET['atencion'];
         }else{
-            $idAtencion="N/A";
+            header('Location: caja.php');
         }
 
  ?>

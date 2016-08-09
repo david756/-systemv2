@@ -86,7 +86,6 @@
                                 console.log("entro");
                               }
                               var descripcion=$('#crear-descripcion').val();
-                              descripcion = descripcion.replace(/\n/g, "<br>");
                               var data = {
                                   'nombre_producto'     : $('input[name=crear-nombre]').val(),
                                   'descripcion_producto' : descripcion,
@@ -222,7 +221,6 @@
         if (!$("#editar_producto").hasClass( "disabled" )) {
 
             var descripcion=$('#descripcion_producto_edit').val();
-            descripcion = descripcion.replace(/\n/g, "<br>");
             productoId=$('#id_producto_edit').val();
             productoNombre=$('#nombre_producto_edit').val();
             productoDescripcion=descripcion;

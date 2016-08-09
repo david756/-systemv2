@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * incluye el modelo usuario, con los metodos y acceso 
  * a la base de datos

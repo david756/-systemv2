@@ -29,6 +29,10 @@ switch ($metodo) {
         verificarUser();
         crear();
         break;
+    case "update":
+        verificarAdmin();
+        actualizar();
+        break;
     case "listaCategorias":
         verificarUser();
         listaCategorias();
@@ -131,6 +135,37 @@ switch ($metodo) {
         }
       echo "Exito";
     }
+    /**
+    * Actualizar una atencion
+    * @param Post idAtencion,mesa,estado,descuento
+    */
+   function actualizar(){
+        $id=$_POST["id_atencion"];
+        $mesa=$_POST["mesa"];
+        $estado=$_POST["estado"];
+        $descuento=$_POST["descuento"];
+        $mesa= new Mesa($mesa);        
+        $atencion=new Atencion($id);
+        $atencion=$atencion->getAtencion();
+        if ($atencion->getEstado()==2||$atencion->getEstado()==3) {
+            die("Error: el pedido ya fue tarifado,no se puede editar");
+        }
+        if ($estado!=1 && $estado!=4 ) {
+            die("Error: no esta autorizado para realizar esta accion");
+        }
+        $cajero=$atencion->getCajero();
+        if ($cajero==null) {
+            $cajero=new Usuario(null);
+        }
+        $atencionActualizar= new Atencion($id,$atencion->getDescripcionEstado(),$descuento,
+                $cajero,$mesa,$atencion->getHoraPago(),$estado);
+        $resultado=$atencionActualizar->updateAtencion();
+        if ($resultado=="Exito") {
+            echo "Exito";
+        } else {
+            echo $resultado;
+        }
+   }
     /**
      * Lista de  categorias
      * @Return lista de categorias
@@ -307,7 +342,7 @@ switch ($metodo) {
     $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
     $tiempo="no disponible";
     if ($horaPago!=null) {
-        $tiempo=date("H:i:s", strtotime("00:00:00") + strtotime($horaInicio) - strtotime($horaPago) );
+        $tiempo=date("H:i:s", strtotime("00:00:00") + strtotime($horaPago) - strtotime($horaInicio) );
         $horaPago = date_create($horaPago);
         $horaPago= date_format($horaPago,'d')." ".$meses[date_format($horaPago,'n')-1]. 
             " ".date_format($horaPago,'Y'). " , ". date_format($horaPago,'g:i a');
@@ -441,7 +476,7 @@ switch ($metodo) {
         $estado=$a["descripcion"]; 
         $mesa=$a["mesa"]; 
         $total=number_format($total, 0, ",", ".");
-        if ($estado=="pedido") {
+        if ($estado=="pedido" || $estado=="aplazado" ) {
             $class="success";
             $accion="pagar";
         }else{

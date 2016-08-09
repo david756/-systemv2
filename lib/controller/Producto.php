@@ -62,7 +62,7 @@ $descripcion = $_POST["descripcion_producto"];
 $valor = $_POST["valor_producto"];
 $categoria = $_POST["categoria_producto"];
 $stock = $_POST["stock_producto"];
-
+$descripcion = eregi_replace("[\n|\r|\n\r]", " ", $descripcion);
 $c=new Categoria($categoria);
 $categoria=$c->getCategoria();
 $producto = new Producto(null,$nombre,$valor,$descripcion,$categoria,1,$stock);
@@ -84,6 +84,7 @@ function actualizar(){
 $id=$_POST["id_producto"];
 $nombre = $_POST["nombre"];
 $descripcion = $_POST["descripcion"];
+$descripcion = eregi_replace("[\n|\r|\n\r]", " ", $descripcion);
 $valor = $_POST["valor"];
 $categoria = $_POST["categoria"];
 $stock = $_POST["Stock"];

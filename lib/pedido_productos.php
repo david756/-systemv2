@@ -2,7 +2,7 @@
         if (isset($_GET['mesa'])) {
                $idMesa=$_GET['mesa'];
         }else{
-            $idMesa="N/A";
+            header('Location: pedido_mesas.php');
         }
 
  ?>

@@ -45,6 +45,10 @@ switch ($metodo) {
         verificarUser();
         pedido_mesas();
         break;
+    case "mesasSelect":
+        verificarUser();
+        mesasSelect();
+        break;
     
     default:
         die ('302:Error, no se encontro dirección');
@@ -182,6 +186,24 @@ function pedido_mesas(){
             }
         }
     }
+     /**
+     * lista de mesas para mostrar en select en formato
+     * html
+     */
+    function mesasSelect(){
+        $mesasConsulta= new Mesa();
+        $consulta=$mesasConsulta->getMesas();  
+        echo '<option value="">Seleccione Mesa</option>';
+        foreach ($consulta as $mesa) {
+            if ($mesa["estado"]=="activa") {          
+                    $mesaDis=new Mesa($mesa['id']);
+                    $disponibilidad=$mesaDis->getMesaDisponiblidad();                    
+                    if ($disponibilidad!=1){
+                         echo '<option value="'.$mesa['id'].'">'.$mesa['descripcion'].'</option>';
+                    }
+                }
+            }
+    }
     /**
     * confirma que exista la sesion de usuario y que sea administrador
     * para poder realizar cambios propios de este privilegio
@@ -209,4 +231,5 @@ function pedido_mesas(){
             die ('Por favor inicie sesion para continuar');
         }
     }
+   
 ?>

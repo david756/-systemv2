@@ -144,7 +144,7 @@ class Atencion {
 
             Database::disconnect();
             if ($stmt->execute()) {
-                return "exito";
+                return "Exito";
             } else {
                 return "*1* Error al tratar de actualizar Atencion";
             }
