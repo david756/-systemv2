@@ -90,7 +90,7 @@ class Inventario {
                 . "(i.cantidad*i.costo) as total,i.proveedor as proveedor FROM inventarios i "
                 . "LEFT JOIN usuarios u ON i.fk_empleado=u.id LEFT JOIN accion_inventarios ai "
                 . "on i.fk_accion=ai.id WHERE i.fk_producto=? "
-                . "and i.fecha BETWEEN ? AND ?";
+                . "and i.fecha BETWEEN ? AND ? order by fecha desc";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->producto);
         $stmt->bindParam(2, $this->getFechaInicio());
@@ -217,15 +217,12 @@ class Inventario {
         try {
             require_once "database.php";
             $pdo = Database::connect();
-            $query = "SELECT p.nombre as producto, sum(i.cantidad) as cantidad_ingresados , "
-                    . "(SELECT count(ap.fk_producto) as cantidad_Vendidos from items as ap "
-                    . "inner join atenciones as a on ap.fk_atencion=a.id "
-                    . "WHERE ap.fk_producto=i.fk_producto and a.fk_estado<>1 GROUP BY ap.fk_producto) as "
-                    . "cantidad_vendidos , (SELECT sum(i2.cantidad) as cantidad_eliminados"
+            $query = "SELECT p.nombre as producto, sum(i.cantidad) as cantidad_ingresados "
+                    . ", (SELECT sum(i2.cantidad) as cantidad_eliminados"
                     . " from inventarios as i2 WHERE i2.fk_accion=2 and i2.fk_producto=i.fk_producto"
                     . " GROUP BY i2.fk_producto) as cantidad_eliminados from inventarios as i "
                     . "inner join productos as p on p.id=i.fk_producto WHERE i.fk_accion=1 "
-                    . "and i.fk_producto=? GROUP BY i.fk_producto";
+                    . "and i.fk_producto=? GROUP BY i.fk_producto ";
             
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->producto->getIdProducto());
@@ -233,15 +230,34 @@ class Inventario {
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             Database::disconnect();
             $cantidad_ingresados=$result['cantidad_ingresados'];
-            $cantidad_vendidos=$result['cantidad_vendidos'];
-            $cantidad_eliminados=$result['cantidad_eliminados'];            
-            $disponibles=$cantidad_ingresados-$cantidad_vendidos-$cantidad_eliminados;
+            $cantidad_eliminados=$result['cantidad_eliminados']; 
             $data = array();
             $data['cantidad_ingresados'] =$cantidad_ingresados;
-            $data['cantidad_vendidos'] = $cantidad_vendidos;
             $data['cantidad_eliminados'] = $cantidad_eliminados;
-            $data['disponibles'] = $disponibles;            
             return $data;
+        } catch (Exception $e) {
+            return "*1* error al obtener unidades disponibles de inventario ";
+        }
+    }
+    /**
+     * Retorna las unidades vendidas de este producto
+     * @return type resultado
+     */
+    function getCantidadVendidos(){
+        try {
+            require_once "database.php";
+            $pdo = Database::connect();
+            $query = "SELECT count(ap.fk_producto) as cantidad_Vendidos from items as ap "
+                    . "inner join atenciones as a on ap.fk_atencion=a.id WHERE"
+                    . " a.fk_estado<>1 and ap.fk_producto=? GROUP BY ap.fk_producto";
+            
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(1, $this->producto->getIdProducto());
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            Database::disconnect();
+            $cantidad_vendidos=$result['cantidad_Vendidos'];
+            return $cantidad_vendidos;
         } catch (Exception $e) {
             return "*1* error al obtener unidades disponibles de inventario ";
         }

@@ -34,11 +34,12 @@ class Sesion {
     public static function getSesion() {
         if(!isset($_SESSION)){session_start();}
         if(isset($_SESSION['usuario'])){
-        return $_SESSION['usuario'];
-        }
-        else { 
+            $user=$_SESSION['usuario']->getUsuario();
+            if ($user->getEstado()==1) {  
+            return $user;
+            }            
+        }        
             return null;
-        }
     }    
 
 }

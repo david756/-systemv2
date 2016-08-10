@@ -74,14 +74,19 @@ switch ($metodo) {
         verificarUser();
         aplazar();
         break;
+    case "pedidosCaja":
+        verificarUser();
+        pedidosCaja();
+        break;
+    case "pedidosCocina":
+        verificarUser();
+        pedidosCocina();
+        break;
     case "cortesia":
         verificarUser();
         cortesia();
         break;
-    case "pedidosCaja":
-        verificarUser();
-        pedidosCaja();
-        break;    
+        
     default:
         die ('302:Error, no se encontro dirección');
 }
@@ -495,6 +500,60 @@ switch ($metodo) {
                 <td><a href="pago_pedido.php?atencion='.$id.'">
                     <button type="button" class="btn btn-'.$class.' btn-xs">'.$accion.'</button></a>
                   </td>
+                </tr>';
+     
+       }
+    }
+    
+    /**
+     * Metodo lista de pedidos para mostrar en el modulo de caja
+     * @return Html tabla para mostrar los pedidos en modulo de caja
+     */
+    function pedidosCocina(){
+        
+    $consulta= new Item();
+    $consulta= $consulta->pedidosCocina();
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    foreach ($consulta as $a) {              
+        
+        $producto= $a["nombre"];
+        $anexos= $a["anexos"];
+        $mesa= $a["mesa"];  
+        $tiempo=$a["hora_pedido"];        
+        $mesero=$a["mesero"];
+        $cocinero=$a["cocinero"]; 
+        $estado=$a["estado"]; 
+        $id=$a["idItem"]; 
+        
+        $date = new DateTime($tiempo); 
+        $horaPedido= $date->format('U');
+        $horaActual=time();
+        $diferencia=round(($horaActual-$horaPedido)/60)+1;
+        $progreso='<span class="timeprogress">'.$diferencia.'</span> Minutos <i class="fa fa-level-up"></i>';
+        $classTr="";
+        if ($diferencia>5) {
+            $classTr="danger";
+        }
+        if ($estado=="pedido") {
+            $class="success";
+            $accion="Preparar";
+            
+        }else{
+            $class="info";
+            $accion="Despachar";
+        }
+        
+        echo '<tr class="'.$classTr.'"> 
+                <td>'.$producto.'</td> 
+                <td>'.$anexos.'</td>
+                <td>'.$mesa.'</td>
+                <td>'.$progreso.'</td>                    
+                <td>'.$mesero.'</td>
+                <td>'.$cocinero.'</td>                
+                <td>'.$estado.'</td>
+                <td><a>
+                    <button onclick="(cambiarEstado('.$id.',\''.$accion.'\'))" type="button" class="btn btn-'.$class.' btn-xs">'.$accion.'</button></a>
+                </td>
                 </tr>';
      
        }

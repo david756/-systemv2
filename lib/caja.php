@@ -1,6 +1,9 @@
+<?php  
+  include 'controller/Sesiones.php';
+  caja();
+?>
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <!-- Meta, title, CSS, favicons, etc. -->
@@ -29,15 +32,18 @@
 
   <script src="js/jquery.min.js"></script>
 
-  <script>        
+  <script>   
            //cuando carga la pagina obtiene los datos de la base de datos y los muestra en la tabla
-            $( document ).ready(function() {              
+            $( document ).ready(function() { 
+                //actializa los pedidos de la cocina cada 15 segundos
+                  setInterval(function(){ 
+                  $('#actualizar').trigger('click');                                            
+                  }, 15000);             
                 //  pide a  todos los pedidos que estan en espera en la base de datos.y los recible como (tabla)
                 $.post("controller/Atencion.php", 
                     {metodo: "pedidosCaja"},
                     function(tabla){
-                      $('#comentarios').html(tabla); 
-                      $('#datatable-responsive').dataTable();                    
+                      $('#comentarios').html(tabla);             
                     }
               );  
 
@@ -45,12 +51,10 @@
                   $.post("controller/Atencion.php", 
                     {metodo: "pedidosCaja"},
                     function(tabla){
-                      $('#comentarios').html(tabla);
-                      $('#datatable-responsive').dataTable();                       
+                      $('#comentarios').html(tabla);                 
                     }
                    );  
                 });
-                $("#actualizar").click();
             });           
            
 

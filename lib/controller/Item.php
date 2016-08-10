@@ -30,6 +30,10 @@ switch ($metodo) {
         verificarAdmin();
         eliminar();
         break;
+    case "cambiarEstado":
+        verificarUser();
+        cambiarEstadoItem();
+        break;    
     default:
         die ('302:Error, no se encontro dirección');
 }
@@ -126,6 +130,47 @@ switch ($metodo) {
    $atencion=$atencion->deleteAtencion();
    echo $respuesta;
    }
+   
+    /**
+     * cambia el estado de un item en el momento que el cocinero decide despachar o 
+     * prepara el producto
+     */
+    function cambiarEstadoItem(){
+        $id=$_POST["id"];
+        $accion=$_POST["accion"];
+        $fecha= date('Y-m-d H:i:s');  
+        $item = new Item($id);
+        $item=$item->getAtencionProducto();
+        $cocinero= null;
+        
+        if ($item->getEstado()==3) {
+            die("Error: alguien ya despacho este producto");
+        }
+        //preparar
+        if ($accion=="Preparar" && $item->getEstado()==1 ) {
+                $cocinero= new Usuario();
+                $cocinero=$cocinero->getSesion();  
+                $item->setCocinero($cocinero->getIdUsuario());
+                $item->setEstado(2);
+                $item->setHoraPreparacion($fecha);
+                $estado=$item->updateAtencionProducto();
+                echo $estado;
+        }
+        //despachar
+        elseif ($accion=="Despachar" && $item->getEstado()==2) {
+                $item->setEstado(3);
+                $item->setHoraDespacho($fecha);
+                $estado=$item->updateAtencionProducto();
+                echo $estado;
+        }
+        elseif ($item->getEstado()==2) {
+                echo 'Error: parce que alguien ya esta preparando este producto';
+        }
+    
+        
+        
+    }
+    
     /**
     * confirma que exista la sesion de usuario y que sea administrador
     * para poder realizar cambios propios de este privilegio

@@ -1,4 +1,6 @@
 <?php
+        include 'controller/Sesiones.php';
+        caja();
         if (isset($_GET['atencion'])) {
                $idAtencion=$_GET['atencion'];
         }else{

@@ -1,4 +1,6 @@
 <?php
+        include 'controller/Sesiones.php';
+        mesero();
         if (isset($_GET['mesa'])) {
                $idMesa=$_GET['mesa'];
         }else{

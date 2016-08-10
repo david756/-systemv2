@@ -226,6 +226,22 @@ class Mesa {
                 echo "*102* Error al tratar de actualizar Mesa: " . $e->getMessage();
             }
         } 
+        
+     /**
+     * Metodo que retorn el total de mesas ocupadas en el momento
+     * @return string Resultado
+     */
+    function totalOcupadas() {
+            
+                require_once "database.php";
+                $pdo = Database::connect();
+                $query = "SELECT COUNT(*) total FROM atenciones as a WHERE(a.fk_estado=1)";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                Database::disconnect();
+                return  $result;
+    } 
 
     /**
      * Metodo que obtiene el id de una mesa

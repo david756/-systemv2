@@ -1,4 +1,6 @@
 <?php
+        include 'controller/Sesiones.php';
+        user();
         if (isset($_GET['atencion'])) {
                $idAtencion=$_GET['atencion'];
         }else{
@@ -336,14 +338,14 @@
                                       <!-- /.col -->
                                       <div class="col-sm-12 invoice-col">
                                           <h4>Detalle de la orden</h4>
-                                          <b> Orden Id :</b>  #25714<br>
-                                          <b> Mesa :</b>  Mesa 2<br>
-                                          <b> Cajero :</b>  juan<br>                                          
-                                          <b> Hora pago:</b> 27/Feb/2016 12:01:01 pm<br>                   
-                                          <b> Estado :</b>  Pago <br>
-                                          <b> Subtotal :</b> $15.000 <br>
-                                          <b> Descuento Total :</b>  $3.000<br>
-                                          <b> TOTAL:</b> $12.000<br><br><hr>
+                                          <b> Orden Id :</b># <span class="idAtencion"></span><br>
+                                          <b> Mesa :</b>  <span class="mesa"></span><br>
+                                          <b> Cajero :</b> <span class="cajero"></span><br>                                          
+                                          <b> Hora pago:</b> <span class="horaPago"></span><br>                   
+                                          <b> Estado :</b>  <span class="estadoAtencion"></span> <br>
+                                          <b> Subtotal :</b> $ <span class="subtotal"></span> <br>
+                                          <b> Descuento Total :</b>  $ <span class="descuento"></span><br>
+                                          <b> TOTAL:</b> $ <span class="totalPedido"></span><br><br><hr>
                                       </div>
                                       <!-- /.col -->
                               </div>

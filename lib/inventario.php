@@ -1,3 +1,7 @@
+<?php  
+  include 'controller/Sesiones.php';
+  inventario();
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -125,7 +129,6 @@
                   fecha2:fechaFin}
                   ,function(tabla){
                     $('#tabla').html(tabla);
-                    $('#datatable').dataTable(); 
                   }
                 );
             }                     
@@ -248,18 +251,18 @@
                 <div class="x_content">
 
                         <div class="col-sm-12 invoice-col">
-                                <b>Unidades disponibles:</b> <span id="disponibles">0</span>
+                                <b>Total Unidades disponibles:</b> <span id="disponibles">0</span>
                                 <br>
                                 <br>
-                                <b>Total ingresados: </b> <span id="cantidad_ingresados">0</span>
+                                <b>Unidades ingresadas: </b> <span id="cantidad_ingresados">0</span>
                                 <br>
-                                <b>Total vendidos: </b> <span id="cantidad_vendidos">0</span>
+                                <b>Unidades vendidas: </b> <span id="cantidad_vendidos">0</span>
                                 <br>
-                                <b>Total eliminados: </b> <span id="cantidad_eliminados">0</span>
+                                <b>Unidades eliminadas: </b> <span id="cantidad_eliminados">0</span>
                                 <br><br>
                                 <b>Valor de venta promedio: $</b> <span id="valorPromedio">0</span>
                                 <br>
-                                <b>Costo promedio: $ </b><span id="costoPromedio">0</span>
+                                <b>Valor de compra promedio: $ </b><span id="costoPromedio">0</span>
                                 <br><br>
                               </div>
                         <table id="datatable" class="table table-striped table-bordered">

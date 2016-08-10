@@ -124,25 +124,7 @@ function listaInventario(){
                 <td>'.$inventario['proveedor'].'</td>
               </tr>';
         } 
-    
-    $consulta=$inventarioConsulta->getListaItemsVendidos(); 
-    print_r($consulta) ;
-    foreach ($consulta as $inventario) {
-        $f = date_create($inventario['fecha']);        
-        $fecha= date_format($f,'d')." de ".$meses[date_format($f,'n')-1].
-                " del ".date_format($f,'Y'). " - ". date_format($f,'g:i a');
-        
-        echo '<tr>
-                <td>'.$fecha.'</td>
-                <td>'.$inventario['usuario'].'</td>
-                <td>1</td>
-                <td><button type="button" class="btn btn-info btn-xs">Vendido</button></td>
-                <td>'.$inventario['descripcion_estado'].'</td>
-                <td>'.$inventario['total'].'</td>
-                <td>'.$inventario['total'].'</td>
-                <td></td>
-              </tr>';
-        } 
+  
     }
     
     function datosInventario(){
@@ -153,11 +135,11 @@ function listaInventario(){
         $producto=$producto->getProducto();        
         $inventario->setProducto($producto);
         
-        $data['disponibles'] = $inventario->getDisponibles()['disponibles'];
+       
         $data['cantidad_ingresados'] =0+ $inventario->getDisponibles()['cantidad_ingresados'];
-        $data['cantidad_vendidos'] = 0+$inventario->getDisponibles()['cantidad_vendidos'];
+        $data['cantidad_vendidos'] = 0+$inventario->getCantidadVendidos();
         $data['cantidad_eliminados'] = 0+$inventario->getDisponibles()['cantidad_eliminados'];
-        
+        $data['disponibles'] =$data['cantidad_ingresados']-$data['cantidad_vendidos']-$data['cantidad_eliminados'] ;
         $data['valorPromedio'] = $inventario->getValorPromedio();
         $data['costoPromedio'] = $inventario->getCostoPromedio();
         $data['productoNombre'] = $producto->getNombre();

@@ -1,6 +1,9 @@
+<?php  
+  include 'controller/Sesiones.php';
+  user();
+?>
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <!-- Meta, title, CSS, favicons, etc. -->

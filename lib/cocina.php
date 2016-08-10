@@ -1,5 +1,9 @@
+<?php  
+  include 'controller/Sesiones.php';
+  cocina();
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -28,6 +32,63 @@
   <link href="js/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
 
   <script src="js/jquery.min.js"></script>
+    <script>        
+                //cuando carga la pagina obtiene los datos de la base de datos y los muestra en la tabla
+                $( document ).ready(function() {
+                   //actializa los pedidos de la cocina cada 15 segundos
+                  setInterval(function(){ 
+                  $('#actualizar').trigger('click');                                            
+                  }, 15000);
+
+                //  pide a  todos los pedidos que estan en espera en la base de datos.y los recible como (tabla)
+                $.post("controller/Atencion.php", 
+                    {metodo: "pedidosCocina"},
+                    function(tabla){
+                      $('#comentarios').html(tabla);             
+                    }
+                );  
+
+              $("#actualizar").click(function() {
+                  $.post("controller/Atencion.php", 
+                    {metodo: "pedidosCocina"},
+                    function(tabla){
+                      $('#comentarios').html(tabla); 
+                    }
+                   );  
+                });
+            });  
+    </script>
+    <script type="text/javascript">
+      function cambiarEstado(idAtemProd,accion){
+              datos= {id:idAtemProd,accion:accion,metodo:"cambiarEstado"};
+              $.ajax({
+                      url:   'controller/Item.php',
+                      type:  'POST',
+                      data: datos,
+                      error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(jqXHR);
+                                $('#resultado').html("Error: por favor verifique su conexion!");
+                                $('#resultado').attr("class","alert alert-danger");
+                                $('#resultado').show("slow").delay(4000).hide("slow");
+                      },
+                      success:  function (resultado,estado,objeto) {
+                            console.log(resultado);
+                            if (resultado=="Exito") {
+                                $('#resultado').html("Se realizo la peticion con exito!");
+                                $('#resultado').attr("class","alert alert-success");
+                                $('#resultado').show("slow").delay(4000).hide("slow");
+                                $('#actualizar').trigger('click');
+                            }
+                            else{
+                                 $('#resultado').attr("class","alert alert-danger");
+                                 $('#resultado').html(resultado);
+                                 $('#resultado').show("slow").delay(4000).hide("slow");
+                            }
+                      },
+                      
+              });          
+          }
+    </script>
 
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -66,12 +127,14 @@
                         <h2>Lista de pedidos en espera </h2>
                         <div class="clearfix"></div>
                       </div>
-
+                      <div class="row">
+                        <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+                      </div>
                       <div class="x_content">
                         <p class="text-muted font-13 m-b-30">
                           Opciones:
                         </p>
-                        <button type="button" class="btn btn-success">Actualizar</button>
+                        <button type="button" id="actualizar" class="btn btn-success">Actualizar</button>
                         <hr>
                         <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                            <thead>
@@ -86,60 +149,8 @@
                               <th>Accion</th>
                             </tr>
                           </thead>
-                          <tbody>                           
-                            <tr>
-                              <td>Perro Caliente</td>
-                              <td>anexo del producto</td>
-                              <td>Mesa 2</td>
-                              <td>5 minutos</td>
-                              <td>Juan</td>
-                              <td>Pipe</td>
-                              <td>Prepararando</td>
-                              <td>
-                                <button type="button" class="btn btn-success btn-xs">Despachar</button>
-                                <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Perro Caliente</td>
-                              <td>anexo del producto</td>
-                              <td>Mesa 2</td>
-                              <td>5 minutos</td>
-                              <td>Juan</td>
-                              <td>Pipe</td>
-                              <td>Prepararando</td>
-                              <td>
-                                <button type="button" class="btn btn-success btn-xs">Despachar</button>
-                                <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Perro Caliente</td>
-                              <td>anexo del producto</td>
-                              <td>Mesa 2</td>
-                              <td>5 minutos</td>
-                              <td>Juan</td>
-                              <td>Pipe</td>
-                              <td>Prepararando</td>
-                              <td>
-                                <button type="button" class="btn btn-success btn-xs">Despachar</button>
-                                <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Perro Caliente</td>
-                              <td>anexo del producto</td>
-                              <td>Mesa 2</td>
-                              <td>5 minutos</td>
-                              <td>Juan</td>
-                              <td>Pipe</td>
-                              <td>Prepararando</td>
-                              <td>
-                                <button type="button" class="btn btn-success btn-xs">Despachar</button>
-                                <button type="button" class="btn btn-defautl btn-xs">Quitar <i class="fa fa-remove"></i></button>
-                              </td>
-                            </tr>
-
+                          <tbody id="comentarios"> 
+                            
                           </tbody>
                         </table>
 
@@ -197,59 +208,7 @@
 
         <!-- pace -->
         <script src="js/pace/pace.min.js"></script>
-        <script>
-          var handleDataTableButtons = function() {
-              "use strict";
-              0 !== $("#datatable-buttons").length && $("#datatable-buttons").DataTable({
-                dom: "Bfrtip",
-                buttons: [{
-                  extend: "copy",
-                  className: "btn-sm"
-                }, {
-                  extend: "csv",
-                  className: "btn-sm"
-                }, {
-                  extend: "excel",
-                  className: "btn-sm"
-                }, {
-                  extend: "pdf",
-                  className: "btn-sm"
-                }, {
-                  extend: "print",
-                  className: "btn-sm"
-                }],
-                responsive: !0
-              })
-            },
-            TableManageButtons = function() {
-              "use strict";
-              return {
-                init: function() {
-                  handleDataTableButtons()
-                }
-              }
-            }();
-        </script>
-        <script type="text/javascript">
-          $(document).ready(function() {
-            $('#datatable').dataTable();
-            $('#datatable-keytable').DataTable({
-              keys: true
-            });
-            $('#datatable-responsive').DataTable();
-            $('#datatable-scroller').DataTable({
-              ajax: "js/datatables/json/scroller-demo.json",
-              deferRender: true,
-              scrollY: 380,
-              scrollCollapse: true,
-              scroller: true
-            });
-            var table = $('#datatable-fixed-header').DataTable({
-              fixedHeader: true
-            });
-          });
-          TableManageButtons.init();
-        </script>
+        
 </body>
 
 </html>

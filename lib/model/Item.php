@@ -73,7 +73,7 @@ class Item {
         $pdo = Database::connect();
         $query = "select  ap.id ap_id ,ap.valor ap_valor,ap.anexos ap_anexos,ap.hora_pedido ap_hora_pedido,"
                 . "ap.hora_preparacion ap_hora_preparacion,ap.hora_despacho"
-                . " ap_hora_despacho,ap.descuento ap_descuento,ap.fk_atencion"
+                . " ap_hora_despacho,ap.fk_atencion"
                 . " ap_fk_atencion,ap.fk_producto ap_fk_producto,ap.fk_estado_item"
                 . " ap_fk_estado_item,ap.fk_cocinero ap_fk_cocinero,"
                 . "ea.id ea_id,ea.fk_usuario ea_fk_usuario,ea.fk_item ea_fk_item "
@@ -228,26 +228,13 @@ class Item {
             $stmt->bindParam(3, $this->horaPedido);
             $stmt->bindParam(4, $this->horaPreparacion);
             $stmt->bindParam(5, $this->horaDespacho);
-            $stmt->bindParam(6, $this->atencion->getIdAtencion());
-            $stmt->bindParam(7, $this->producto->getIdProducto());
-            $stmt->bindParam(8, $this->cocinero->getIdUsuario());
+            $stmt->bindParam(6, $this->atencion);
+            $stmt->bindParam(7, $this->producto);
+            $stmt->bindParam(8, $this->cocinero);
             $stmt->bindParam(9, $this->estado);
             Database::disconnect();
             if ($stmt->execute()) {
-                //solo si agrego la atencion Producto con exito , ahora agrega
-                //el empleado atencion
-                $pdo = Database::connect();
-                $query = "update atencion_empleados set fk_usuario = ?"
-                        . "where fk_aten_prod =" . $this->idAtencionProducto;
-                $stmt = $pdo->prepare($query);
-                $stmt->bindParam(1, $this->usuario->getIdUsuario());
-                Database::disconnect();
-                if ($stmt->execute()) {
-                    return "exito";
-                } else {
-                    return "*1* Error al tratar de actualizar AtencionProducto: "
-                            . "Error ingresando Mesero de la atencion";
-                }
+                return "Exito";
             } else {
                 return "*2* Error al tratar de actualizar AtencionProducto";
             }
@@ -277,7 +264,34 @@ class Item {
             echo "*2* Error al tratar de eliminar AtencionProducto:  " . $e->getMessage();
         }
     }
-
+    /**
+     *  
+     * @return resultado con los pedidos de cocina de las ultimas horas
+     */
+    function pedidosCocina(){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT p.nombre,p.descripcion,ap.anexos,m.descripcion mesa,ap.hora_pedido,e.usuario mesero,ep.descripcion estado,p.id idProducto,ap.id idItem,ep.id meseroId,ap.hora_preparacion,cocinero.usuario cocinero
+                              FROM atenciones AS a INNER JOIN  estados_atencion AS ea ON 
+                              (a.fk_estado=ea.id)
+                              INNER JOIN  items AS ap ON (ap.fk_atencion=a.id)
+                              INNER JOIN  productos AS p ON (p.id=ap.fk_producto)
+                              INNER JOIN  categorias AS  c ON (p.fk_categoria=c.id)
+                              INNER JOIN  atencion_empleados AS eat ON (eat.fk_item=ap.id)
+                              INNER JOIN  usuarios AS e ON (e.id=eat.fk_usuario)
+                              INNER JOIN  mesas AS m ON (m.id=a.fk_mesa)
+                              INNER JOIN  estado_items AS ep ON (ep.id=ap.fk_estado_item)
+                              left JOIN  usuarios as cocinero on (cocinero.id=ap.fk_cocinero)
+                              WHERE(ep.id=1 OR ep.id=2) and (ap.hora_pedido)<(DATE_SUB(NOW(), INTERVAL 0 hour))
+                              and (ap.hora_pedido)>(DATE_SUB(NOW(), INTERVAL 2 hour))
+                              ORDER BY ap.hora_pedido ASC";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();
+        return $result;
+    }
+       
     /**
      * Metodo get idAtencionProducto de la clase Atencion Producto
      * @return idAtencionProducto

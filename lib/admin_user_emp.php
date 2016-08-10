@@ -1,6 +1,9 @@
+<?php  
+  include 'controller/Sesiones.php';
+  admin();
+?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <!-- Meta, title, CSS, favicons, etc. -->
@@ -346,19 +349,19 @@
                 </li>
                 <li><a><i class="fa fa-bar-chart"></i> Presentacion de datos <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li><a href="empty.html">General</a></li>                    
-                    <li><a href="empty.html">Empleados</a></li>
-                    <li><a href="empty.html">Categorias</a></li>                    
-                    <li><a href="empty.html">Productos</a></li>
-                    <li><a href="empty.html">Atenciones</a></li>                    
-                    <li><a href="empty.html">Inventarios</a></li>                    
+                    <li><a href="#">General</a></li>                    
+                    <li><a href="#">Empleados</a></li>
+                    <li><a href="#">Categorias</a></li>                    
+                    <li><a href="#">Productos</a></li>
+                    <li><a href="#">Atenciones</a></li>                    
+                    <li><a href="#">Inventarios</a></li>                    
                   </ul>
                 </li>
                 <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li><a href="empty.html">Reporte de hoy</a></li>                    
-                    <li><a href="empty.html">Reportes pasados</a></li>
-                    <li><a href="empty.html">Informe mes</a></li>                                        
+                    <li><a href="admin_reportes_dia.php">Reporte de hoy</a></li>                    
+                    <li><a href="admin_reportes_fecha.php">Reportes pasados</a></li>
+                    <li><a href="#">Informe mes</a></li>                                        
                   </ul>
                 </li>
               </ul>
@@ -600,11 +603,11 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Perfiles del usuario</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                           <label>
-                            <input id="check1" type="checkbox" class="css-checkbox" name="categoriaEdit[]" value="1" >
+                            <input id="check1" type="checkbox" class="css-checkbox" name="categoriaEdit[]" value="2" >
                             <label for="check1" class="css-label radGroup2">Mesero</label>
                           </label>
                           <label>
-                            <input id="check2" type="checkbox" class="css-checkbox" name="categoriaEdit[]" value="2" >
+                            <input id="check2" type="checkbox" class="css-checkbox" name="categoriaEdit[]" value="1" >
                             <label for="check2" class="css-label radGroup2">Caja</label>
                           </label>
                           <label>

@@ -1,6 +1,10 @@
+<?php  
+  include 'controller/Sesiones.php';
+  include 'controller/Reportes.php';
+  admin();
+?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <!-- Meta, title, CSS, favicons, etc. -->
@@ -26,6 +30,8 @@
 
   <script src="js/jquery.min.js"></script>
   <script src="js/nprogress.js"></script>
+  <script type="text/javascript">
+  </script>
 
   <!--[if lt IE 9]>
   <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -101,19 +107,19 @@
                 </li>
                 <li><a><i class="fa fa-bar-chart"></i> Presentacion de datos <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li><a href="empty.html">General</a></li>                    
-                    <li><a href="empty.html">Empleados</a></li>
-                    <li><a href="empty.html">Categorias</a></li>                    
-                    <li><a href="empty.html">Productos</a></li>
-                    <li><a href="empty.html">Atenciones</a></li>                    
-                    <li><a href="empty.html">Inventarios</a></li>                    
+                    <li><a href="#">General</a></li>                    
+                    <li><a href="#">Empleados</a></li>
+                    <li><a href="#">Categorias</a></li>                    
+                    <li><a href="#">Productos</a></li>
+                    <li><a href="#">Atenciones</a></li>                    
+                    <li><a href="#">Inventarios</a></li>                    
                   </ul>
                 </li>
                 <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li><a href="empty.html">Reporte de hoy</a></li>                    
-                    <li><a href="empty.html">Reportes pasados</a></li>
-                    <li><a href="empty.html">Informe mes</a></li>                                        
+                    <li><a href="admin_reportes_dia.php">Reporte de hoy</a></li>                    
+                    <li><a href="admin_reportes_fecha.php">Reportes pasados</a></li>
+                    <li><a href="#">Informe mes</a></li>                                        
                   </ul>
                 </li>
               </ul>
@@ -153,7 +159,7 @@
               <div class="tile-stats">
                 <div class="icon"><i class="fa fa-edit"></i>
                 </div>
-                <div class="count">17</div>
+                <div class="count"><?php echo pedidosHoy(); ?></div>
 
                 <h3>Pedidos Hoy</h3>
                 <p>Ordenes facturadas el dia de hoy.</p>
@@ -163,7 +169,7 @@
               <div class="tile-stats">
                 <div class="icon"><i class="fa fa-th"></i>
                 </div>
-                <div class="count">08</div>
+                <div class="count"><?php echo mesasOcupadas(); ?></div>
 
                 <h3>Mesas Ocupadas</h3>
                 <p>Mesas que registran atenciones.</p>
@@ -173,7 +179,7 @@
               <div class="tile-stats">
                 <div class="icon"><i class="fa fa-male"></i>
                 </div>
-                <div class="count">03</div>
+                <div class="count"><?php echo meserosActivos(); ?></div>
 
                 <h3>Meseros Activos</h3>
                 <p>Meseros que registraron hoy.</p>
@@ -183,7 +189,7 @@
               <div class="tile-stats">
                 <div class="icon"><i class="fa fa-usd"></i>
                 </div>
-                <div class="count">178900</div>
+                <div class="count"><?php echo ingresosHoy(); ?></div>
 
                 <h3>Total ingresos</h3>
                 <p>ingresos totales de ventas.</p>
@@ -497,7 +503,7 @@
       }
     };
     var plot = $.plot($("#placeholder3xx3"), [{
-      label: "Pedidos",
+      label: "Cantidad de pedidos",
       data: d1,
       lines: {
         fillColor: "rgba(150, 202, 89, 0.12)"

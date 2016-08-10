@@ -512,6 +512,23 @@ class Usuario {
         Database::disconnect();
         return $result;
     }
+    /**
+     * Metodo que retorn el total de mesas ocupadas en el momento
+     * @return string Resultado
+     */
+    function meserosActivos() {
+            
+                require_once "database.php";
+                $pdo = Database::connect();
+                $query = "SELECT COUNT(DISTINCT ea.fk_usuario) total "
+                        . "from atencion_empleados as ea INNER JOIN items as ap "
+                        . "on ea.fk_item=ap.id where DATE(hora_pedido)=DATE(NOW())";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                Database::disconnect();
+                return  $result;
+    } 
     
     /**
      * crea una notificacion en la base de datos

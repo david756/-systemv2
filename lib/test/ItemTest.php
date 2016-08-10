@@ -21,7 +21,7 @@
          */
 
         //agregar($atencionProducto);
-        //consultar(99737902);
+        consultar(53);
         //consultarAll();
        // actualizar(99737945,$producto,$atencion,$usuario,7000,$fecha,null,
                 //"anexos editados",$fecha,$fecha,3,$usuario);

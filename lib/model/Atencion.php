@@ -349,6 +349,36 @@ class Atencion {
         $result = $stmt->fetchAll();
         Database::disconnect();
         return $result;
+    }  
+    /**
+     * Metodo que retorn el total de atenciones hasta el momento
+     * @return string Resultado
+     */
+    function pedidosHoy() {
+            
+                require_once "database.php";
+                $pdo = Database::connect();
+                $query = "SELECT count(DISTINCT a.horaInicio) total FROM atenciones as a WHERE DATE(a.horaInicio)=DATE(NOW())";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                Database::disconnect();
+                return  $result;
+    } 
+     /**
+     * Metodo que retorn el total de ingresos hasta el momento
+     * @return string Resultado
+     */
+    function ingresosHoy() {
+            
+                require_once "database.php";
+                $pdo = Database::connect();
+                $query = "SELECT sum(i.valor) as total FROM items as i INNER JOIN atenciones a on i.fk_atencion=a.id WHERE DATE(a.horaPago)=DATE(NOW()) and a.fk_estado=2";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                Database::disconnect();
+                return  $result;
     }
 
     /**
