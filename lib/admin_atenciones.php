@@ -35,6 +35,44 @@
   <script src="js/jquery.min.js"></script>
   <script src="js/nprogress.js"></script>
 
+  <!-- /datepicker -->
+    <script type="text/javascript">
+      $(document).ready(function() {
+          var f = new Date();
+          var actual =((f.getMonth() +1) + "/" +  f.getDate()+ "/" + f.getFullYear());
+          var anterior =((f.getMonth() +1) + "/" +  (f.getDate())+ "/" + f.getFullYear());
+          $('#fecha_inicio').val(anterior);
+          $('#fecha_fin').val(actual);
+          $('#reservation').daterangepicker({ 
+            "startDate": anterior,
+            "endDate": actual
+          }, function(start, end, label) {
+            $('#fecha_inicio').val(start.format('MM/DD/YYYY'));
+            $('#fecha_fin').val(end.format('MM/DD/YYYY'));
+          });
+      });
+    </script>
+
+   <script type="text/javascript">
+
+     
+      function mostrarLista(){   
+           
+            fechaInicio=$('#fecha_inicio').val();
+            fechaFin=$('#fecha_fin').val(); 
+                $.post("controller/Atencion.php", 
+                  {metodo: "listaAtenciones",
+                  fecha1:fechaInicio,
+                  fecha2:fechaFin}
+                  ,function(tabla){
+                    $('#tabla').html(tabla);
+                  }
+                );                 
+      }
+    
+
+  </script>
+
   <!--[if lt IE 9]>
   <script src="../assets/js/ie8-responsive-file-warning.js"></script>
   <![endif]-->
@@ -172,54 +210,40 @@
                     <form class="form-horizontal">
                       <fieldset>
                       <div class="row">
-                          <div class="control-group col-md-4 col-sm-6 col-xs-12">
+                          <div class="control-group col-md-4 col-sm-3 col-xs-12">
                             <div class="controls">
                               <div class="input-prepend input-group">
                                 <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
-                                <input type="text" style="width: 200px" name="reservation" id="reservation" class="form-control" value="03/18/2013 - 03/23/2013" />
+                                <input type="text" style="width: 200px" name="reservation" id="reservation" class="form-control" value="Seleccione fecha" />
+                                <input type="text" id ="fecha_inicio" value="" style="display:none">
+                                <input type="text" id ="fecha_fin" value="" style="display:none">
                               </div>
                             </div>
                           </div>
-
-                            <div class="col-md-8 col-sm-6 col-xs-12">
-                              <button type="button" class="btn btn-success btn-sm">Ver atenciones</button>
+                            <div class="col-md-4">
+                              <button type="button" onclick="mostrarLista()" class="btn btn-default btn-sm">Consultar</button>
                             </div>
                         </div>
                       </fieldset>
                     </form>
                   </div>
               <div class="col-md-12 col-sm-12 col-xs-12">                    
-                        <table  id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <table id="datatable" class="table table-striped table-bordered">
                           <thead>
                             <tr>
+                              <th>Id</th>
                               <th>Fecha</th>
                               <th>Mesa</th>
                               <th>Estado</th>
                               <th>Descripcion</th>
                               <th>Descuento</th>
+                              <th>Total</th>
                               <th>Cajero</th>
                               <th>Accion</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            <tr>
-                              <td>2 octubre 2016  2:16 pm</td>
-                              <td>Mesa 2</td>
-                              <td>pedido</td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td><button type="button" class="btn btn-success btn-xs">Ver</button></td>
-                            </tr>
-                            <tr>
-                              <td>2 octubre 2016  2:16 pm</td>
-                              <td>Mesa 2</td>
-                              <td>pago</td>
-                              <td>Pago normal</td>
-                              <td></td>
-                              <td>Juan</td>
-                              <td><button type="button" class="btn btn-success btn-xs">Ver</button></td>
-                            </tr>
+                         <tbody id="tabla">
+                            
                           </tbody>
                         </table>
                   </div>
@@ -289,255 +313,6 @@
         <script src="js/datatables/dataTables.responsive.min.js"></script>
         <script src="js/datatables/responsive.bootstrap.min.js"></script>
         <script src="js/datatables/dataTables.scroller.min.js"></script>
-
-
-        <!-- pace -->
-        <script src="js/pace/pace.min.js"></script>
-        <script>
-          var handleDataTableButtons = function() {
-              "use strict";
-              0 !== $("#datatable-buttons").length && $("#datatable-buttons").DataTable({
-                dom: "Bfrtip",
-                buttons: [{
-                  extend: "copy",
-                  className: "btn-sm"
-                }, {
-                  extend: "csv",
-                  className: "btn-sm"
-                }, {
-                  extend: "excel",
-                  className: "btn-sm"
-                }, {
-                  extend: "pdf",
-                  className: "btn-sm"
-                }, {
-                  extend: "print",
-                  className: "btn-sm"
-                }],
-                responsive: !0
-              })
-            },
-            TableManageButtons = function() {
-              "use strict";
-              return {
-                init: function() {
-                  handleDataTableButtons()
-                }
-              }
-            }();
-        </script>
-        <script type="text/javascript">
-          $(document).ready(function() {
-            $('#datatable').dataTable();
-            $('#datatable-keytable').DataTable({
-              keys: true
-            });
-            $('#datatable-responsive').DataTable();
-            $('#datatable-scroller').DataTable({
-              ajax: "js/datatables/json/scroller-demo.json",
-              deferRender: true,
-              scrollY: 380,
-              scrollCollapse: true,
-              scroller: true
-            });
-            var table = $('#datatable-fixed-header').DataTable({
-              fixedHeader: true
-            });
-          });
-          TableManageButtons.init();
-        </script>
-
-         <!-- datepicker -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-
-      var cb = function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange_right span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        //alert("Callback has fired: [" + start.format('MMMM D, YYYY') + " to " + end.format('MMMM D, YYYY') + ", label = " + label + "]");
-      }
-
-      var optionSet1 = {
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: {
-          days: 60
-        },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'right',
-        buttonClasses: ['btn btn-default'],
-        applyClass: 'btn-small btn-primary',
-        cancelClass: 'btn-small',
-        format: 'MM/DD/YYYY',
-        separator: ' to ',
-        locale: {
-          applyLabel: 'Submit',
-          cancelLabel: 'Clear',
-          fromLabel: 'From',
-          toLabel: 'To',
-          customRangeLabel: 'Custom',
-          daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-          monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-          firstDay: 1
-        }
-      };
-
-      $('#reportrange_right span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-      $('#reportrange_right').daterangepicker(optionSet1, cb);
-
-      $('#reportrange_right').on('show.daterangepicker', function() {
-        console.log("show event fired");
-      });
-      $('#reportrange_right').on('hide.daterangepicker', function() {
-        console.log("hide event fired");
-      });
-      $('#reportrange_right').on('apply.daterangepicker', function(ev, picker) {
-        console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
-      });
-      $('#reportrange_right').on('cancel.daterangepicker', function(ev, picker) {
-        console.log("cancel event fired");
-      });
-
-      $('#options1').click(function() {
-        $('#reportrange_right').data('daterangepicker').setOptions(optionSet1, cb);
-      });
-
-      $('#options2').click(function() {
-        $('#reportrange_right').data('daterangepicker').setOptions(optionSet2, cb);
-      });
-
-      $('#destroy').click(function() {
-        $('#reportrange_right').data('daterangepicker').remove();
-      });
-
-    });
-  </script>
-  <!-- datepicker -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-
-      var cb = function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        //alert("Callback has fired: [" + start.format('MMMM D, YYYY') + " to " + end.format('MMMM D, YYYY') + ", label = " + label + "]");
-      }
-
-      var optionSet1 = {
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: {
-          days: 60
-        },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'left',
-        buttonClasses: ['btn btn-default'],
-        applyClass: 'btn-small btn-primary',
-        cancelClass: 'btn-small',
-        format: 'MM/DD/YYYY',
-        separator: ' to ',
-        locale: {
-          applyLabel: 'Submit',
-          cancelLabel: 'Clear',
-          fromLabel: 'From',
-          toLabel: 'To',
-          customRangeLabel: 'Custom',
-          daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-          monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-          firstDay: 1
-        }
-      };
-      $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-      $('#reportrange').daterangepicker(optionSet1, cb);
-      $('#reportrange').on('show.daterangepicker', function() {
-        console.log("show event fired");
-      });
-      $('#reportrange').on('hide.daterangepicker', function() {
-        console.log("hide event fired");
-      });
-      $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
-        console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
-      });
-      $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
-        console.log("cancel event fired");
-      });
-      $('#options1').click(function() {
-        $('#reportrange').data('daterangepicker').setOptions(optionSet1, cb);
-      });
-      $('#options2').click(function() {
-        $('#reportrange').data('daterangepicker').setOptions(optionSet2, cb);
-      });
-      $('#destroy').click(function() {
-        $('#reportrange').data('daterangepicker').remove();
-      });
-    });
-  </script>
-  <!-- /datepicker -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#single_cal1').daterangepicker({
-        singleDatePicker: true,
-        calender_style: "picker_1"
-      }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
-      $('#single_cal2').daterangepicker({
-        singleDatePicker: true,
-        calender_style: "picker_2"
-      }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
-      $('#single_cal3').daterangepicker({
-        singleDatePicker: true,
-        calender_style: "picker_3"
-      }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
-      $('#single_cal4').daterangepicker({
-        singleDatePicker: true,
-        calender_style: "picker_4"
-      }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
-    });
-  </script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#reservation').daterangepicker(null, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
-    });
-  </script>
-  <!-- /datepicker -->
- 
 </body>
 
 </html>

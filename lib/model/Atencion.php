@@ -380,7 +380,29 @@ class Atencion {
                 Database::disconnect();
                 return  $result;
     }
-
+    /**
+     * Metodo devuelve un array con la lista de atenciones
+     * @return Array <Atenciones>
+     **/  
+    function listaAtenciones($fecha1,$fecha2){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $query = "SELECT a.id as id ,a.horaInicio as fecha,u.usuario as cajero, a.descripcion_estado
+            as descripcion,m.descripcion as mesa,a.descuento,ea.descripcion estado, sum(it.valor)-a.descuento total
+            FROM atenciones a INNER JOIn mesas m on  m.id=a.fk_mesa
+            left join items it on it.fk_atencion=a.id inner join estados_atencion ea on ea.id=a.fk_estado
+            LEFT JOIN usuarios u ON a.fk_cajero=u.id  WHERE 
+            a.horaInicio BETWEEN ? AND ? group by a.id order by fecha desc";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $fecha1);
+        $stmt->bindParam(2, $fecha2);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();         
+        return $result;
+    }
     /**
      * Metodo get id de la atencion
      * @return idAtencion

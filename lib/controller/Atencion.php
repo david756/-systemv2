@@ -86,6 +86,10 @@ switch ($metodo) {
         verificarUser();
         cortesia();
         break;
+    case "listaAtenciones":
+        verificarAdmin();
+        listaAtenciones();
+        break;
         
     default:
         die ('302:Error, no se encontro dirección');
@@ -557,6 +561,52 @@ switch ($metodo) {
                 </tr>';
      
        }
+    }
+    /**
+ * Lista de  atenciones
+ * @Return lista de atenciones en un rango de fecha
+ * formato HTML tabla
+ */
+function listaAtenciones(){  
+    
+    $fecha1=$_POST["fecha1"];
+    $fecha2=$_POST["fecha2"];        
+    $fecha1 = strtotime($fecha1);
+    $fecha1 = date('Y-m-d',$fecha1);    
+    $fecha2 = strtotime("$fecha2 + 1 days");
+    $fecha2 = date('Y-m-d',$fecha2);
+    
+    $atencionConsulta= new Atencion();
+    $consulta=$atencionConsulta->listaAtenciones($fecha1,$fecha2); 
+         
+    $meses = array("Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic");
+    
+    foreach ($consulta as $atenciones) {        
+        $f = date_create($atenciones['fecha']);        
+        $fecha= date_format($f,'d')." de ".$meses[date_format($f,'n')-1].
+                " del ".date_format($f,'Y'). " - ". date_format($f,'g:i a');
+
+        if ($atenciones['estado']=="pago"){
+            $claseEstado="success";
+            $accion="Pago";
+        }
+        else {
+            $claseEstado="danger";
+            $accion=$atenciones['estado'];
+        }        
+           echo' <tr>
+                 <td>'.$atenciones['id'].'</td>
+                <td>'.$fecha.'</td>
+                <td>'.$atenciones['mesa'].'</td>
+                <td>'.$accion.'</td>
+                <td>'.$atenciones['descripcion'].'</td>
+                <td>'.$atenciones['descuento'].'</td>
+                <td>'.$atenciones['total'].'</td>
+                <td>'.$atenciones['cajero'].'</td>
+                <td><a href="detalle_pedido.php?atencion='.$atenciones['id'].'" type="button" class="btn btn-'.$claseEstado.' btn-xs">Ver</a></td>
+            </tr>';
+        } 
+  
     }
     /**
     * confirma que exista la sesion de usuario y que sea administrador

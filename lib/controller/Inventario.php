@@ -79,7 +79,7 @@ if (is_object($respuesta)) {
 }
 /**
  * Lista de  inventarios
- * @Return lista de inventario de un producto
+ * @Return lista de inventario de un producto en un rango de fecha
  * formato HTML tabla
  */
 function listaInventario(){  
