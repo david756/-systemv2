@@ -1,5 +1,5 @@
 <?php  
-  include 'controller/Sesiones.php';
+  require 'controller/Sesiones.php';
   login();
 ?>
 <!DOCTYPE html>
