@@ -483,7 +483,7 @@ class Usuario {
         require_once "database.php";
         $pdo = Database::connect();
         $query = "select n.mensaje,n.fecha,u.usuario as usuario from notificaciones n "
-                . "INNER JOIN usuarios u on n.fk_usuario=u.id WHERE n.fk_destino=206 "
+                . "INNER JOIN usuarios u on n.fk_usuario=u.id WHERE n.fk_destino=? "
                 . "and n.fecha>=DATE_SUB(NOW(), INTERVAL 3 day) and n.fecha <= NOW()"
                 . " ORDER BY `n`.`fecha` DESC";
         $stmt = $pdo->prepare($query);

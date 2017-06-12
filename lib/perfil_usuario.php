@@ -78,7 +78,7 @@
       function crearNotificacion(){      
                   var destino=$('#destino').val();  
                   var mensaje=$('#mensaje').val(); 
-            if (mensaje.length > 5) {            
+            if (mensaje.length > 1) {            
             $.post("controller/Usuario.php", 
                     {metodo: "crearNotificacion",
                      destino:  destino,

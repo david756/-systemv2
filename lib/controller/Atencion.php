@@ -301,7 +301,7 @@ switch ($metodo) {
     
     if ($atencion->getEstado()==1) {
         $estado="Ocupada";
-        $url='detalle_pedido.php?id='.$atencion->getIdAtencion();
+        $url='detalle_pedido.php?atencion='.$atencion->getIdAtencion();
     }else {
         $estado="Disponible";
         $url='#';
