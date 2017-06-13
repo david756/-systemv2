@@ -6,6 +6,7 @@
 include "../model/Atencion.php";
 include "../model/Usuario.php";
 include "../model/Item.php";
+include "../model/Mesa.php";
 /**
  * recibe por POST el metodo segun
  * el proceso que valla a realizar
@@ -142,6 +143,12 @@ switch ($metodo) {
         $item = new Item($id);
         $item=$item->getAtencionProducto();
         $cocinero= null;
+        $mesero=$item->getUsuario();
+        $fkatencion=$item->getAtencion();
+        $atencion=new Atencion($fkatencion);     
+        $fkmesa=$atencion->getAtencion()->getMesa();
+        $mesa=new Mesa($fkmesa);
+        $mesaNombre=$mesa->getMesa()->getDescripcion();
         
         if ($item->getEstado()==3) {
             die("Error: alguien ya despacho este producto");
@@ -161,7 +168,24 @@ switch ($metodo) {
                 $item->setEstado(3);
                 $item->setHoraDespacho($fecha);
                 $estado=$item->updateAtencionProducto();
-                echo $estado;
+
+
+                //crear notificacion a mesero
+               
+                 $destino = $mesero;
+                 $mensaje ="Ya esta lista una orden para:  ".$mesaNombre.". ¡Acercate para que sea entregada!";
+
+                  $usuario = new Usuario();
+                  $usuario= $usuario->getSesion();
+                  $estado=$usuario->crear_notificacion($destino,$mensaje);
+
+                  if ($estado=="Exito") {
+                      echo "Exito";
+                  } else {
+                      echo $estado;
+                  }
+                  //fin crear notificacion
+        
         }
         elseif ($item->getEstado()==2) {
                 echo 'Error: parce que alguien ya esta preparando este producto';

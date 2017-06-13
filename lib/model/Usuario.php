@@ -375,7 +375,7 @@ class Usuario {
                 $pdo = Database::connect();
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-                $query = "update Usuarios set fk_estado = ? where id =" . $this->idUsuario;
+                $query = "update usuarios set fk_estado = ? where id =" . $this->idUsuario;
                 $stmt = $pdo->prepare($query);
                 $stmt->bindParam(1, $estado);
                 Database::disconnect();

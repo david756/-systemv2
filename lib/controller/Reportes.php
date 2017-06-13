@@ -4,7 +4,7 @@
      * Reporte mesas ocupadas
      */
     function mesasOcupadas(){
-    require_once 'Model/Mesa.php';
+    require_once 'model/Mesa.php';
     $mesas = new Mesa();
     $respuesta = $mesas->totalOcupadas()["total"];
     if (is_numeric($respuesta)) {
@@ -20,7 +20,7 @@
      * Reporte meseros activos
      */
     function meserosActivos(){
-    require_once 'Model/Usuario.php';
+    require_once 'model/Usuario.php';
     $user = new Usuario();
     $respuesta = $user->meserosActivos()["total"];
     if (is_numeric($respuesta)) {
@@ -35,7 +35,7 @@
      * Reporte pedidos hoy
      */
     function pedidosHoy(){
-    require_once 'Model/Atencion.php';
+    require_once 'model/Atencion.php';
     $atencion = new Atencion();
     $respuesta = $atencion->pedidosHoy()["total"];
     if (is_numeric($respuesta)) {
@@ -50,7 +50,7 @@
      * Reporte ingresos hoy
      */
     function ingresosHoy(){
-    require_once 'Model/Atencion.php';
+    require_once 'model/Atencion.php';
     $atencion = new Atencion();
     $respuesta = $atencion->ingresosHoy()["total"];
     if (is_numeric($respuesta)) {

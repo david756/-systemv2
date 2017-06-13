@@ -98,10 +98,14 @@ class Atencion {
      */
     function createAtencion() {
         try {
+
+
             require_once "database.php";
             $pdo = Database::connect();
             $query = "insert into atenciones set descripcion_estado = ?,descuento = ?,fk_estado = ?,fk_mesa = ?,"
-                    . "fk_cajero = ?,horaPago = ?";
+                    . "fk_cajero = ?,horaPago = ?,horaInicio = ?";
+
+            $horaActual=date('Y-m-d H:i:s');
             $stmt = $pdo->prepare($query);
             $stmt->bindParam(1, $this->descripcionEstado);
             $stmt->bindParam(2, $this->descuento);
@@ -109,6 +113,7 @@ class Atencion {
             $stmt->bindParam(4, $this->mesa->getIdMesa());
             $stmt->bindParam(5, $this->cajero->getIdUsuario());
             $stmt->bindParam(6, $this->horaPago);
+            $stmt->bindParam(7, $horaActual);
 
             $resultado = $stmt->execute();
             $this->idAtencion = $pdo->lastInsertId();
