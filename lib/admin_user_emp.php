@@ -424,7 +424,7 @@
 
                     <p>Formulario de ingreso de usuarios</p>
                     <div class="item form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12"">Nombre <span class="required">*</span>
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Nombre <span class="required">*</span>
                       </label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                         <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="20"  name="crear-nombre" placeholder="ingrese nombre" required="required" type="text">
@@ -489,10 +489,10 @@
                       <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Perfiles del usuario</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                           <label>
-                            <input type="checkbox" name="categoria[]" value="1" class="flat"> Mesero
+                            <input type="checkbox" name="categoria[]" value="2" class="flat"> Mesero
                           </label><br>
                           <label>
-                            <input type="checkbox" name="categoria[]" value="2" class="flat"> Caja
+                            <input type="checkbox" name="categoria[]" value="1" class="flat"> Caja
                           </label><br>
                           <label>
                             <input type="checkbox" name="categoria[]" value="3" class="flat"> Cocina

@@ -385,6 +385,49 @@ class Atencion {
                 Database::disconnect();
                 return  $result;
     }
+     /**
+     * Metodo que retorna el total de ventas en los ultimos 7 dias
+     * @return string Resultado
+     */
+    function actividadDiaria(){
+         require_once "database.php";
+                $pdo = Database::connect();
+                $query = "SELECT DATE_FORMAT(horaInicio, '%Y-%m-%d') as fecha ,count(id) total FROM atenciones as a WHERE DATE(a.horaInicio)>DATE_SUB(CURDATE(),INTERVAL 15 DAY) GROUP BY DAYOFYEAR(horaInicio)";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute();
+                $result = $stmt->fetchAll();
+                Database::disconnect();
+                return $result;
+    }
+    /**
+     * Metodo que retorna los 4 productos mas vendidos
+     * @return string Resultado
+     */
+       function productosMasVendidos(){
+         require_once "database.php";
+                $pdo = Database::connect();
+                $query = "select productos.nombre producto, COUNT(items.fk_producto) total from items RIGHT JOIN productos ON productos.id=items.fk_producto WHERE items.hora_pedido > DATE_SUB(CURDATE(),INTERVAL 7 DAY)GROUP BY productos.id order by total DESC limit 4";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute();
+                $result = $stmt->fetchAll();
+                Database::disconnect();
+                return $result;
+    }
+    /**
+     * Metodo que retorna las 4 categorias mas vendidas
+     * @return string Resultado
+     */
+    
+    function categoriasMasVendidas(){
+         require_once "database.php";
+                $pdo = Database::connect();
+                $query = "select categorias.nombre categoria, COUNT(items.fk_producto) total from items inner JOIN productos ON productos.id=items.fk_producto INNER JOIN categorias on productos.fk_categoria=categorias.id WHERE items.hora_pedido > DATE_SUB(CURDATE(),INTERVAL 7 DAY) GROUP BY categorias.id order by total DESC limit 4";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute();
+                $result = $stmt->fetchAll();
+                Database::disconnect();
+                return $result;
+    }
 
     /**
      * Metodo get id de la atencion

@@ -2,6 +2,7 @@
   include 'controller/Sesiones.php';
   include 'controller/Reportes.php';
   admin();
+  //echo actividadDiaria();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -225,41 +226,10 @@
                 <div class="clearfix"></div>
               </div>
 
-                <div class="col-md-12 col-sm-12 col-xs-6">
-                  <div>
-                    <p>Producto 1</p>
-                    <div class="">
-                      <div class="progress progress_sm" style="width: 100%;">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="58"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p>Producto 2</p>
-                    <div class="">
-                      <div class="progress progress_sm" style="width: 100%;">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="20"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 col-sm-12 col-xs-6">
-                  <div>
-                    <p>Producto 3</p>
-                    <div class="">
-                      <div class="progress progress_sm" style="width: 100%;">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="10"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p>Producto 4</p>
-                    <div class="">
-                      <div class="progress progress_sm" style="width: 100%;">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="5"></div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                  
+                	<?php echo productosMasVendidos(); ?>
+
                 </div>
               </div>
            </div>
@@ -271,18 +241,14 @@
                 <div class="clearfix"></div>
               </div>
               <div class="x_content">
-
                 <table class="" style="width:100%">
                   <tr>
                     <th style="width:37%;">
                       <p>Top 5</p>
                     </th>
                     <th>
-                      <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <p class="">Usuario</p>
-                      </div>
-                      <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <p class="">Prog</p>
                       </div>
                     </th>
                   </tr>
@@ -295,32 +261,27 @@
                         <tr>
                           <td>
                             <p><i class="fa fa-square blue"></i>Juan</p>
-                          </td>
-                          <td>30%</td>
+                          </td>                          
                         </tr>
                         <tr>
                           <td>
                             <p><i class="fa fa-square green"></i>Pipe</p>
-                          </td>
-                          <td>10%</td>
+                          </td>                          
                         </tr>
                         <tr>
                           <td>
                             <p><i class="fa fa-square purple"></i>Ana</p>
-                          </td>
-                          <td>20%</td>
+                          </td>                          
                         </tr>
                         <tr>
                           <td>
                             <p><i class="fa fa-square aero"></i>Maria</p>
-                          </td>
-                          <td>15%</td>
+                          </td>                          
                         </tr>
                         <tr>
                           <td>
                             <p><i class="fa fa-square red"></i>Yesica</p>
-                          </td>
-                          <td>30%</td>
+                          </td>                          
                         </tr>
                       </table>
                     </td>
@@ -338,41 +299,9 @@
                 <div class="clearfix"></div>
               </div>
 
-                <div class="col-md-12 col-sm-12 col-xs-6">
-                  <div>
-                    <p>Categoria 1</p>
-                    <div class="">
-                      <div class="progress progress_sm" style="width: 100%;">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="60"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p>Categoria 2</p>
-                    <div class="">
-                      <div class="progress progress_sm" style="width: 100%;">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="20"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 col-sm-12 col-xs-6">
-                  <div>
-                    <p>Categoria 3</p>
-                    <div class="">
-                      <div class="progress progress_sm" style="width: 100%;">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="10"></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p>Categoria 4</p>
-                    <div class="">
-                      <div class="progress progress_sm" style="width: 100%;">
-                        <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="10"></div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                 	<?php echo categoriasMasVendidas(); ?>
+                
                 </div>
               </div>
            </div>
@@ -383,7 +312,7 @@
 
               <div class="row x_title">
                 <div class="col-md-12">
-                  <h3>Actividad<small>Ultimos dias</small></h3>
+                  <h3>Actividad <small>  Ultimos dias</small></h3>
                 </div>
               </div>
               <div class="col-md-12 col-sm-12 col-xs-12 widget_tally_box">
@@ -455,32 +384,23 @@
   <script type="text/javascript" src="js/flot/jquery.flot.resize.js"></script>
   <!-- pace -->
   <script src="js/pace/pace.min.js"></script>
+  
+ 
   <!-- flot -->
-
   <script>
     //random data
-    var d1 = [
-      [0, 1],
-      [1, 9],
-      [2, 6],
-      [3, 10],
-      [4, 5],
-      [5, 17],
-      [6, 6],
-      [7, 10],
-      [8, 7],
-      [9, 11],
-      [10, 35],
-      [11, 9],
-      [12, 12],
-      [13, 5],
-      [14, 3],
-      [15, 4],
-      [16, 9]
-    ];
+    var d1 =   [
+            <?php echo actividadDiaria(); ?>
+        ];
 
+         function gd(year, month, day) {
+            return new Date(year, (month-1), day).getTime();
+        }
     //flot options
     var options = {
+    	 xaxis: {
+        mode: "time"
+    },
       series: {
         curvedLines: {
           apply: true,
@@ -514,31 +434,12 @@
     }], options);
   </script>
   <!-- /flot -->
+
+
+
   <!--  -->
   <script>
-    $('document').ready(function() {
-      $(".sparkline_one").sparkline([2, 4, 3, 4, 5, 4, 5, 4, 3, 4, 5, 6, 7, 5, 4, 3, 5, 6], {
-        type: 'bar',
-        height: '40',
-        barWidth: 9,
-        colorMap: {
-          '7': '#a1a1a1'
-        },
-        barSpacing: 2,
-        barColor: '#26B99A'
-      });
-
-      $(".sparkline_two").sparkline([2, 4, 3, 4, 5, 4, 5, 4, 3, 4, 5, 6, 7, 5, 4, 3, 5, 6], {
-        type: 'line',
-        width: '200',
-        height: '40',
-        lineColor: '#26B99A',
-        fillColor: 'rgba(223, 223, 223, 0.57)',
-        lineWidth: 2,
-        spotColor: '#26B99A',
-        minSpotColor: '#26B99A'
-      });
-
+    $('document').ready(function() { 
       Chart.defaults.global.legend = {
         enabled: false
       };
@@ -580,6 +481,9 @@
   </script>
   <!-- -->
   
+
+
+
   <!-- moris js -->
   <script src="js/moris/raphael-min.js"></script>
   <script src="js/moris/morris.min.js"></script>
@@ -640,6 +544,8 @@
       });
     });
   </script>
+
+
   <!-- skycons -->
   <script>
     var icons = new Skycons({
@@ -654,109 +560,9 @@
 
     for (i = list.length; i--;)
       icons.set(list[i], list[i]);
-
     icons.play();
   </script>
-  
-  <script>
-    var opts = {
-      lines: 12, // The number of lines to draw
-      angle: 0, // The length of each line
-      lineWidth: 0.4, // The line thickness
-      pointer: {
-        length: 0.75, // The radius of the inner circle
-        strokeWidth: 0.042, // The rotation offset
-        color: '#1D212A' // Fill color
-      },
-      limitMax: 'false', // If true, the pointer will not go past the end of the gauge
-      colorStart: '#1ABC9C', // Colors
-      colorStop: '#1ABC9C', // just experiment with them
-      strokeColor: '#F0F3F3', // to see which ones work best for you
-      generateGradient: true
-    };
-    var target = document.getElementById('foo2'); // your canvas element
-    var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-    gauge.maxValue = 5000; // set max gauge value
-    gauge.animationSpeed = 32; // set animation speed (32 is default value)
-    gauge.set(3200); // set actual value
-    gauge.setTextField(document.getElementById("gauge-text2"));
-  </script>
-  <script>
-    $(document).ready(function() {
-      // [17, 74, 6, 39, 20, 85, 7]
-      //[82, 23, 66, 9, 99, 6, 2]
-      var data1 = [
-        [gd(2012, 1, 1), 17],
-        [gd(2012, 1, 2), 74],
-        [gd(2012, 1, 3), 6],
-        [gd(2012, 1, 4), 39],
-        [gd(2012, 1, 5), 20],
-        [gd(2012, 1, 6), 85],
-        [gd(2012, 1, 7), 7]
-      ];
 
-      var data2 = [
-        [gd(2012, 1, 1), 82],
-        [gd(2012, 1, 2), 23],
-        [gd(2012, 1, 3), 66],
-        [gd(2012, 1, 4), 9],
-        [gd(2012, 1, 5), 119],
-        [gd(2012, 1, 6), 6],
-        [gd(2012, 1, 7), 9]
-      ];
-      $("#canvas_dahs").length && $.plot($("#canvas_dahs"), [
-        data1, data2
-      ], {
-        series: {
-          lines: {
-            show: false,
-            fill: true
-          },
-          splines: {
-            show: true,
-            tension: 0.4,
-            lineWidth: 1,
-            fill: 0.4
-          },
-          points: {
-            radius: 0,
-            show: true
-          },
-          shadowSize: 2
-        },
-        grid: {
-          verticalLines: true,
-          hoverable: true,
-          clickable: true,
-          tickColor: "#d5d5d5",
-          borderWidth: 1,
-          color: '#fff'
-        },
-        colors: ["rgba(38, 185, 154, 0.38)", "rgba(3, 88, 106, 0.38)"],
-        xaxis: {
-          tickColor: "rgba(51, 51, 51, 0.06)",
-          mode: "time",
-          tickSize: [1, "day"],
-          //tickLength: 10,
-          axisLabel: "Date",
-          axisLabelUseCanvas: true,
-          axisLabelFontSizePixels: 12,
-          axisLabelFontFamily: 'Verdana, Arial',
-          axisLabelPadding: 10
-            //mode: "time", timeformat: "%m/%d/%y", minTickSize: [1, "day"]
-        },
-        yaxis: {
-          ticks: 8,
-          tickColor: "rgba(51, 51, 51, 0.06)",
-        },
-        tooltip: false
-      });
-
-      function gd(year, month, day) {
-        return new Date(year, month - 1, day).getTime();
-      }
-    });
-  </script>
  
 </body>
 
