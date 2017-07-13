@@ -1,5 +1,5 @@
 <script>
-            $(document).ready(function() {
+            $(document).ready(function() {           	  
               notificacionesBarra();              
                 $.ajax({
                    type   : 'POST',
@@ -13,6 +13,13 @@
                     console.log(data);
                   }
                });
+
+                //actializa las notificaciones cada cierto tiempo
+                  setInterval(function(){ 
+                  notificacionesBarra();                                            
+                  }, 5000); 
+
+
             });
 </script>
 <script>
@@ -47,7 +54,34 @@
                   ,function(tabla){
                     $('#menu1').html(tabla);
                     var total= $("#menu1 li").size()-1;
+
                     $('#totalNotificaciones').html(total);
+
+                    var numnotificaciones=$('#numNot').val();
+
+                    
+                    if (total>numnotificaciones && numnotificaciones!=0) {
+                    	document.getElementById('player').play();
+            			     playing = true;
+                    };
+
+                    if ($('#cont').val()==1 && total>numnotificaciones) {
+                      document.getElementById('player').play();
+                      playing = true;
+                    };
+
+
+                    $('#numNot').val(total);  
+                    $('#cont').val(1); 
+
+                  }
+                  );
+      }
+      function quitarNotificacion(id){         
+                  $.post("controller/Usuario.php", 
+                  {metodo: "notificacionVista",id:id}
+                  ,function(result){
+                  	notificacionesBarra();                
                   }
                   );
       }
@@ -80,6 +114,9 @@
                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-bell-o"></i>
                   <span class="badge bg-green" id="totalNotificaciones"></span>
+                  <audio id="player" src="js/not.mp3"> </audio>
+                  <span  id="numNot" value="0"></span>
+                  <span  id="cont" value="0"></span>
                 </a>
                 <ul id="menu1" class="dropdown-menu list-unstyled msg_list animated fadeInDown" role="menu">
                   

@@ -85,6 +85,10 @@ switch ($metodo) {
         verificarUser();
         notificacionesBarra();
         break; 
+    case "notificacionVista":
+        verificarUser();
+        notificacionVista();
+        break; 
     default:
         die ('302:Error, no se encontro dirección');
     }
@@ -111,6 +115,25 @@ switch ($metodo) {
        echo $respuesta;
     }
    }
+    /**
+    * Crear una notificacion
+    * @param Post datos de notificacion recibe usuario destino ,
+    * mensaje
+    */
+    function crearNotificacion(){
+        $destino = $_POST["destino"];
+        $mensaje = $_POST["mensaje"];
+
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        $estado=$usuario->crear_notificacion($destino,$mensaje);
+
+        if ($estado=="Exito") {
+            echo "Exito";
+        } else {
+            echo $estado;
+        }
+    }
    /**
     * Actualizar una usuario
     * @param Post idUsuario,nombreUsuario recibe id y 
@@ -449,6 +472,7 @@ switch ($metodo) {
             print ' <option value="'.$l['id'].'">'.$l['usuario'].'</option>';
         }
      }
+
      
      /**
       * notificaciones barra,muestra las ultimas notificaciones en la barra de menu
@@ -459,11 +483,12 @@ switch ($metodo) {
          $usuario= $usuario->getSesion();
          $lista=$usuario->notificacionesBarra();
          $meses = array("Enero","Feb","Marzo","Abril","Mayo","Jun","Jul","Ago","Sept","Oct","Nov","Dic");
+         $i=0;
          foreach ($lista as $n) { 
              $f = date_create($n['fecha']);
              $fecha= date_format($f,'d')." de ".$meses[date_format($f,'n')-1]. 
                      " del ".date_format($f,'Y'). " - ". date_format($f,'g:i a');
-           echo '<li>
+           echo '<li id="'.$i.'">
                     <a>
                       <span class="image">
                             <img src="images/userMale.png" alt="Profile Image" />
@@ -475,8 +500,10 @@ switch ($metodo) {
                       <span class="message">
                              '.$n['mensaje'].'
                       </span>
+                      <button type="button" onclick="quitarNotificacion('.$n['id'].')" class="btn btn-info btn-xs">Quitar</button>
                     </a>
                   </li>';
+             $i++;
         }
         echo '<li>
                     <div class="text-center">
@@ -486,20 +513,23 @@ switch ($metodo) {
                       </a>
                     </div>
                   </li>';
+      
      }
      
     /**
-    * Crear una notificacion
+    * Marca una notificacion como vista
     * @param Post datos de notificacion recibe usuario destino ,
     * mensaje
     */
-    function crearNotificacion(){
-        $destino = $_POST["destino"];
-        $mensaje = $_POST["mensaje"];
-
+    function notificacionVista(){
+        
+       if (isset($_POST["id"])) {
+            $id=$_POST["id"];
+        }
         $usuario = new Usuario();
         $usuario= $usuario->getSesion();
-        $estado=$usuario->crear_notificacion($destino,$mensaje);
+        $estado=$usuario->ver_notificacion($id);       
+        
 
         if ($estado=="Exito") {
             echo "Exito";

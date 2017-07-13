@@ -501,9 +501,9 @@ class Usuario {
     function notificacionesBarra() {
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "select n.mensaje,n.fecha,u.usuario as usuario from notificaciones n "
+        $query = "select n.id,n.mensaje,n.fecha,u.usuario as usuario from notificaciones n "
                 . "INNER JOIN usuarios u on n.fk_usuario=u.id WHERE n.fk_destino=? "
-                . "and n.fecha>=DATE_SUB(NOW(), INTERVAL 30 MINUTE) and n.fecha <= NOW() "
+                . "and n.fecha>=DATE_SUB(NOW(), INTERVAL 30 MINUTE) and n.fecha <= NOW() and n.estado=0 "
                 . "ORDER BY `n`.`fecha` DESC";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $this->idUsuario);
@@ -512,6 +512,26 @@ class Usuario {
         Database::disconnect();
         return $result;
     }
+    
+    /**
+     * Notificaciones vistas
+     * @return lista de notificaciones
+     */
+    function  ver_notificacion($id) {
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "UPDATE `notificaciones` SET `estado` = '1' WHERE `notificaciones`.`id` = ?;";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $id);
+        Database::disconnect();
+        if ($stmt->execute()) {
+            return "Exito";
+        } else {
+            return "*101* Error al tratar de cambiar estado a notificacion";
+        }
+    }
+    
+   
     /**
      * Metodo que retorn el total de mesas ocupadas en el momento
      * @return string Resultado

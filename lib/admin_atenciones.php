@@ -1,6 +1,12 @@
 <?php  
   include 'controller/Sesiones.php';
+  include 'controller/Reportes.php';
   admin();
+  if(isset($_GET['i'])&&isset($_GET['f'])) {
+    $inicio=$_GET['i'];
+    $fin=$_GET['i'];
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -34,6 +40,16 @@
 
   <script src="js/jquery.min.js"></script>
   <script src="js/nprogress.js"></script>
+
+  <script type="text/javascript">
+    
+
+  function verAtenciones(){
+
+    console.log("hola");
+  }
+
+  </script>
 
   <!--[if lt IE 9]>
   <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -182,7 +198,7 @@
                           </div>
 
                             <div class="col-md-8 col-sm-6 col-xs-12">
-                              <button type="button" class="btn btn-success btn-sm">Ver atenciones</button>
+                              <button type="button" onclick="verAtenciones()" class="btn btn-success btn-sm">Ver atenciones</button>
                             </div>
                         </div>
                       </fieldset>
@@ -194,32 +210,23 @@
                             <tr>
                               <th>Fecha</th>
                               <th>Mesa</th>
-                              <th>Estado</th>
-                              <th>Descripcion</th>
+                              <th>subtotal</th>
                               <th>Descuento</th>
-                              <th>Cajero</th>
+                              <th>Total</th>
+                              <th>Estado</th>
+                              <th>Hora Pago</th>
                               <th>Accion</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            <tr>
-                              <td>2 octubre 2016  2:16 pm</td>
-                              <td>Mesa 2</td>
-                              <td>pedido</td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                              <td><button type="button" class="btn btn-success btn-xs">Ver</button></td>
-                            </tr>
-                            <tr>
-                              <td>2 octubre 2016  2:16 pm</td>
-                              <td>Mesa 2</td>
-                              <td>pago</td>
-                              <td>Pago normal</td>
-                              <td></td>
-                              <td>Juan</td>
-                              <td><button type="button" class="btn btn-success btn-xs">Ver</button></td>
-                            </tr>
+                          <tbody>                            
+                            <?php 
+                            if (isset($inicio)&&isset($fin)) {
+                              echo Atenciones($inicio,$fin);
+                            }
+                            else{
+                             echo "Seleccione una fecha <hr>" ;
+                            }
+                            ?>
                           </tbody>
                         </table>
                   </div>
@@ -353,17 +360,17 @@
 
       var cb = function(start, end, label) {
         console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange_right span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        $('#reportrange_right span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
         //alert("Callback has fired: [" + start.format('MMMM D, YYYY') + " to " + end.format('MMMM D, YYYY') + ", label = " + label + "]");
       }
 
       var optionSet1 = {
         startDate: moment().subtract(29, 'days'),
         endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
+        minDate: '01/01/2016',
+        maxDate: '12/12/2030',
         dateLimit: {
-          days: 60
+          days: 15
         },
         showDropdowns: true,
         showWeekNumbers: true,
@@ -382,7 +389,7 @@
         buttonClasses: ['btn btn-default'],
         applyClass: 'btn-small btn-primary',
         cancelClass: 'btn-small',
-        format: 'MM/DD/YYYY',
+        format: 'DD/MM/YYYY',
         separator: ' to ',
         locale: {
           applyLabel: 'Submit',
@@ -396,139 +403,10 @@
         }
       };
 
-      $('#reportrange_right span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
-      $('#reportrange_right').daterangepicker(optionSet1, cb);
-
-      $('#reportrange_right').on('show.daterangepicker', function() {
-        console.log("show event fired");
-      });
-      $('#reportrange_right').on('hide.daterangepicker', function() {
-        console.log("hide event fired");
-      });
-      $('#reportrange_right').on('apply.daterangepicker', function(ev, picker) {
-        console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
-      });
-      $('#reportrange_right').on('cancel.daterangepicker', function(ev, picker) {
-        console.log("cancel event fired");
-      });
-
-      $('#options1').click(function() {
-        $('#reportrange_right').data('daterangepicker').setOptions(optionSet1, cb);
-      });
-
-      $('#options2').click(function() {
-        $('#reportrange_right').data('daterangepicker').setOptions(optionSet2, cb);
-      });
-
-      $('#destroy').click(function() {
-        $('#reportrange_right').data('daterangepicker').remove();
-      });
-
+      
     });
   </script>
-  <!-- datepicker -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-
-      var cb = function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        //alert("Callback has fired: [" + start.format('MMMM D, YYYY') + " to " + end.format('MMMM D, YYYY') + ", label = " + label + "]");
-      }
-
-      var optionSet1 = {
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2012',
-        maxDate: '12/31/2015',
-        dateLimit: {
-          days: 60
-        },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 1,
-        timePicker12Hour: true,
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        opens: 'left',
-        buttonClasses: ['btn btn-default'],
-        applyClass: 'btn-small btn-primary',
-        cancelClass: 'btn-small',
-        format: 'MM/DD/YYYY',
-        separator: ' to ',
-        locale: {
-          applyLabel: 'Submit',
-          cancelLabel: 'Clear',
-          fromLabel: 'From',
-          toLabel: 'To',
-          customRangeLabel: 'Custom',
-          daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-          monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-          firstDay: 1
-        }
-      };
-      $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-      $('#reportrange').daterangepicker(optionSet1, cb);
-      $('#reportrange').on('show.daterangepicker', function() {
-        console.log("show event fired");
-      });
-      $('#reportrange').on('hide.daterangepicker', function() {
-        console.log("hide event fired");
-      });
-      $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
-        console.log("apply event fired, start/end dates are " + picker.startDate.format('MMMM D, YYYY') + " to " + picker.endDate.format('MMMM D, YYYY'));
-      });
-      $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
-        console.log("cancel event fired");
-      });
-      $('#options1').click(function() {
-        $('#reportrange').data('daterangepicker').setOptions(optionSet1, cb);
-      });
-      $('#options2').click(function() {
-        $('#reportrange').data('daterangepicker').setOptions(optionSet2, cb);
-      });
-      $('#destroy').click(function() {
-        $('#reportrange').data('daterangepicker').remove();
-      });
-    });
-  </script>
-  <!-- /datepicker -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#single_cal1').daterangepicker({
-        singleDatePicker: true,
-        calender_style: "picker_1"
-      }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
-      $('#single_cal2').daterangepicker({
-        singleDatePicker: true,
-        calender_style: "picker_2"
-      }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
-      $('#single_cal3').daterangepicker({
-        singleDatePicker: true,
-        calender_style: "picker_3"
-      }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
-      $('#single_cal4').daterangepicker({
-        singleDatePicker: true,
-        calender_style: "picker_4"
-      }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
-    });
-  </script>
+ 
   <script type="text/javascript">
     $(document).ready(function() {
       $('#reservation').daterangepicker(null, function(start, end, label) {

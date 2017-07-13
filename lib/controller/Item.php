@@ -7,6 +7,7 @@ include "../model/Atencion.php";
 include "../model/Usuario.php";
 include "../model/Item.php";
 include "../model/Mesa.php";
+include "../model/Producto.php";
 /**
  * recibe por POST el metodo segun
  * el proceso que valla a realizar
@@ -149,6 +150,8 @@ switch ($metodo) {
         $fkmesa=$atencion->getAtencion()->getMesa();
         $mesa=new Mesa($fkmesa);
         $mesaNombre=$mesa->getMesa()->getDescripcion();
+        $producto= new Producto($item->getProducto());
+        $producto=$producto->getProducto()->getNombre();
         
         if ($item->getEstado()==3) {
             die("Error: alguien ya despacho este producto");
@@ -173,7 +176,7 @@ switch ($metodo) {
                 //crear notificacion a mesero
                
                  $destino = $mesero;
-                 $mensaje ="Ya esta lista una orden para:  ".$mesaNombre.". ¡Acercate para que sea entregada!";
+                 $mensaje ="Ya esta listo: ".$producto."  para:  ".$mesaNombre.". ¡Acercate para que sea entregada!";
 
                   $usuario = new Usuario();
                   $usuario= $usuario->getSesion();

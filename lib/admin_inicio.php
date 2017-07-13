@@ -193,7 +193,7 @@
                 <div class="count"><?php echo ingresosHoy(); ?></div>
 
                 <h3>Total ingresos</h3>
-                <p>ingresos totales de ventas.</p>
+                <p>ingresos totales de ventas hoy.</p>
               </div>
             </div>
           </div>
@@ -237,7 +237,7 @@
           <div class="col-md-4 col-sm-4 col-xs-12">
             <div class="x_panel tile fixed_height_320 overflow_hidden">
               <div class="x_title">
-                <h2>Mesero <small>ult.7 dias</small> </h2>                
+                <h2>Mesero <small>Ventas ult.7 dias</small> </h2>                
                 <div class="clearfix"></div>
               </div>
               <div class="x_content">
@@ -258,29 +258,30 @@
                     </td>
                     <td>
                       <table class="tile_info">
+                        <?php $result=ventasMeseros(); ?>
                         <tr>
                           <td>
-                            <p><i class="fa fa-square blue"></i>Juan</p>
+                            <p><i class="fa fa-square blue"></i><?php echo $result[0]["usuario"]; ?></p>
                           </td>                          
                         </tr>
                         <tr>
                           <td>
-                            <p><i class="fa fa-square green"></i>Pipe</p>
+                            <p><i class="fa fa-square green"></i><?php echo $result[1]["usuario"]; ?></p>
                           </td>                          
                         </tr>
                         <tr>
                           <td>
-                            <p><i class="fa fa-square purple"></i>Ana</p>
+                            <p><i class="fa fa-square purple"></i><?php echo $result[2]["usuario"]; ?></p>
                           </td>                          
                         </tr>
                         <tr>
                           <td>
-                            <p><i class="fa fa-square aero"></i>Maria</p>
+                            <p><i class="fa fa-square aero"></i><?php echo $result[3]["usuario"]; ?></p>
                           </td>                          
                         </tr>
                         <tr>
                           <td>
-                            <p><i class="fa fa-square red"></i>Yesica</p>
+                            <p><i class="fa fa-square red"></i><?php echo $result[4]["usuario"]; ?></p>
                           </td>                          
                         </tr>
                       </table>
@@ -446,27 +447,29 @@
 
       var data = {
         labels: [
-          "Maria",
-          "Ana",
-          "Yesica",
-          "Pipe",
-          "Juan"
+        <?php echo '"'.$result[0]["usuario"].'",'; ?>
+          <?php echo '"'.$result[1]["usuario"].'",'; ?>
+          <?php echo '"'.$result[2]["usuario"].'",'; ?>
+          <?php echo '"'.$result[3]["usuario"].'",'; ?>
+          <?php echo '"'.$result[4]["usuario"].'"'; ?>
         ],
         datasets: [{
-          data: [15, 20, 30, 10, 30],
+          data: [<?php echo $result[0]["total"]; ?>, <?php echo $result[1]["total"]; ?>,
+           <?php echo $result[2]["total"]; ?>, <?php echo $result[3]["total"]; ?>,
+           <?php echo $result[4]["total"]; ?>],
           backgroundColor: [
-            "#BDC3C7",
-            "#9B59B6",
-            "#455C73",
+            "#3498DB",
             "#26B99A",
-            "#3498DB"
+            "#9B59B6",
+            "#BDC3C7",
+            "#455C73"
           ],
           hoverBackgroundColor: [
-            "#CFD4D8",
-            "#B370CF",
-            "#34495E",
+            "#49A9EA",
             "#36CAAB",
-            "#49A9EA"
+            "#B370CF",
+            "#CFD4D8",
+            "#34495E"
           ]
 
         }]
@@ -489,49 +492,7 @@
   <script src="js/moris/morris.min.js"></script>
   <script>
     $(function() {
-      var day_data = [{
-        "period": "Dom",
-        "Hours worked": 400000
-      }, {
-        "period": "Lun",
-        "Hours worked": 250000
-      }, {
-        "period": "Mar",
-        "Hours worked": 960000
-      }, {
-        "period": "Mie",
-        "Hours worked": 325000
-      }, {
-        "period": "Jue",
-        "Hours worked": 265000
-      }, {
-        "period": "Vie",
-        "Hours worked": 265000
-      }, {
-        "period": "Sab",
-        "Hours worked": 314000
-      },{
-        "period": "Dom",
-        "Hours worked": 400000
-      }, {
-        "period": "Lun",
-        "Hours worked": 250000
-      }, {
-        "period": "Mar",
-        "Hours worked": 960000
-      }, {
-        "period": "Mie",
-        "Hours worked": 325000
-      }, {
-        "period": "Jue",
-        "Hours worked": 265000
-      }, {
-        "period": "Vie",
-        "Hours worked": 265000
-      }, {
-        "period": "Sab",
-        "Hours worked": 314000
-      }];
+      var day_data = [<?php actividadDiariaIngresos(); ?>];
       Morris.Bar({
         element: 'graph_bar',
         data: day_data,

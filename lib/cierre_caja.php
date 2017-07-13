@@ -31,34 +31,49 @@
   <link href="js/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
 
   <script src="js/jquery.min.js"></script>
-
   <script>   
            //cuando carga la pagina obtiene los datos de la base de datos y los muestra en la tabla
-            $( document ).ready(function() { 
-                //actializa los pedidos de la cocina cada 15 segundos
-                  setInterval(function(){ 
-                  $('#actualizar').trigger('click');                                            
-                  }, 15000);             
-                //  pide a  todos los pedidos que estan en espera en la base de datos.y los recible como (tabla)
+            $( document ).ready(function() {                       
+                //  
                 $.post("controller/Atencion.php", 
-                    {metodo: "pedidosCaja"},
+                    {metodo: "pedidosAlCierre"},
                     function(tabla){
                       $('#comentarios').html(tabla);             
                     }
               );  
+            });    
 
-              $("#actualizar").click(function() {
-                  $.post("controller/Atencion.php", 
-                    {metodo: "pedidosCaja"},
+            $( document ).ready(function() {                       
+                //  pide a  todos los pedidos que estan en espera en la base de datos.y los recible como (tabla)
+                $.post("controller/Atencion.php", 
+                    {metodo: "atencionesAbiertas"},
                     function(tabla){
-                      $('#comentarios').html(tabla);                 
+                      $('#peiddos_pendientes').html(tabla);             
                     }
-                   );  
-                });
-            });           
-           
+              );  
+            });   
 
-                 
+
+            function confirmar(){
+
+            $.post("controller/Atencion.php", 
+                    {metodo: "cierreCaja"},function(respuesta){
+                      $('#ModalConfirmar').modal('hide');
+                      if (respuesta=="Exito") {
+                        $('#resultado').html("Se realizo cierre de caja!");
+                        $('#resultado').attr("class","alert alert-success");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                        setTimeout(function(){window.location.href = "menu_principal.php"}, 600);
+                      }
+                      else{
+                        $('#resultado').html(respuesta);
+                        $('#resultado').attr("class","alert alert-danger");
+                        $('#resultado').show("slow").delay(4000).hide("slow");
+                      }                      
+                    }
+              ); 
+            }
+                           
   </script>
 
   <!--[if lt IE 9]>
@@ -86,26 +101,53 @@
         <div class="x_content">
           <div class="page-title">
             <div class="title_left">
-              <h3>Caja</h3>
+              <h3>Cierre de Caja</h3>
             </div>
           </div>
           <div class="clearfix"></div>
 
           <div class="row">
                   <div class="col-md-12 col-sm-12 col-xs-12">
+
+                    <div class="x_panel">
+                    <a type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalConfirmar"> </i> Confirmar Cierre</a>
+                    <hr>    
+                      <div class="x_title">
+                        <h2>Pedidos que aun no han sido facturados </h2>
+                        <div class="clearfix"></div>
+                      </div>
+                      <div class="row">
+                      <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
+                      </div>
+                      <div class="x_content">                                        
+                        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th>Fecha</th>
+                              <th>Mesa</th>
+                              <th>Subtotal</th>
+                              <th>Descuento</th>
+                              <th>Total</th>
+                              <th>Estado</th>
+                            </tr>
+                          </thead>
+                          <tbody id="peiddos_pendientes" ></tbody>                         
+                          </tbody>
+                        </table>
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                   <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                       <div class="x_title">
-                        <h2>Lista de pedidos en espera </h2>
+                        <h2>Pedidos para este cierre</h2>
                         <div class="clearfix"></div>
                       </div>
 
-                      <div class="x_content">
-                        <p class="text-muted font-13 m-b-30">
-                          Opciones:
-                        </p>
-                        <a type="button" id="actualizar" class="btn btn-success">Actualizar</a>
-                        <a type="button" href="cierre_caja.php" id="cerrar" class="btn btn-success">Cerrar caja</a>
-                        <hr>
+                      <div class="x_content">                       
                         <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                           <thead>
                             <tr>
@@ -126,6 +168,33 @@
                       </div>
                     </div>
                   </div>
+
+
+
+                  <!-- /modal confirmar -->
+                    <div class="modal fade bs-example-modal-sm" id="ModalConfirmar" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-sm">
+                          <div class="modal-content" align="center">
+
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                              </button>
+                              <h4 class="modal-title" id="myModalLabel2">Confirmar Cierre de caja</h4>
+                            </div>
+                              <form>
+                                <h2> ¿Seguro desea hacer cierre de caja? </h2><br>
+                                <h4> Atencion: Esta accion no tiene reversa, desea continuar? </h4><br>
+                              </form>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                              <button type="button" onclick="confirmar()" class="btn btn-info">Confirmar</button>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <!-- /modal confirmar -->
+
+
              <!-- footer content -->
               <?php include 'footer.php'; ?>
               <!-- /footer content -->

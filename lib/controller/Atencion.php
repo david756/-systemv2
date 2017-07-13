@@ -82,6 +82,18 @@ switch ($metodo) {
         verificarUser();
         pedidosCocina();
         break;
+    case "atencionesAbiertas":
+        verificarUser();
+        atencionesAbiertas();
+        break;  
+    case "cierreCaja":
+        verificarUser();
+        cierreCaja();
+        break; 
+    case "pedidosAlCierre":
+        verificarUser();
+        atencionesAlCierre();
+        break; 
     case "cortesia":
         verificarUser();
         cortesia();
@@ -558,6 +570,110 @@ switch ($metodo) {
      
        }
     }
+    
+    function atencionesAbiertas(){
+    $atencion=new Atencion();
+    $consulta=$atencion->getAtencionesAbiertas();
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    foreach ($consulta as $a) {              
+        
+        $subtotal= $a["total"];
+        $descuento= $a["descuento"];
+        $total= $subtotal-$descuento;
+        $horaInicio=$a["horaInicio"];
+        $horaInicio = date_create($horaInicio);
+        $horaInicio= date_format($horaInicio,'d')." ".$meses[date_format($horaInicio,'n')-1]. 
+            " ".date_format($horaInicio,'Y'). " , ". date_format($horaInicio,'g:i a');
+        
+        $id=$a["id"];
+        $estado="Pendiente de pago"; 
+        $mesa=$a["mesa"]; 
+        $total=number_format($total, 0, ",", ".");
+        
+        
+        echo '<tr> 
+                <td>'.$horaInicio.'</td> 
+                <td>'.$mesa.'</td>
+                 <td>'.$subtotal.'</td>
+                <td>'.$descuento.'</td>                    
+                <td>'.$total.'</td>
+                <td>'.$estado.'</td>
+                </tr>';     
+       }
+        
+    }
+    
+    function cierreCaja(){
+        $atencion=new Atencion();
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        $id=$usuario->getIdUsuario();
+        
+        $estado=$atencion->cerrarAtenciones();
+        if ($estado){
+            $estado=$atencion->cierreCaja($id);
+            if ($estado){
+                echo "Exito";
+            }
+            else {
+                echo $estado;
+            }
+        }
+        else {
+            echo $estado;
+        }
+    }
+    
+    function atencionesAlCierre(){
+        
+        $atencion=new Atencion();
+    $consulta=$atencion->pedidosAlCierre();
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    foreach ($consulta as $a) {              
+        
+        $subtotal= $a["total"];
+        $descuento= $a["descuento"];
+        $total= $subtotal-$descuento;
+        $horaInicio=$a["horaInicio"];
+        $horaInicio = date_create($horaInicio);
+        $horaInicio= date_format($horaInicio,'d')." ".$meses[date_format($horaInicio,'n')-1]. 
+            " ".date_format($horaInicio,'Y'). " , ". date_format($horaInicio,'g:i a');
+        $horaPago=$a["horaPago"];
+        if ($horaPago!="") {
+            $horaPago = date_create($horaPago);
+            $horaPago= date_format($horaPago,'d')." ".$meses[date_format($horaPago,'n')-1]. 
+            " ".date_format($horaPago,'Y'). " , ". date_format($horaPago,'g:i a');
+        }        
+        $id=$a["id"];
+        $estado=$a["descripcion"]; 
+        $mesa=$a["mesa"]; 
+        $total=number_format($total, 0, ",", ".");
+        if ($estado=="pedido" || $estado=="aplazado" ) {
+            $class="success";
+            $accion="pagar";
+        }else{
+            $class="info";
+            $accion="ver";
+        }
+        
+        echo '<tr> 
+                <td>'.$horaInicio.'</td> 
+                <td>'.$mesa.'</td>
+                 <td>'.$subtotal.'</td>
+                <td>'.$descuento.'</td>                    
+                <td>'.$total.'</td>
+                <td>'.$estado.'</td>                
+                <td>'.$horaPago.'</td>
+                <td><a href="pago_pedido.php?atencion='.$id.'">
+                    <button type="button" class="btn btn-'.$class.' btn-xs">'.$accion.'</button></a>
+                  </td>
+                </tr>';
+     
+       }
+        
+    }
+    
+    
     /**
     * confirma que exista la sesion de usuario y que sea administrador
     * para poder realizar cambios propios de este privilegio

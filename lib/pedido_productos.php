@@ -63,6 +63,8 @@
                pedidoCompleto();
                categorias();
                productos();
+        
+
             });
   </script>
 
@@ -131,6 +133,15 @@
                   $('#detalleProducto').html(detalle);
                   $('#modalDetalleProducto').modal('show');
        }
+
+      function agregarguarnicion(parametro){
+          $('#anexoDescripcion').append(" "+parametro+"  ");         
+      }
+
+      function limpiarGuarnicion(parametro){
+          $('#anexoDescripcion').text('');         
+      }
+     
 
   </script>     
 
@@ -202,6 +213,7 @@
 
             array=[productoId,cantidad,nombre,valor,total,anexoDescripcion];
             agregarFila(array);
+            limpiarGuarnicion();
             $('#modalAnexo').modal('hide');
           }
 
@@ -464,9 +476,22 @@
                                     <input type="text" id ="valorProductoAnexo" value="" style="display:none">
 
                                       <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Guarniciones</label><br><br>
+                                        <label>
+                                           <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Vegetales.")' data-target="#ModalOrden">Vegetales</button>
+                                        </label>
+                                        <label>
+                                           <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Papas fritas.")' >Papas Fritas</button>
+                                        </label>
+                                        <label>
+                                            <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Platanos fritos.")'>PLatanos Fritos</button>
+                                        </label><br><br>
+                                      </div>
+
+                                      <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Anexo</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                          <textarea id="anexoDescripcion" class="form-control" rows="2" maxlength="25" placeholder='Anexo de este producto' required="required"></textarea><br>
+                                          <textarea id="anexoDescripcion" class="form-control" rows="4" maxlength="100" placeholder='Anexo de este producto' required="required"></textarea><br>
                                         </div>
                                       </div>
                                       <div class="form-group">
@@ -477,7 +502,7 @@
                                       </div> 
                                     <div class="clearfix"></div>                            
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                    <button type="button" class="btn btn-default" onclick="limpiarGuarnicion()" data-dismiss="modal">Cerrar</button>
                                     <button type="button" onclick="agregarAnexo()" class="btn btn-info">Guardar</button>
                                 </div>
                               </form>

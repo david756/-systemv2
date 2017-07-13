@@ -283,7 +283,7 @@ class Item {
                               INNER JOIN  estado_items AS ep ON (ep.id=ap.fk_estado_item)
                               left JOIN  usuarios as cocinero on (cocinero.id=ap.fk_cocinero)
                               WHERE(ep.id=1 OR ep.id=2) and (ap.hora_pedido)<(DATE_SUB(NOW(), INTERVAL 0 hour))
-                              and (ap.hora_pedido)>(DATE_SUB(NOW(), INTERVAL 2 hour))
+                              and (ap.hora_pedido)>(DATE_SUB(NOW(), INTERVAL 12 hour))
                               ORDER BY ap.hora_pedido ASC";
         $stmt = $pdo->prepare($query);
         $stmt->execute();

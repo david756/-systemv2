@@ -47,11 +47,7 @@
                       $('#usernameUser').html(data.username); 
                       $('#editNombre').val(data.nombre);
                       $('#editApellido').val(data.apellido);
-                      $('#editTelefono').val(data.telefono);                  
-                      console.log(data.nombre);
-                      console.log("a continuacion abajo el telefono");
-                      console.log(data.telefono);
-                      console.log(data.username);
+                      $('#editTelefono').val(data.telefono);  
                   },
                    error  : function(data){
                     console.log(data);
