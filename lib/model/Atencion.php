@@ -202,6 +202,28 @@ class Atencion {
         Database::disconnect();
         return $result;
     }
+     /**
+     * verifica si un mesero ya esta atendiendo una mesa y retorna true o false
+     */
+    function pedidoMesero($id){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT count(*) as total from atenciones a INNER JOIN items i on i.fk_atencion=a.id INNER JOIN atencion_empleados ae on ae.fk_item=i.id WHERE a.fk_mesa=? and ae.fk_usuario=? and a.fk_estado=1";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->mesa->getIdMesa());
+        $stmt->bindParam(2, $id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+        
+        if ($result['total']>0){
+            
+           return 1;
+        }
+        else{
+           return -1;
+        }
+    }
     
     /**
      * retorna el nombre de la mesa,el subtotal,descuento, valor total de la atencion, cajero
@@ -337,18 +359,7 @@ class Atencion {
     function pedidosCaja(){
         require_once "database.php";
         $pdo = Database::connect();
-        $query = "SELECT m.descripcion as mesa,SUM(ap.valor)"
-                . " as total,a.id,a.fk_estado as estado,ea.descripcion"
-                . ",a.descuento as descuento,a.horaInicio,a.horaPago "
-                . "FROM atenciones AS a INNER JOIN estados_atencion AS ea ON"
-                . " (a.fk_estado=ea.id) INNER JOIN items AS ap ON (ap.fk_atencion=a.id)"
-                . " INNER JOIN productos AS p ON (p.id=ap.fk_producto) INNER JOIN "
-                . "categorias AS c ON (p.fk_categoria=c.id) INNER JOIN atencion_empleados AS "
-                . "eat ON (eat.fk_item=ap.id) INNER JOIN usuarios AS e ON (e.id=eat.fk_usuario) "
-                . "INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN estado_items AS ep ON "
-                . "(ep.id=ap.fk_estado_item) WHERE (a.horaInicio)<(DATE_SUB(NOW(), INTERVAL 0 hour))"
-                . " and (a.horaInicio)>(DATE_SUB(NOW(), INTERVAL 10 hour)) "
-                . "group by m.descripcion,a.id ORDER BY a.horaInicio DESC";
+        $query = "SELECT m.descripcion as mesa,SUM(ap.valor) as total,a.id,a.fk_estado as estado,ea.descripcion ,a.descuento as descuento,a.horaInicio,a.horaPago FROM atenciones AS a INNER JOIN estados_atencion AS ea ON (a.fk_estado=ea.id) INNER JOIN items AS ap ON (ap.fk_atencion=a.id) INNER JOIN productos AS p ON (p.id=ap.fk_producto) INNER JOIN categorias AS c ON (p.fk_categoria=c.id) INNER JOIN atencion_empleados AS eat ON (eat.fk_item=ap.id) INNER JOIN usuarios AS e ON (e.id=eat.fk_usuario) INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN estado_items AS ep ON (ep.id=ap.fk_estado_item) WHERE (a.horaPago> (SELECT cc.fecha FROM cierre_caja cc order by fecha desc LIMIT 1) ) or (a.fk_estado!=2 and a.fk_estado!=3) group by m.descripcion,a.id ORDER BY a.horaInicio DESC";
         $stmt = $pdo->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll();
@@ -499,7 +510,7 @@ class Atencion {
     function getAtencionesAbiertas(){
          require_once "database.php";
                 $pdo = Database::connect();
-                $query = "SELECT a.id,m.descripcion as mesa,SUM(ap.valor) as total,a.descuento as descuento,a.horaInicio FROM atenciones AS a INNER JOIN estados_atencion AS ea ON (a.fk_estado=ea.id) INNER JOIN items AS ap ON (ap.fk_atencion=a.id) INNER JOIN productos AS p ON (p.id=ap.fk_producto) INNER JOIN categorias AS c ON (p.fk_categoria=c.id) INNER JOIN atencion_empleados AS eat ON (eat.fk_item=ap.id) INNER JOIN usuarios AS e ON (e.id=eat.fk_usuario) INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN estado_items AS ep ON (ep.id=ap.fk_estado_item) WHERE a.fk_estado=1 group by m.descripcion,a.id ORDER BY a.horaInicio DESC";
+                $query = "SELECT a.id,m.descripcion as mesa,SUM(ap.valor) as total,a.descuento as descuento,a.horaInicio FROM atenciones AS a INNER JOIN estados_atencion AS ea ON (a.fk_estado=ea.id) INNER JOIN items AS ap ON (ap.fk_atencion=a.id) INNER JOIN productos AS p ON (p.id=ap.fk_producto) INNER JOIN categorias AS c ON (p.fk_categoria=c.id) INNER JOIN atencion_empleados AS eat ON (eat.fk_item=ap.id) INNER JOIN usuarios AS e ON (e.id=eat.fk_usuario) INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN estado_items AS ep ON (ep.id=ap.fk_estado_item) WHERE (a.fk_estado=1 or a.fk_estado=4) group by m.descripcion,a.id ORDER BY a.horaInicio DESC";
                 $stmt = $pdo->prepare($query);
                 $stmt->execute();
                 $result = $stmt->fetchAll();
@@ -529,6 +540,7 @@ class Atencion {
         
          require_once "database.php";
         $pdo = Database::connect();
+        
         $query = "SELECT m.descripcion as mesa,SUM(ap.valor)
                  as total,a.id,a.fk_estado as estado,ea.descripcion
                 ,a.descuento as descuento,a.horaInicio,a.horaPago 
@@ -538,15 +550,43 @@ class Atencion {
                 categorias AS c ON (p.fk_categoria=c.id) INNER JOIN atencion_empleados AS 
                 eat ON (eat.fk_item=ap.id) INNER JOIN usuarios AS e ON (e.id=eat.fk_usuario) 
                 INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN estado_items AS ep ON 
-                (ep.id=ap.fk_estado_item) WHERE (a.horaInicio)>(?)
-                 and (a.horaInicio)<(?) 
+                (ep.id=ap.fk_estado_item) WHERE (a.horaInicio)>=(?)
+                 and (a.horaInicio)<=(?) 
                 group by m.descripcion,a.id ORDER BY a.horaInicio DESC";
+        
+       
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $inicio);
         $stmt->bindParam(2, $fin);
-        $stmt->execute();
+     
+        $estado= $stmt->execute();
+
         $result = $stmt->fetchAll();
         Database::disconnect();
+        
+        return $result;
+    }
+    
+      /**
+     * retorna los pedidos en un periodo de tiempo
+     */
+    
+    function reportePedidos($inicio,$fin){
+        
+         require_once "database.php";
+        $pdo = Database::connect();
+        
+        $query ="SELECT i.hora_pedido,i.hora_preparacion,i.hora_despacho, a.id id_atencion,p.nombre,i.anexos, i.id id_item,cocinero.usuario cocinero,u.usuario mesero,m.descripcion mesa,i.valor valor,COUNT(i.fk_producto) cantidad, (i.valor*COUNT(i.fk_producto)) total FROM atenciones a INNER JOIN items i on i.fk_atencion=a.id INNER JOIN atencion_empleados ae on ae.fk_item=i.id inner JOIN usuarios u on u.id=ae.fk_usuario LEFT JOIN usuarios cocinero on i.fk_cocinero=cocinero.id INNER JOIN mesas m on m.id=a.fk_mesa inner JOIN productos p on p.id=i.fk_producto WHERE (i.hora_pedido)>=(?) and i.hora_pedido<=(?) GROUP BY i.anexos,i.fk_producto,i.fk_atencion ORDER BY i.hora_pedido DESC";
+                
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $inicio);
+        $stmt->bindParam(2, $fin);
+     
+        $estado= $stmt->execute();
+
+        $result = $stmt->fetchAll();
+        Database::disconnect();
+        
         return $result;
     }
 

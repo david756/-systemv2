@@ -260,7 +260,13 @@
      * Reporte de atenciones
      */
     function Atenciones($inicio,$fin){
-        
+
+    list($dia, $mes, $ano) = split('[/]', $inicio);
+    $inicio=$ano."-".$mes."-".$dia;
+    list($dia1, $mes1, $ano1) = split('[/]', $fin);
+    $fin=$ano1."-".$mes1."-".(intval($dia1)+1);
+
+    require_once 'model/Atencion.php';    
     $atencion=new Atencion();
     $consulta=$atencion->reporteAtenciones($inicio,$fin);
     $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
@@ -282,7 +288,7 @@
         $id=$a["id"];
         $estado=$a["descripcion"]; 
         $mesa=$a["mesa"]; 
-        $total=number_format($total, 0, ",", ".");
+       // $total=number_format($total, 0, ",", ".");
         if ($estado=="pedido" || $estado=="aplazado" ) {
             $class="success";
             $accion="pagar";
@@ -306,7 +312,73 @@
      
        }
     }
+        
+    /**
+     * Reporte de pedidos
+     */
+    function pedidos($inicio,$fin){
 
+    list($dia, $mes, $ano) = split('[/]', $inicio);
+    $inicio=$ano."-".$mes."-".$dia;
+    list($dia1, $mes1, $ano1) = split('[/]', $fin);
+    $fin=$ano1."-".$mes1."-".(intval($dia1)+1);
+    
+    require_once 'model/Atencion.php';    
+    $atencion=new Atencion();
+    $consulta=$atencion->reportePedidos($inicio,$fin);
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    foreach ($consulta as $a) {              
+        
+        $horaPedido= $a["hora_pedido"];
+        $horaPreparacion= $a["hora_preparacion"];
+        $horaDespacho= $a["hora_despacho"];
+        $idAtencion= $a["id_atencion"];
+        
+        $producto= $a["nombre"];
+        $anexos= $a["anexos"];
+        $id_item= $a["id_item"];
+        $cocinero= $a["cocinero"];
+        $mesero= $a["mesero"];
+        $mesa= $a["mesa"];
+        $valor= $a["valor"];
+        $cantidad= $a["cantidad"];
+        $total= $a["total"];
+        
+
+        $horaPedido = date_create($horaPedido);
+        $horaPedido= date_format($horaPedido,'d')." ".$meses[date_format($horaPedido,'n')-1]. 
+            " ".date_format($horaPedido,'Y'). " , ". date_format($horaPedido,'g:i a');
+        
+        
+        if ($horaPreparacion!="") {
+            $horaPreparacion = date_create($horaPreparacion);
+            $horaPreparacion= date_format($horaPreparacion,'d')." ".$meses[date_format($horaPreparacion,'n')-1]. 
+            " ".date_format($horaPreparacion,'Y'). " , ". date_format($horaPreparacion,'g:i a');
+        }
+         if ($horaDespacho!="") {
+            $horaDespacho = date_create($horaDespacho);
+            $horaDespacho= date_format($horaDespacho,'d')." ".$meses[date_format($horaDespacho,'n')-1]. 
+            " ".date_format($horaDespacho,'Y'). " , ". date_format($horaDespacho,'g:i a');
+        }  
+        
+         echo '<tr> 
+                <td>'.$horaPedido.'</td>
+                <td>'.$producto.'</td>
+                <td>'.$anexos.'</td>
+                <td>'.$mesero.'</td>  
+                <td>'.$cocinero.'</td> 
+                <td>'.$mesa.'</td>
+                <td>'.$cantidad.'</td>
+                <td>'.$valor.'</td>
+                <td>'.$total.'</td>        
+
+                <td><a href="detalle_pedido.php?atencion='.$idAtencion.'">
+                    <button type="button" class="btn btn-info btn-xs">Ver más</button></a>
+                  </td>
+                </tr>';
+     
+       }
+    }
     
     /**
     * confirma que exista la sesion de usuario y que sea administrador

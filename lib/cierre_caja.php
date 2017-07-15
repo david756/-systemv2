@@ -110,10 +110,10 @@
                   <div class="col-md-12 col-sm-12 col-xs-12">
 
                     <div class="x_panel">
-                    <a type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalConfirmar"> </i> Confirmar Cierre</a>
+                    <a type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#ModalConfirmar"> </i> Confirmar Cierre</a>
                     <hr>    
                       <div class="x_title">
-                        <h2>Pedidos que aun no han sido facturados </h2>
+                        <h2>Pedidos que aún no han sido facturados </h2>
                         <div class="clearfix"></div>
                       </div>
                       <div class="row">

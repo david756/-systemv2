@@ -39,6 +39,7 @@
   <link href="css/icheck/flat/green.css" rel="stylesheet" />
   <link href="css/floatexamples.css" rel="stylesheet" type="text/css" />
 
+
   <link href="js/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/fixedHeader.bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -47,45 +48,6 @@
 
   <script src="js/jquery.min.js"></script>
   <script src="js/nprogress.js"></script>
-
-  <script type="text/javascript">
-       function datosTotales(){   
-
-        var pagos=0;
-        var aplazados=0;
-        var cortesias=0;
-        var descuentos=0;  
-
-
-        tabla = document.getElementById("datatable-buttons");
-
-        for(var i = 0; tabla.rows[i]; i++){
-          if (tabla.rows[i].cells[5]!==undefined) {
-                  if (tabla.rows[i].cells[5].innerHTML=="pago") {
-                      pagos=pagos+parseInt(tabla.rows[i].cells[2].innerHTML);
-                      descuentos=descuentos+parseInt(tabla.rows[i].cells[3].innerHTML);
-                  }
-                  if (tabla.rows[i].cells[5].innerHTML=="aplazado") {
-                      aplazados=aplazados+parseInt(tabla.rows[i].cells[2].innerHTML);
-                  }
-                  if (tabla.rows[i].cells[5].innerHTML=="cortesia") {
-                      cortesias=cortesias+parseInt(tabla.rows[i].cells[2].innerHTML);
-                  }
-
-          };
-        }
-        totales=pagos-descuentos;     
-
-
-            $('#pagos').html(pagos);
-            $('#aplazados').html(aplazados);
-            $('#cortesias').html(cortesias);
-            $('#descuentos').html(descuentos);
-            $('#totales').html(totales);
-             
-      }
-  </script>
-
 
   <!--[if lt IE 9]>
   <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -135,7 +97,7 @@
               <li ><a href="admin_inicio.php"><i class="fa fa-home"></i> Inicio </a></li>
                <li><a><i class="fa fa-users"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li><a href="admin_user_emp.php">Empleados</a></li>                    
+                    <li class="current-page"><a href="admin_user_emp.php">Empleados</a></li>                    
                     <li><a href="admin_user_admin.php">Administradores</a></li>                    
                   </ul>
                 </li>
@@ -154,16 +116,16 @@
                     <li><a href="admin_productos.php">Administrar</a></li>            
                   </ul>
                 </li>
-                <li  class="active" ><a><i class="fa fa-edit"></i> Atenciones <span class="fa fa-chevron-down"></span></a>
+                <li><a><i class="fa fa-edit"></i> Atenciones <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
-                    <li class="current-page"><a href="admin_atenciones.php">Administrar</a></li>                  
+                    <li><a href="admin_atenciones.php">Administrar</a></li>                  
                   </ul>
-                </li>
+                </li>                
                 <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">                  
-                    <li><a href="admin_reportes.php">Reporte pedidos</a></li>           
+                    <li class="current-page"><a href="admin_reportes.php">Reporte pedidos</a></li>                        
                   </ul>
-                </li>               
+                </li>
               </ul>
             </div>
           </div>
@@ -202,13 +164,13 @@
 
               <div class="row x_title">
                 <div class="col-md-6">
-                  <h3>Atenciones <small>Ordenes de pedidos</small></h3>
-                </div>
-                <div class="col-md-6">
-
+                  <h3>Reporte</h3>
                 </div>
               </div>
-                <div class="well"> 
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="well">             
+                    
                     <form class="form-horizontal">
                       <fieldset>
                       <div class="row">
@@ -219,7 +181,7 @@
                                 <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
                                 <input type="text" style="width: 200px" name="reservation" id="reservation" class="form-control"
                                  value="<?php echo $fecha_actual; ?>" />
-                              </div>
+                               </div>
                             </div>
                           </div>
                         </div>
@@ -227,46 +189,46 @@
                     </form>
                   </div>
 
-                  <div class="col-sm-12 invoice-col">
-                                <b>Ordenes facturadas: $</b> <span id="pagos">0</span>
-                                <br>
-                                <br>
-                                <b>Ordenes pendientes: $</b> <span id="aplazados">0</span>
-                                <br>
-                                <b>Ordenes de cortesia: $</b> <span id="cortesias">0</span>
-                                <br>
-                                <b>Total descuentos: $</b> <span id="descuentos">0</span>
-                                <br><br>
-                                <b>Ingresos Totales: $</b> <span id="totales">0</span>
-                                <br><br><br>
-                   </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h4>Reporte de pedidos</h4>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
 
-              <div class="col-md-12 col-sm-12 col-xs-12">                    
-                        <table  id="datatable-buttons" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="datatable-buttons" class="table table-striped table-bordered">
                           <thead>
                             <tr>
-                              <th>Fecha</th>
-                              <th>Mesa</th>
-                              <th>subtotal</th>
-                              <th>Descuento</th>
+                              <th>Fecha Pedido</th>
+                              <th>Producto</th>
+                              <th>Anexos</th> 
+                              <th>Mesero</th>
+                              <th>Cocinero</th>                             
+                              <th>Mesa</th> 
+                              <th>Cant.</th>
+                              <th>Valor</th>
                               <th>Total</th>
-                              <th>Estado</th>
-                              <th>Hora Pago</th>
                               <th>Accion</th>
                             </tr>
                           </thead>
                           <tbody>                            
                             <?php 
                             if (isset($inicio)&&isset($fin)) {
-                              echo Atenciones($inicio,$fin);
+                              echo pedidos($inicio,$fin);
                             }
                             else{
                              echo "Seleccione una fecha <hr>" ;
                             }
                             ?>
                           </tbody>
-                        </table>
+                        </table><br><br> <hr>
+
+                      </div>
+                    </div>
                   </div>
+
+              </div>
 
               <div class="clearfix"></div>
             </div>
@@ -284,37 +246,45 @@
 
   </div>
 
- 		<div id="custom_notifications" class="custom-notifications dsp_none">
-                <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
-                </ul>
-                <div class="clearfix"></div>
-                <div id="notif-group" class="tabbed_notifications"></div>
-        </div>
+  <div id="custom_notifications" class="custom-notifications dsp_none">
+    <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
+    </ul>
+    <div class="clearfix"></div>
+    <div id="notif-group" class="tabbed_notifications"></div>
+  </div>
 
-        <script src="js/bootstrap.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- bootstrap progress js -->
+  <script src="js/progressbar/bootstrap-progressbar.min.js"></script>
+  <script src="js/nicescroll/jquery.nicescroll.min.js"></script>
+  <!-- icheck -->
+  <script src="js/icheck/icheck.min.js"></script>
+  <!-- daterangepicker -->
+  <script type="text/javascript" src="js/moment/moment.min.js"></script>
+  <script type="text/javascript" src="js/datepicker/daterangepicker.js"></script>
 
-        <!-- bootstrap progress js -->
-        <script src="js/progressbar/bootstrap-progressbar.min.js"></script>
-        <script src="js/nicescroll/jquery.nicescroll.min.js"></script>
-        <!-- icheck -->
-        <script src="js/icheck/icheck.min.js"></script>
+  <script src="js/custom.js"></script>
 
-        <script src="js/custom.js"></script>
+  <!-- flot js -->
+  <!--[if lte IE 8]><script type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+  <script type="text/javascript" src="js/flot/jquery.flot.js"></script>
+  <script type="text/javascript" src="js/flot/jquery.flot.pie.js"></script>
+  <script type="text/javascript" src="js/flot/jquery.flot.orderBars.js"></script>
+  <script type="text/javascript" src="js/flot/jquery.flot.time.min.js"></script>
+  <script type="text/javascript" src="js/flot/date.js"></script>
+  <script type="text/javascript" src="js/flot/jquery.flot.spline.js"></script>
+  <script type="text/javascript" src="js/flot/jquery.flot.stack.js"></script>
+  <script type="text/javascript" src="js/flot/curvedLines.js"></script>
+  
+  <!-- worldmap -->
+  <script type="text/javascript" src="js/maps/jquery-jvectormap-2.0.3.min.js"></script>
+  <script type="text/javascript" src="js/maps/gdp-data.js"></script>
+  <script type="text/javascript" src="js/maps/jquery-jvectormap-world-mill-en.js"></script>
+  <script type="text/javascript" src="js/maps/jquery-jvectormap-us-aea-en.js"></script>
+  <!-- pace -->
+  <script src="js/pace/pace.min.js"></script>
 
-        <!-- daterangepicker -->
-        <script type="text/javascript" src="js/moment/moment.min.js"></script>
-        <script type="text/javascript" src="js/datepicker/daterangepicker.js"></script>
-        <!-- input mask -->
-        <script src="js/input_mask/jquery.inputmask.js"></script>
-        <!-- knob -->
-        <script src="js/knob/jquery.knob.min.js"></script>
-        <!-- range slider -->
-        <script src="js/ion_range/ion.rangeSlider.min.js"></script>
-        <!-- color picker -->
-        <script src="js/colorpicker/bootstrap-colorpicker.min.js"></script>
-        <script src="js/colorpicker/docs.js"></script>
-
-   <!-- Datatables -->
+  <!-- Datatables -->
         <!-- <script src="js/datatables/js/jquery.dataTables.js"></script>
   <script src="js/datatables/tools/js/dataTables.tableTools.js"></script> -->
 
@@ -372,7 +342,6 @@
         </script>
         <script type="text/javascript">
           $(document).ready(function() {
-            datosTotales();
             $('#datatable').dataTable();
             $('#datatable-keytable').DataTable({
               keys: true
@@ -387,7 +356,7 @@
             });
             var table = $('#datatable-fixed-header').DataTable({
               fixedHeader: true
-            });            
+            });
           });
           TableManageButtons.init();
         </script>
@@ -398,14 +367,13 @@
 
 	      	var a_inicio=start.format("DD/MM/YYYY");
 	      	var a_fin=end.format("DD/MM/YYYY")
-	      	var url="admin_atenciones.php?inicio="+a_inicio+"&fin="+a_fin;
+	      	var url="admin_reportes.php?inicio="+a_inicio+"&fin="+a_fin;
 
 	      	location.href =url;
 
 	      });
 	    });
-	  </script>
- 
+	  </script> 
 </body>
 
 </html>

@@ -347,22 +347,11 @@
                     <li><a href="admin_atenciones.php">Administrar</a></li>                  
                   </ul>
                 </li>
-                <li><a><i class="fa fa-bar-chart"></i> Presentacion de datos <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">
-                    <li><a href="#">General</a></li>                    
-                    <li><a href="#">Empleados</a></li>
-                    <li><a href="#">Categorias</a></li>                    
-                    <li><a href="#">Productos</a></li>
-                    <li><a href="#">Atenciones</a></li>                    
-                    <li><a href="#">Inventarios</a></li>                    
+                <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu" style="display: none">                  
+                    <li><a href="admin_reportes.php">Reporte pedidos</a></li>           
                   </ul>
                 </li>
-                <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">
-                    <li><a href="admin_reportes_dia.php">Reporte de hoy</a></li>                    
-                    <li><a href="admin_reportes_fecha.php">Reportes pasados</a></li>
-                    <li><a href="#">Informe mes</a></li>                                        
-                  </ul>
                 </li>
               </ul>
             </div>

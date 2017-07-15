@@ -6,7 +6,6 @@
         }else{
             header('Location: pedido_mesas.php');
         }
-
  ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -32,6 +31,7 @@
   <link href="css/icheck/flat/green.css" rel="stylesheet">
 
   <script src="js/jquery.min.js"></script>
+
 
   <style type="text/css">    
     .categoria{
@@ -59,6 +59,7 @@
         <![endif]-->
   <script>
             $(document).ready(function() {
+               meseroAutorizado();
                datosAtencion();
                pedidoCompleto();
                categorias();
@@ -67,6 +68,23 @@
 
             });
   </script>
+
+    <script type="text/javascript">
+      function meseroAutorizado(){         
+                  $.post("controller/Atencion.php", 
+                  {metodo: "meseroAutorizado", mesa:"<?php echo $idMesa ?>"}
+                  ,function(tabla){
+                    console.log(tabla);
+                      if (tabla=="No autorizado") {
+                        location.href ="pedido_mesas.php";
+                      }
+
+                  }
+                  );
+      }
+      </script>
+
+
 
   <script type="text/javascript">
       var idMesa=<?php echo $idMesa; ?> ;
@@ -478,7 +496,7 @@
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Guarniciones</label><br><br>
                                         <label>
-                                           <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Vegetales.")' data-target="#ModalOrden">Vegetales</button>
+                                           <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Vegetales.")' data-target="#ModalOrden">Casabe</button>
                                         </label>
                                         <label>
                                            <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Papas fritas.")' >Papas Fritas</button>

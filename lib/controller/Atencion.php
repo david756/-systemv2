@@ -98,6 +98,12 @@ switch ($metodo) {
         verificarUser();
         cortesia();
         break;
+    case "meseroAutorizado":
+        verificarUser();
+        meseroAutorizado();
+        break;
+    
+    
         
     default:
         die ('302:Error, no se encontro dirección');
@@ -675,10 +681,9 @@ switch ($metodo) {
     
     
     /**
-    * confirma que exista la sesion de usuario y que sea administrador
-    * para poder realizar cambios propios de este privilegio
+    * Verifica que el mesero sea el mismo que abrio la mesa o que esta se encuentre disponible
     */
-    function verificarAdmin(){        
+     function verificarAdmin(){        
         $usuario = new Usuario();
         $usuario= $usuario->getSesion();
         if (!is_object($usuario)) {
@@ -687,6 +692,47 @@ switch ($metodo) {
         if ($usuario->getPrivilegios()[0]!=1) {
            die('no esta autorizado para realizar esta accion');
         }
+    }
+    
+    
+    /**
+    * confirma que exista la sesion de usuario y que sea administrador
+    * para poder realizar cambios propios de este privilegio
+    */
+    function meseroAutorizado(){        
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        
+        if (isset($_POST["mesa"])) {
+            $idMesa=$_POST["mesa"];
+        }
+         else {
+            die ('No autorizado');
+        }
+        
+        $atencion= new Atencion();
+        $mesa=new Mesa($idMesa);
+        $atencion->setMesa($mesa);
+        $estadoMesa=$atencion->atencionMesa()["disponibilidad"];
+        $idAtencion=$atencion->atencionMesa()["idAtencion"];
+        
+        $usuario = new Usuario();
+        $usuario= $usuario->getSesion();
+        $id=$usuario->getIdUsuario();
+        
+        if ($estadoMesa!=1) {
+            die("Autorizado");
+        }
+        else{            
+            if ($atencion->pedidoMesero($id)==1){
+                die("Autorizado");
+            }
+            else{
+                die("No autorizado");
+            }
+            
+        }
+        
     }
     
     /**

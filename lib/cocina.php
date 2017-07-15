@@ -134,7 +134,7 @@
                         <p class="text-muted font-13 m-b-30">
                           Opciones:
                         </p>
-                        <button type="button" id="actualizar" class="btn btn-success">Actualizar</button>
+                        <button type="button" id="actualizar" class="btn btn-success btn-xs">Actualizar</button>
                         <hr>
                         <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                            <thead>

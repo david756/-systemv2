@@ -213,7 +213,7 @@
 
             <div class="title_right">
               <div class="pull-right">
-                <h2>Estado Atencion : Pago </h2>
+                <h2>Estado Atencion : <span class="estadoAtencion"></span> </h2>
                 <small>
                    <h5><span class="horaInicio"></span></h5>
                 </small>
@@ -248,7 +248,8 @@
 
 
                       <div class="col-md-6">   
-                        <h4>Pedidos Atencion</h4> 
+                        <h4>Información de items</h4> 
+                        <h5><b>Seleccione un producto para ver más detalles</b></h5> </br>
                         <div class="detalleItems"></div>
                         
                       </div>

@@ -103,8 +103,8 @@
                         <p class="text-muted font-13 m-b-30">
                           Opciones:
                         </p>
-                        <a type="button" id="actualizar" class="btn btn-success">Actualizar</a>
-                        <a type="button" href="cierre_caja.php" id="cerrar" class="btn btn-success">Cerrar caja</a>
+                        <a type="button" id="actualizar" class="btn btn-success btn-xs">Actualizar</a>
+                        <a type="button" href="cierre_caja.php" id="cerrar" class="btn btn-info btn-xs">Cerrar caja</a>
                         <hr>
                         <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                           <thead>
