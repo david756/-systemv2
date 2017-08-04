@@ -408,7 +408,7 @@
                   <div class="accordion" id="accordion" role="tablist" aria-multiselectable="false">
                       <div class="panel">
                           <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            <h4 class="panel-title"><strong>Pedido completo</strong></h4>
+                            <h4 class="panel-title"><strong>Ver el pedido actual</strong></h4>
                           </a>
                             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                                   <div class="panel-body">

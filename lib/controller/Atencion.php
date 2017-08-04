@@ -723,6 +723,9 @@ switch ($metodo) {
         if ($estadoMesa!=1) {
             die("Autorizado");
         }
+        else if ($usuario->getPrivilegios()[0]==1) {
+           die("Autorizado");
+        }
         else{            
             if ($atencion->pedidoMesero($id)==1){
                 die("Autorizado");
