@@ -282,12 +282,24 @@ class Item {
                               INNER JOIN  mesas AS m ON (m.id=a.fk_mesa)
                               INNER JOIN  estado_items AS ep ON (ep.id=ap.fk_estado_item)
                               left JOIN  usuarios as cocinero on (cocinero.id=ap.fk_cocinero)
-                              WHERE(ep.id=1 OR ep.id=2) and (ap.hora_pedido)<(DATE_SUB(NOW(), INTERVAL 0 hour))
-                              and (ap.hora_pedido)>(DATE_SUB(NOW(), INTERVAL 12 hour))
+                              WHERE(ep.id=1 OR ep.id=2)and (ap.hora_pedido>(SELECT cc.fecha FROM cierre_caja cc order by fecha desc LIMIT 1))
                               ORDER BY ap.hora_pedido ASC";
         $stmt = $pdo->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll();
+        Database::disconnect();
+        return $result;
+    }
+    
+    function datosDespachoCocina(){
+        
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT p.nombre producto,ap.anexos anexo,ap.hora_despacho horaDespacho,ap.hora_pedido horaPedido,u.usuario mesero,m.descripcion mesa,c.usuario cocinero FROM items AS ap INNER JOIN atenciones AS a ON (ap.fk_atencion=a.id) INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN atencion_empleados ae on ae.fk_item=ap.id INNER JOIN usuarios u on u.id=ae.fk_usuario INNER JOIN usuarios c on c.id=ap.fk_cocinero inner JOIN productos p on p.id=ap.fk_producto WHERE(ap.id=?)";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->idAtencionProducto);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
         Database::disconnect();
         return $result;
     }

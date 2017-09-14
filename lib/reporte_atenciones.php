@@ -2,6 +2,7 @@
   include 'controller/Sesiones.php';
   include 'controller/Reportes.php';
   admin();
+  caja();
   if(isset($_GET['inicio'])&&isset($_GET['fin'])) {
     $inicio=$_GET['inicio'];
     $fin=$_GET['fin'];
@@ -24,7 +25,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Mantil Sistema Pos | </title>
+  <title>Holly Sistema Pos | </title>
 
   <!-- Bootstrap core CSS -->
 
@@ -51,37 +52,57 @@
   <script type="text/javascript">
        function datosTotales(){   
 
-        var pagos=0;
-        var aplazados=0;
-        var cortesias=0;
-        var descuentos=0;  
+  
+        var subtotalAplazados=0;
+        var descuentosAplazados=0;  
+        var totalAplazado=0;
+
+        var subtotalCortesias=0;        
+        var descuentosCortesias=0; 
+        var totalCortesia=0;
+
+        var subtotal=0;
+        var descuentos=0;
+        var total=0;
+
 
 
         tabla = document.getElementById("datatable-buttons");
 
-        for(var i = 0; tabla.rows[i]; i++){
-          if (tabla.rows[i].cells[5]!==undefined) {
-                  if (tabla.rows[i].cells[5].innerHTML=="pago") {
-                      pagos=pagos+parseInt(tabla.rows[i].cells[2].innerHTML);
-                      descuentos=descuentos+parseInt(tabla.rows[i].cells[3].innerHTML);
+         for(var i = 0; tabla.rows[i]; i++){
+          if (tabla.rows[i].cells[6]!==undefined) {
+                  if (tabla.rows[i].cells[6].innerHTML=="pago") {
+                      subtotal=subtotal+parseInt(tabla.rows[i].cells[3].innerHTML);
+                      descuentos=descuentos+parseInt(tabla.rows[i].cells[4].innerHTML);
                   }
-                  if (tabla.rows[i].cells[5].innerHTML=="aplazado") {
-                      aplazados=aplazados+parseInt(tabla.rows[i].cells[2].innerHTML);
+                  if (tabla.rows[i].cells[6].innerHTML=="aplazado") {
+                      subtotalAplazados=subtotalAplazados+parseInt(tabla.rows[i].cells[3].innerHTML);
+                      descuentosAplazados=descuentosAplazados+parseInt(tabla.rows[i].cells[4].innerHTML);
                   }
-                  if (tabla.rows[i].cells[5].innerHTML=="cortesia") {
-                      cortesias=cortesias+parseInt(tabla.rows[i].cells[2].innerHTML);
+                  if (tabla.rows[i].cells[6].innerHTML=="cortesia") {
+                      subtotalCortesias=subtotalCortesias+parseInt(tabla.rows[i].cells[3].innerHTML);
+                      descuentosCortesias=descuentosCortesias+parseInt(tabla.rows[i].cells[4].innerHTML);
                   }
 
           };
         }
-        totales=pagos-descuentos;     
+        totalCortesia=subtotalCortesias-descuentosCortesias;
+        totalAplazado=subtotalAplazados-descuentosAplazados;
+        total=subtotal-descuentos;
 
 
-            $('#pagos').html(pagos);
-            $('#aplazados').html(aplazados);
-            $('#cortesias').html(cortesias);
-            $('#descuentos').html(descuentos);
-            $('#totales').html(totales);
+            $('.subtotal').html(subtotal);
+            $('.descuentos').html(descuentos);
+            $('.total').html(total);
+
+            
+            $('.subtotalAplazados').html(subtotalAplazados);
+            $('.descuentosAplazados').html(descuentosAplazados);
+            $('.totalAplazado').html(totalAplazado);
+
+            $('.subtotalCortesias').html(subtotalCortesias);
+            $('.descuentosCortesias').html(descuentosCortesias);
+            $('.totalCortesia').html(totalCortesia);
              
       }
   </script>
@@ -99,122 +120,32 @@
 
 </head>
 
-
-<body class="nav-md">
+<body style="background:#F7F7F7;">
+<!-- top Menu navigation-->
+<?php include 'menu.php'; ?>
+<!-- /top Menu navigation -->
 
   <div class="container body">
-    <div class="main_container">
-      <div class="col-md-3 left_col">
-        <div class="left_col scroll-view">
-
-          <div class="navbar nav_title" style="border: 0;">
-            <a href="menu_principal.php" class="site_title"><i class="fa fa-glass"></i> <span>Mantil System</span></a>
-          </div>
-          <div class="clearfix"></div>
-
-          <!-- menu prile quick info -->
-          <div class="profile">
-            <div class="profile_pic">
-              <img src="images/userMale.png" alt="..." class="img-circle profile_img">
-            </div>
-            <div class="profile_info">
-              <span>Bienvenido,</span>
-              <h2>Usuario</h2>
-            </div>
-          </div>
-          <!-- /menu prile quick info -->
-
-          <br />
-
-          <!-- sidebar menu -->
-          <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-
-            <div class="menu_section">
-              <h3>Administrador</h3><br>
-              <ul class="nav side-menu">
-              <li ><a href="admin_inicio.php"><i class="fa fa-home"></i> Inicio </a></li>
-               <li><a><i class="fa fa-users"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">
-                    <li><a href="admin_user_emp.php">Empleados</a></li>                    
-                    <li><a href="admin_user_admin.php">Administradores</a></li>                    
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-th-large"></i> Mesas <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">
-                    <li><a href="admin_mesas.php">Administrar</a></li>               
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-folder-o"></i> Categorias <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">
-                  <li><a href="admin_categorias.php">Administrar</a></li>             
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-beer"></i> Productos <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">
-                    <li><a href="admin_productos.php">Administrar</a></li>            
-                  </ul>
-                </li>
-                <li  class="active" ><a><i class="fa fa-edit"></i> Atenciones <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">
-                    <li class="current-page"><a href="admin_atenciones.php">Administrar</a></li>                  
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">                  
-                    <li><a href="admin_reportes.php">Reporte pedidos</a></li>           
-                  </ul>
-                </li>               
-              </ul>
-            </div>
-          </div>
-          <!-- /sidebar menu -->
-
-          <!-- /menu footer buttons -->
-          <div class="sidebar-footer hidden-small">
-            <a data-toggle="tooltip" data-placement="top" title="Soporte">
-              <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="Pantalla Completa">
-              <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="Salir">
-              <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="Inicio">
-              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-            </a>
-          </div>
-          <!-- /menu footer buttons -->
-        </div>
-      </div>
-
-          <!-- top Menu navigation-->
-          <?php include 'admin_menu.php'; ?>
-          <!-- /top Menu navigation -->
-
 
       <!-- page content -->
       <div class="right_col" role="main">
-
-        <div class="row">
-          <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="dashboard_graph">
-
-              <div class="row x_title">
+        <div class="x_content">         
+          <div class="clearfix"></div>
+          <div class="row">
                 <div class="col-md-6">
                   <h3>Atenciones <small>Ordenes de pedidos</small></h3>
                 </div>
                 <div class="col-md-6">
-
                 </div>
               </div>
                 <div class="well"> 
+                    <a class="pull-right" href="menu_principal.php" type="button" class="btn btn-default btn-sm">Volver</a>
                     <form class="form-horizontal">
                       <fieldset>
                       <div class="row">
                           <div class="control-group col-md-4 col-sm-6 col-xs-12">
                             <div class="controls">
-                              <h5>Seleccione un rango de fecha:</h5>
+                            <h5>Seleccione un rango de fecha:</h5>
                               <div class="input-prepend input-group">
                                 <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
                                 <input type="text" style="width: 200px" name="reservation" id="reservation" class="form-control"
@@ -227,27 +158,22 @@
                     </form>
                   </div>
 
-                  <div class="col-sm-12 invoice-col">
-                                <b>Ordenes facturadas: $</b> <span id="pagos">0</span>
-                                <br>
-                                <br>
-                                <b>Ordenes pendientes: $</b> <span id="aplazados">0</span>
-                                <br>
-                                <b>Ordenes de cortesia: $</b> <span id="cortesias">0</span>
-                                <br>
-                                <b>Total descuentos: $</b> <span id="descuentos">0</span>
+                  <div class="well">                      
+                               <b>Subtotal: $</b> <span class="subtotal">0</span><br>
+                                <b>Total Descuentos: $</b> <span class="descuentos">0</span>
                                 <br><br>
-                                <b>Ingresos Totales: $</b> <span id="totales">0</span>
-                                <br><br><br>
-                   </div>
+                                <b>GRAN TOTAL: $</b> <span class="total">0</span>
+                               
+                      </div>
 
               <div class="col-md-12 col-sm-12 col-xs-12">                    
                         <table  id="datatable-buttons" class="table table-striped table-bordered" cellspacing="0" width="100%">
                           <thead>
                             <tr>
+                              <th>Id Atencion</th>
                               <th>Fecha</th>
                               <th>Mesa</th>
-                              <th>subtotal</th>
+                              <th>Subtotal</th>
                               <th>Descuento</th>
                               <th>Total</th>
                               <th>Estado</th>
@@ -263,33 +189,61 @@
                             else{
                              echo "Seleccione una fecha <hr>" ;
                             }
-                            ?>
+                            ?>                            
+                            <tr> 
+                              <td><b>TOTALES >>></b> </td>
+                              <td><b>Cortesias</b> </td> 
+                              <td></td>
+                              <td class="subtotalCortesias"></td>
+                              <td class="descuentosCortesias">1</td>                    
+                              <td class="totalCortesia">1</td>
+                              <td></td>                
+                              <td></td>
+                              <td></td>                               
+                            </tr>
+                             <tr> 
+                              <td><b>TOTALES >>></b> </td>
+                              <td><b>Pendientes de pago</b></td> 
+                              <td></td>
+                              <td class="subtotalAplazados"></td>
+                              <td class="descuentosAplazados">1</td>                    
+                              <td class="totalAplazado"></td>
+                              <td></td>                
+                              <td></td>
+                              <td></td>                               
+                            </tr>                          
+                           <tr> 
+                           	  <td><b>TOTALES >>></b> </td>
+                              <td><b>TOTAL INGRESOS</b> </td> 
+                              <td></td>
+                              <td class="subtotal"></td>
+                              <td class="descuentos">1</td>                    
+                              <td class="total"></td>
+                              <td></td>                
+                              <td></td>
+                              <td></td>                               
+                           </tr>
                           </tbody>
                         </table>
                   </div>
-
-              <div class="clearfix"></div>
+             <!-- footer content -->
+              <?php include 'footer.php'; ?>
+              <!-- /footer content -->
             </div>
+            <!-- /page content -->
           </div>
 
+
         </div>
-        <br />       
-       <!-- footer content -->
-        <?php include 'footer.php'; ?>
-        <!-- /footer content -->
-      </div>
-      <!-- /page content -->
-
-    </div>
-
-  </div>
-
- 		<div id="custom_notifications" class="custom-notifications dsp_none">
-                <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
-                </ul>
-                <div class="clearfix"></div>
-                <div id="notif-group" class="tabbed_notifications"></div>
         </div>
+        <div id="custom_notifications" class="custom-notifications dsp_none">
+          <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
+          </ul>
+          <div class="clearfix"></div>
+          <div id="notif-group" class="tabbed_notifications"></div>
+        </div>
+
+
 
         <script src="js/bootstrap.min.js"></script>
 
@@ -338,9 +292,12 @@
         <!-- pace -->
         <script src="js/pace/pace.min.js"></script>
         <script>
+          datosTotales();
           var handleDataTableButtons = function() {
               "use strict";
               0 !== $("#datatable-buttons").length && $("#datatable-buttons").DataTable({
+				    "order": []
+				},{
                 dom: "Bfrtip",
                 buttons: [{
                   extend: "copy",
@@ -370,25 +327,7 @@
               }
             }();
         </script>
-        <script type="text/javascript">
-          $(document).ready(function() {
-            datosTotales();
-            $('#datatable').dataTable();
-            $('#datatable-keytable').DataTable({
-              keys: true
-            });
-            $('#datatable-responsive').DataTable();
-            $('#datatable-scroller').DataTable({
-              ajax: "js/datatables/json/scroller-demo.json",
-              deferRender: true,
-              scrollY: 380,
-              scrollCollapse: true,
-              scroller: true
-            });
-            var table = $('#datatable-fixed-header').DataTable({
-              fixedHeader: true
-            });            
-          });
+        <script type="text/javascript">         
           TableManageButtons.init();
         </script>
        
@@ -398,7 +337,7 @@
 
 	      	var a_inicio=start.format("DD/MM/YYYY");
 	      	var a_fin=end.format("DD/MM/YYYY")
-	      	var url="admin_atenciones.php?inicio="+a_inicio+"&fin="+a_fin;
+	      	var url="reporte_atenciones.php?inicio="+a_inicio+"&fin="+a_fin;
 
 	      	location.href =url;
 

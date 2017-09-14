@@ -28,6 +28,10 @@ switch ($metodo) {
         verificarUser();
         detalleItems();
         break;
+    case "detalleItemsCocina":
+        verificarUser();
+        detalleItemsCocina();
+        break;
     case "delete":
         verificarAdmin();
         eliminar();
@@ -39,7 +43,7 @@ switch ($metodo) {
     default:
         die ('302:Error, no se encontro dirección');
 }
-/**
+     /**
      * Metodo lista de items de una atencion para mostrar en detalle pedido
      * @return Html tabla para mostrar los items de determinada atencion,
      */
@@ -112,6 +116,67 @@ switch ($metodo) {
                   </div>
                 </div>   
              <!-- end accordion -->';
+        $i++;
+     
+       }
+    }
+     /**
+     * Metodo lista de items de una atencion para mostrar en detalle pedido
+     * @return Html tabla para mostrar los items de determinada atencion,
+     */
+    function detalleItemsCocina(){
+    $idAtencion=$_POST["atencion"] ;
+    $item=new Item();
+    $atencion= new Atencion($idAtencion);
+    $atencion= $atencion->getAtencion();
+    $item->setAtencion($atencion);
+    $consulta=$item->itemsAtencion();   
+    $meses = array("Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic");
+    $i=0;
+    foreach ($consulta as $a) {     
+        $producto= $a["producto"];
+        $idItem=$a["id"];     
+        $total= $a["valorRegistrado"];
+        $mesero=$a["mesero"];
+        $anexo= $a["anexos"];
+        $horaPedido=$a["hora_pedido"];
+        $horaPreparacion=$a["hora_preparacion"];
+        $horaDespacho=$a["hora_despacho"];
+        $tiempo="no disponible";
+        if ($horaDespacho!="") {
+            $tiempo=date("H:i:s", strtotime("00:00:00") + strtotime($horaDespacho) - strtotime($horaPedido) );
+            $horaDespacho = date_create($horaDespacho);
+            $horaDespacho= date_format($horaDespacho,'d')." ".$meses[date_format($horaDespacho,'n')-1]. 
+            " ".date_format($horaDespacho,'Y'). " , ". date_format($horaDespacho,'g:i a');
+        } 
+        if ($horaPedido!="") {
+            $horaPedido = date_create($horaPedido);
+            $horaPedido= date_format($horaPedido,'d')." ".$meses[date_format($horaPedido,'n')-1]. 
+            " ".date_format($horaPedido,'Y'). " , ". date_format($horaPedido,'g:i a');
+        }    
+        if ($horaPreparacion!="") {
+            $horaPreparacion = date_create($horaPreparacion);
+            $horaPreparacion= date_format($horaPreparacion,'d')." ".$meses[date_format($horaPreparacion,'n')-1]. 
+            " ".date_format($horaPreparacion,'Y'). " , ". date_format($horaPreparacion,'g:i a');
+        }    
+                
+        $cocinero=$a["cocinero"];
+               
+        echo '   <div class="panel">
+                         
+                            <div class="panel-body">
+                                  <b><i>'.$producto.'</i></b><br><br>                    
+                                  <b>Total:</b> $'.$total.'<br>
+                                  <b> Mesero :</b>  '.$mesero.'<br>
+                                  <b> Anexos :</b>  '.$anexo.'<br>
+                                  <b> Hora Pedido :</b> '.$horaPedido.' <br>
+                                  <b> Hora Inicio Preparacion :</b> '.$horaPreparacion.' <br>
+                                  <b> Hora Despacho :</b>'.$horaDespacho.' <br>
+                                  <b> Tiempo total de espera :</b> '.$tiempo.'  <br>                                            
+                                  <b> Cocinero :</b>  '.$cocinero.' <br><br>
+                             </div>                       
+                  </div>'
+               ;
         $i++;
      
        }

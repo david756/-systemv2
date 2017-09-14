@@ -540,9 +540,7 @@ class Usuario {
             
                 require_once "database.php";
                 $pdo = Database::connect();
-                $query = "SELECT COUNT(DISTINCT ea.fk_usuario) total "
-                        . "from atencion_empleados as ea INNER JOIN items as ap "
-                        . "on ea.fk_item=ap.id where DATE(hora_pedido)=DATE(NOW())";
+                $query = "SELECT COUNT(DISTINCT ea.fk_usuario) total from atencion_empleados as ea INNER JOIN items as ap on ea.fk_item=ap.id WHERE ap.hora_pedido> (SELECT cc.fecha FROM cierre_caja cc order by fecha desc LIMIT 1)";
                 $stmt = $pdo->prepare($query);
                 $stmt->execute();
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -11,7 +11,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Mantil Sistema Pos | </title>
+  <title>Holly Sistema Pos | </title>
 
   <!-- Bootstrap core CSS -->
 
@@ -65,7 +65,7 @@
                             success:  function (response,estado,objeto) {
                                    if (response=="exito") {
                                     $('input[name=crear-nombre]').val("")
-                                    $('#resultado').html("el usuario se agrego con exito!");
+                                    $('#resultado').html("la mesa se agrego con exito!");
                                     $('#resultado').attr("class","alert alert-info");
                                     $('#resultado').show("slow").delay(4000).hide("slow");
                                     mostrarLista();
@@ -204,7 +204,7 @@
         <div class="left_col scroll-view">
 
           <div class="navbar nav_title" style="border: 0;">
-            <a href="menu_principal.php" class="site_title"><i class="fa fa-glass"></i> <span>Mantil System</span></a>
+            <a href="menu_principal.php" class="site_title"><i class="fa fa-glass"></i> <span>Holly System</span></a>
           </div>
           <div class="clearfix"></div>
 
@@ -248,16 +248,6 @@
                 <li><a><i class="fa fa-beer"></i> Productos <span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu" style="display: none">
                     <li><a href="admin_productos.php">Administrar</a></li>            
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-edit"></i> Atenciones <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">
-                    <li><a href="admin_atenciones.php">Administrar</a></li>                  
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">                  
-                    <li><a href="admin_reportes.php">Reporte pedidos</a></li>           
                   </ul>
                 </li>
               </ul>

@@ -94,6 +94,15 @@ switch ($metodo) {
         verificarUser();
         atencionesAlCierre();
         break; 
+     case "pedidosAlCierreImprimir":
+        verificarUser();
+        atencionesAlCierreImprimir();
+        break; 
+     case "datosCierre":
+        verificarUser();
+        datosCierre();
+        break; 
+    
     case "cortesia":
         verificarUser();
         cortesia();
@@ -102,9 +111,18 @@ switch ($metodo) {
         verificarUser();
         meseroAutorizado();
         break;
-    
-    
-        
+    case "datosAtencionCocina":
+        verificarUser();
+        datosAtencionCocina();
+        break;    
+    case "datosAtencionDespachoCocina":
+        verificarUser();
+        datosDespachoAtencionCocina();
+        break; 
+    case "ultimoDespacho":
+        verificarUser();
+        ultimoDespacho();
+        break;        
     default:
         die ('302:Error, no se encontro dirección');
 }
@@ -347,10 +365,21 @@ switch ($metodo) {
     function datosAtencion2(){
     $id=$_POST["atencion"];
     $atencion= new Atencion($id);
+    $meseros=$atencion->getMeseros();
+    $meserosString="";
+    foreach ($meseros as $m) {      
+        if ($meserosString=="") {
+            $meserosString=$m['usuario'];
+        }else{          
+            $meserosString=$meserosString." , ".$m['usuario'];        
+        }
+    } 
+    $meseros=$meserosString;
     $atencion=$atencion->getAtencion();
     $total=$atencion->getDatosAtencion()['total'];
     $subtotal=$atencion->getDatosAtencion()['subtotal'];
     $descuento=$atencion->getDatosAtencion()['dcto'];
+    
     if ($total=="") {
         $total=0;
     }       
@@ -382,6 +411,7 @@ switch ($metodo) {
     
     $data = array();
         $data['mesa'] = $nombreMesa;
+        $data['meseros']=$meseros;
         $data['subtotal'] = $subtotal;
         $data['totalPedido'] = $total ;
         $data['estadoAtencion'] = $estado;
@@ -499,12 +529,14 @@ switch ($metodo) {
         $estado=$a["descripcion"]; 
         $mesa=$a["mesa"]; 
         $total=number_format($total, 0, ",", ".");
-        if ($estado=="pedido" || $estado=="aplazado" ) {
-            $class="success";
-            $accion="pagar";
-        }else{
-            $class="info";
-            $accion="ver";
+        if ($estado=="pedido" || $estado=="aplazado" ) {           
+            $opciones=
+                '<a href="pago_pedido.php?atencion='.$id.'"><button type="button" class="btn btn-info btn-xs">Ver</button></a>'
+              . '<a href="pago_pedido.php?atencion='.$id.'&action=1"><button type="button" class="btn btn-success btn-xs">Pagar</button></a>'
+              . '<a href="pago_pedido.php?atencion='.$id.'&action=2"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>';
+        }else{            
+            $opciones='<a href="pago_pedido.php?atencion='.$id.'"><button type="button" class="btn btn-info btn-xs">Ver</button></a>'
+                    . '<a href="pago_pedido.php?atencion='.$id.'&action=2"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>';
         }
         
         echo '<tr> 
@@ -515,10 +547,10 @@ switch ($metodo) {
                 <td>'.$total.'</td>
                 <td>'.$estado.'</td>                
                 <td>'.$horaPago.'</td>
-                <td><a href="pago_pedido.php?atencion='.$id.'">
-                    <button type="button" class="btn btn-'.$class.' btn-xs">'.$accion.'</button></a>
-                  </td>
-                </tr>';
+                <td>
+                    '.$opciones.'
+                 </td>
+                </tr>'; 
      
        }
     }
@@ -543,12 +575,17 @@ switch ($metodo) {
         $estado=$a["estado"]; 
         $id=$a["idItem"]; 
         
+        $item= new Item($id);            
+        $item= $item->getAtencionProducto();
+        $idAtencion=$item->getAtencion();
+        
         $date = new DateTime($tiempo); 
         $horaPedido= $date->format('U');
         $horaActual=time();
         $diferencia=round(($horaActual-$horaPedido)/60)+1;
         $progreso='<span class="timeprogress">'.$diferencia.'</span> Minutos <i class="fa fa-level-up"></i>';
         $classTr="";
+        $url="detalle_pedido.php?atencion=".$idAtencion;
         if ($diferencia>5) {
             $classTr="danger";
         }
@@ -571,10 +608,115 @@ switch ($metodo) {
                 <td>'.$estado.'</td>
                 <td><a>
                     <button onclick="(cambiarEstado('.$id.',\''.$accion.'\'))" type="button" class="btn btn-'.$class.' btn-xs">'.$accion.'</button></a>
+                    <a href="'.$url.'"><button href="'.$url.'" type="button" class="btn btn-default btn-xs">Ver</button></a>
+                    
                 </td>
                 </tr>';
      
        }
+    }
+    
+    function datosAtencionCocina(){
+            $idItem=$_POST["atencionProd"];
+            $item= new Item($idItem);            
+            $item= $item->getAtencionProducto();
+            $atencion=$item->getAtencion();
+            $atencion=new Atencion($atencion);
+            $atencion=$atencion->getAtencion();
+            $id=$atencion->getIdAtencion();
+            $meseros=$atencion->getMeseros();
+            $meserosString="";
+            foreach ($meseros as $m) {      
+                if ($meserosString=="") {
+                    $meserosString=$m['usuario'];
+                }else{          
+                    $meserosString=$meserosString." , ".$m['usuario'];        
+                }
+            } 
+            $meseros=$meserosString;
+            $total=$atencion->getDatosAtencion()['total'];
+
+            if ($total=="") {
+                $total=0;
+            }       
+            $nombreMesa=$atencion->getDatosAtencion()['mesa'];
+            $horaInicio=$atencion->getDatosAtencion()['horaInicio'];            
+            $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+                        
+            $horaInicio = date_create($horaInicio);
+            $horaInicio= date_format($horaInicio,'d')." ".$meses[date_format($horaInicio,'n')-1]. 
+                    " ".date_format($horaInicio,'Y'). " , ". date_format($horaInicio,'g:i a');
+
+
+            $data = array();
+                $data['mesa'] = $nombreMesa;
+                $data['meseros']=$meseros;
+                $data['totalPedido'] = $total ;
+                $data['idAtencion'] = $id;
+                $data['horaInicio'] = $horaInicio;
+                
+                echo json_encode($data);
+    }
+    
+    function datosDespachoAtencionCocina(){
+            $idItem=$_POST["atencionProd"];
+            $item= new Item($idItem);            
+            $item= $item->datosDespachoCocina();           
+            
+            $horaPedido=$item['horaPedido'];
+            $horaDespacho=$item['horaDespacho'];    
+            $tiempo=date("H:i:s", strtotime("00:00:00") + strtotime($horaDespacho) - strtotime($horaPedido) );
+
+            $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+                        
+            $horaDespacho = date_create($horaDespacho);
+            $horaDespacho= date_format($horaDespacho,'d')." ".$meses[date_format($horaDespacho,'n')-1]. 
+                    " ".date_format($horaDespacho,'Y'). " , ". date_format($horaDespacho,'g:i a');
+            
+            
+            $mesa=$item['mesa'];
+            $mesero=$item['mesero'];
+            $cocinero=$item['cocinero'];
+            $producto=$item['producto'];
+            $anexo=$item['anexo'];
+            
+            
+            $data = array();
+                $data['mesa'] = $mesa;
+                $data['mesero']=$mesero;
+                $data['horaDespacho'] = $horaDespacho ;
+                $data['producto'] = $producto;
+                $data['anexo'] = $anexo;
+                $data['cocinero'] = $cocinero;
+                $data['tiempo'] = $tiempo;
+                
+                echo json_encode($data);
+    }
+    
+    function ultimoDespacho(){
+        
+        if (isset($_POST["item"])) {
+            $idItem=$_POST["item"];
+        }
+        //si no recibe metodo
+         else {
+            echo "false";
+        }
+        
+        $item= new Item($idItem);            
+        $item= $item->getAtencionProducto();
+        $idAtencion=$item->getAtencion();
+        
+        $atencion=new Atencion($idAtencion);
+        $consulta=$atencion->cantidadItemsNoDespachados();
+        
+        if ($consulta['cuenta']==0) {
+            echo"true";
+        }
+        else{
+            echo "false";
+        }
+        
     }
     
     function atencionesAbiertas(){
@@ -617,12 +759,12 @@ switch ($metodo) {
         
         $estado=$atencion->cerrarAtenciones();
         if ($estado){
-            $estado=$atencion->cierreCaja($id);
-            if ($estado){
-                echo "Exito";
+            $id=$atencion->cierreCaja($id);
+            if ($id!="Error"){
+                echo $id;
             }
             else {
-                echo $estado;
+                echo "Error";
             }
         }
         else {
@@ -631,9 +773,15 @@ switch ($metodo) {
     }
     
     function atencionesAlCierre(){
-        
-        $atencion=new Atencion();
-    $consulta=$atencion->pedidosAlCierre();
+    $atencion=new Atencion();
+    if (isset($_POST["idCierre"])) {
+            $id=$_POST["idCierre"];
+            $horaInicio=$atencion->horaInicioCierre($id);
+            $consulta=$atencion->reporteCierre($id,$horaInicio);
+    }
+    else{
+         $consulta=$atencion->pedidosAlCierre();
+    }    
     $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
     foreach ($consulta as $a) {              
         
@@ -654,12 +802,8 @@ switch ($metodo) {
         $estado=$a["descripcion"]; 
         $mesa=$a["mesa"]; 
         $total=number_format($total, 0, ",", ".");
-        if ($estado=="pedido" || $estado=="aplazado" ) {
-            $class="success";
-            $accion="pagar";
-        }else{
-            $class="info";
-            $accion="ver";
+        if ($estado=="cortesia") {
+            $estado="<b>Cortesia</b>";
         }
         
         echo '<tr> 
@@ -670,13 +814,100 @@ switch ($metodo) {
                 <td>'.$total.'</td>
                 <td>'.$estado.'</td>                
                 <td>'.$horaPago.'</td>
-                <td><a href="pago_pedido.php?atencion='.$id.'">
-                    <button type="button" class="btn btn-'.$class.' btn-xs">'.$accion.'</button></a>
-                  </td>
+                <td class="opciones"><a href="pago_pedido.php?atencion='.$id.'">
+                    <button type="button" class="btn btn-info btn-xs">Ver</button></a>
+                 </td>
                 </tr>';
      
        }
         
+    }
+    
+    function atencionesAlCierreImprimir(){
+    $atencion=new Atencion();
+    if (isset($_POST["idCierre"])) {
+            $id=$_POST["idCierre"];
+            $horaInicio=$atencion->horaInicioCierre($id);
+            $consulta=$atencion->reporteCierre($id,$horaInicio);
+    }
+    else{
+         $consulta=$atencion->pedidosAlCierre();
+    }    
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    foreach ($consulta as $a) {              
+        $id=$a["id"];
+        $subtotal= $a["total"];
+        $descuento= $a["descuento"];
+        $total= $subtotal-$descuento;
+        $horaInicio=$a["horaInicio"];
+        $horaInicio = date_create($horaInicio);
+        $horaInicio= date_format($horaInicio,'d')." ".$meses[date_format($horaInicio,'n')-1]. 
+            " ".date_format($horaInicio,'Y'). " , ". date_format($horaInicio,'g:i a');
+        $horaPago=$a["horaPago"];
+        if ($horaPago!="") {
+            $horaPago = date_create($horaPago);
+            $horaPago= date_format($horaPago,'d')." ".$meses[date_format($horaPago,'n')-1]. 
+            " ".date_format($horaPago,'Y'). " , ". date_format($horaPago,'g:i a');
+        }        
+        $id=$a["id"];
+        $estado=$a["descripcion"]; 
+        $mesa=$a["mesa"]; 
+        $total=number_format($total, 0, ",", ".");
+        if ($estado=="cortesia") {
+            $estado="<b>Cortesia</b>";
+        }
+        
+        echo '<tr> 
+                <td>'.$id.'</td> 
+                <td>'.$mesa.'</td>
+                 <td>'.$subtotal.'</td>
+                <td>'.$descuento.'</td>                    
+                <td>'.$total.'</td>
+                <td>'.$estado.'</td> 
+            </tr>';
+     
+       }
+        
+    }
+    
+    
+    function datosCierre(){
+        $id=$_POST["id_cierre"];
+        $cierre= new Atencion(); 
+        $horaInicio=$cierre->horaInicioCierre($id);
+        $descuentos= $cierre->descuentosCierre($id,$horaInicio);
+        $cierre= $cierre->datosCierre($id,$horaInicio); 
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        $horaFin=$cierre['fecha_fin'];
+        if ($horaInicio!=null) {
+            $horaInicio = date_create($horaInicio);
+            $horaInicio= date_format($horaInicio,'d')." ".$meses[date_format($horaInicio,'n')-1]. 
+            " ".date_format($horaInicio,'Y'). " , ". date_format($horaInicio,'g:i:s a');
+            $horaFin=$cierre['fecha_fin'];
+            $horaFin = date_create($horaFin);
+            $horaFin= date_format($horaFin,'d')." ".$meses[date_format($horaFin,'n')-1]. 
+            " ".date_format($horaFin,'Y'). " , ". date_format($horaFin,'g:i:s a');
+        }else{
+            $horaFin="";
+            $horaInicio="";
+        }       
+       
+        
+       
+        
+        $usuario=$cierre['usuario'];  
+        $subtotal=$cierre['subtotal'];
+        $total=$subtotal-$descuentos;
+
+        $data = array();
+            $data['horaInicio'] = $horaInicio;
+            $data['horaFin']=$horaFin;
+            $data['usuario'] = $usuario ;
+            $data['subtotal'] = $subtotal;
+            $data['descuentos'] = $descuentos;
+            $data['total'] = $total;
+
+            echo json_encode($data);
     }
     
     

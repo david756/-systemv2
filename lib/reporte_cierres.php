@@ -1,6 +1,9 @@
 <?php  
   include 'controller/Sesiones.php';
+  include 'controller/Reportes.php';
+  admin();
   caja();
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -22,7 +25,9 @@
 
   <!-- Custom styling plus plugins -->
   <link href="css/custom.css" rel="stylesheet">
-  <link href="css/icheck/flat/green.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/maps/jquery-jvectormap-2.0.3.css" />
+  <link href="css/icheck/flat/green.css" rel="stylesheet" />
+  <link href="css/floatexamples.css" rel="stylesheet" type="text/css" />
 
   <link href="js/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
   <link href="js/datatables/buttons.bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -31,48 +36,19 @@
   <link href="js/datatables/scroller.bootstrap.min.css" rel="stylesheet" type="text/css" />
 
   <script src="js/jquery.min.js"></script>
-
-  <script>   
-           //cuando carga la pagina obtiene los datos de la base de datos y los muestra en la tabla
-            $( document ).ready(function() { 
-                //actializa los pedidos de la cocina cada 15 segundos
-                  setInterval(function(){ 
-                  $('#actualizar').trigger('click');                                            
-                  }, 15000);             
-                //  pide a  todos los pedidos que estan en espera en la base de datos.y los recible como (tabla)
-                $.post("controller/Atencion.php", 
-                    {metodo: "pedidosCaja"},
-                    function(tabla){
-                      $('#comentarios').html(tabla);             
-                    }
-              );  
-
-              $("#actualizar").click(function() {
-                  $.post("controller/Atencion.php", 
-                    {metodo: "pedidosCaja"},
-                    function(tabla){
-                      $('#comentarios').html(tabla);                 
-                    }
-                   );  
-                });
-            });           
-           
-
-                 
-  </script>
+  <script src="js/nprogress.js"></script>
 
   <!--[if lt IE 9]>
-        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
-        <![endif]-->
+  <script src="../assets/js/ie8-responsive-file-warning.js"></script>
+  <![endif]-->
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 
 </head>
-
 
 <body style="background:#F7F7F7;">
 <!-- top Menu navigation-->
@@ -83,48 +59,30 @@
 
       <!-- page content -->
       <div class="right_col" role="main">
-        <div class="x_content">
-          <div class="page-title">
-            <div class="title_left">
-              <h3>Caja</h3>
-            </div>
-          </div>
+        <div class="x_content">         
           <div class="clearfix"></div>
-
           <div class="row">
-                  <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="x_panel">
-                      <div class="x_title">
-                        <h2>Lista de pedidos en espera </h2>
-                        <div class="clearfix"></div>
-                      </div>
-
-                      <div class="x_content">
-                        <p class="text-muted font-13 m-b-30">
-                          Opciones:
-                        </p>
-                        <a type="button" id="actualizar" class="btn btn-success btn-xs">Actualizar</a>
-                        <a type="button" href="cierre_caja.php" id="cerrar" class="btn btn-info btn-xs">Cerrar caja</a>
-                        <hr>
-                        <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <div class="col-md-6">
+                  <h3>Cierres de caja</h3>
+                </div>
+          </div>  
+<br><br><br>
+              <div class="col-md-12 col-sm-12 col-xs-12">                    
+                        <table id="datatable-buttons" class="table table-striped table-bordered">
                           <thead>
                             <tr>
-                              <th>Fecha</th>
-                              <th>Mesa</th>
-                              <th>Subtotal</th>
-                              <th>Descuento</th>
-                              <th>Total</th>
-                              <th>Estado</th>                            
-                              <th>Hora Pago</th>
+                              <th>Id cierre</th>
+                              <th>Fecha cierre</th>
+                              <th>Usuario</th>
                               <th>Accion</th>
                             </tr>
                           </thead>
-                          <tbody id="comentarios" ></tbody>                         
+                          <tbody>                            
+                            <?php                             
+                              echo lista_cierres();                            
+                            ?>
                           </tbody>
                         </table>
-
-                      </div>
-                    </div>
                   </div>
              <!-- footer content -->
               <?php include 'footer.php'; ?>
@@ -143,6 +101,8 @@
           <div id="notif-group" class="tabbed_notifications"></div>
         </div>
 
+
+
         <script src="js/bootstrap.min.js"></script>
 
         <!-- bootstrap progress js -->
@@ -153,8 +113,20 @@
 
         <script src="js/custom.js"></script>
 
+        <!-- daterangepicker -->
+        <script type="text/javascript" src="js/moment/moment.min.js"></script>
+        <script type="text/javascript" src="js/datepicker/daterangepicker.js"></script>
+        <!-- input mask -->
+        <script src="js/input_mask/jquery.inputmask.js"></script>
+        <!-- knob -->
+        <script src="js/knob/jquery.knob.min.js"></script>
+        <!-- range slider -->
+        <script src="js/ion_range/ion.rangeSlider.min.js"></script>
+        <!-- color picker -->
+        <script src="js/colorpicker/bootstrap-colorpicker.min.js"></script>
+        <script src="js/colorpicker/docs.js"></script>
 
-        <!-- Datatables -->
+   <!-- Datatables -->
         <!-- <script src="js/datatables/js/jquery.dataTables.js"></script>
   <script src="js/datatables/tools/js/dataTables.tableTools.js"></script> -->
 
@@ -177,7 +149,63 @@
 
         <!-- pace -->
         <script src="js/pace/pace.min.js"></script>
-        
+        <script>
+          var handleDataTableButtons = function() {
+              "use strict";
+              0 !== $("#datatable-buttons").length && $("#datatable-buttons").DataTable({
+                    "order": []
+                },{
+                dom: "Bfrtip",
+                buttons: [{
+                  extend: "copy",
+                  className: "btn-sm"
+                }, {
+                  extend: "csv",
+                  className: "btn-sm"
+                }, {
+                  extend: "excel",
+                  className: "btn-sm"
+                }, {
+                  extend: "pdf",
+                  className: "btn-sm"
+                }, {
+                  extend: "print",
+                  className: "btn-sm"
+                }],
+                responsive: !0
+              })
+            },
+            TableManageButtons = function() {
+              "use strict";
+              return {
+                init: function() {
+                  handleDataTableButtons()
+                }
+              }
+            }();
+        </script>
+        <script type="text/javascript">
+          $(document).ready(function() {
+            
+            $('#datatable').dataTable();
+            $('#datatable-keytable').DataTable({
+              keys: true
+            });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-scroller').DataTable({
+              ajax: "js/datatables/json/scroller-demo.json",
+              deferRender: true,
+              scrollY: 380,
+              scrollCollapse: true,
+              scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({
+              fixedHeader: true
+            });
+            
+          });
+          TableManageButtons.init();
+        </script>
 </body>
 
 </html>

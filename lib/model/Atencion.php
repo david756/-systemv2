@@ -247,6 +247,21 @@ class Atencion {
     }
     
     /**
+     * @return Meseros de la atencion
+     */
+    function getMeseros(){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "select u.usuario from atenciones a INNER JOIN items i ON a.id=i.fk_atencion INNER JOIN atencion_empleados ae on ae.fk_item=i.id INNER JOIN usuarios u on u.id=ae.fk_usuario WHERE a.id=? GROUP BY u.id";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->idAtencion);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();  
+        return $result;
+    }
+    
+    /**
      * retorna el nombre de la mesa,el subtotal,descuento, valor total de la atencion, cajero
      * horaPago,descripcion de la atencion 
      * @return total de la atencion
@@ -313,12 +328,11 @@ class Atencion {
                 $fecha= date('Y-m-d H:i:s');
                 $usuario=$this->cajero->getIdUsuario();
                 $pdo = Database::connect();
-                $query =  "UPDATE atenciones SET fk_estado = 4,descripcion_estado = ?,horaPago =?,fk_cajero=? WHERE atenciones.id = ?";
+                $query =  "UPDATE atenciones SET fk_estado = 4,descripcion_estado = ?,fk_cajero=? WHERE atenciones.id = ?";
                 $stmt = $pdo->prepare($query);
                 $stmt->bindParam(1, $detalle);
-                $stmt->bindParam(2, $fecha);
-                $stmt->bindParam(3, $usuario);
-                $stmt->bindParam(4, $this->idAtencion);
+                $stmt->bindParam(2, $usuario);
+                $stmt->bindParam(3, $this->idAtencion);
                 Database::disconnect();
                 if ($stmt->execute()) {
                     return "Exito";
@@ -374,7 +388,7 @@ class Atencion {
             
                 require_once "database.php";
                 $pdo = Database::connect();
-                $query = "SELECT count(DISTINCT a.horaInicio) total FROM atenciones as a WHERE DATE(a.horaInicio)=DATE(NOW())";
+                $query = "SELECT count(DISTINCT a.id) total FROM atenciones as a WHERE a.horaPago> (SELECT cc.fecha FROM cierre_caja cc order by fecha desc LIMIT 1)";
                 $stmt = $pdo->prepare($query);
                 $stmt->execute();
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -389,7 +403,7 @@ class Atencion {
             
                 require_once "database.php";
                 $pdo = Database::connect();
-                $query = "SELECT sum(i.valor) as total FROM items as i INNER JOIN atenciones a on i.fk_atencion=a.id WHERE DATE (a.horaPago)>= DATE_SUB(CURDATE(),INTERVAL 0 DAY) and a.fk_estado=2";
+                $query = "SELECT sum(i.valor) as total FROM items as i INNER JOIN atenciones a on i.fk_atencion=a.id WHERE a.horaPago> (SELECT cc.fecha FROM cierre_caja cc order by fecha desc LIMIT 1) and a.fk_estado=2";
                 $stmt = $pdo->prepare($query);
                 $stmt->execute();
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -478,14 +492,15 @@ class Atencion {
             $stmt->bindParam(1, $horaActual);
             $stmt->bindParam(2, $usuario);
             $resultado = $stmt->execute();
+            $idCierre= $pdo->lastInsertId();
             Database::disconnect();
             if ($resultado) {
-                return "Exito";
+                return $idCierre;
             } else {
-                return "*1* Error al tratar de hacer cierre de caja:  " . $resultado;
+                return "Error";
             }
         } catch (Exception $e) {
-            echo "*2* Error al tratar de cerrar caja:  " . $e->getMessage();
+            echo "Error";
         }
     }
     
@@ -518,10 +533,24 @@ class Atencion {
                 return $result;
     }
     
+    function cantidadItemsNoDespachados(){
+        require_once "database.php";
+        $pdo = Database::connect();
+        
+        $query = "SELECT COUNT(*) cuenta FROM atenciones a INNER JOIN items i on i.fk_atencion=a.id WHERE a.id=? and i.hora_despacho IS NULL";        
+       
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $this->idAtencion);     
+        $estado= $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();        
+        return $result;
+    }
+    
     
     function pedidosAlCierre(){
         
-         require_once "database.php";
+        require_once "database.php";
         $pdo = Database::connect();
         $query = "SELECT m.descripcion as mesa,SUM(ap.valor) as total,a.id,a.fk_estado as estado,ea.descripcion ,a.descuento as descuento,a.horaInicio,a.horaPago FROM atenciones AS a INNER JOIN estados_atencion AS ea ON (a.fk_estado=ea.id) INNER JOIN items AS ap ON (ap.fk_atencion=a.id) INNER JOIN productos AS p ON (p.id=ap.fk_producto) INNER JOIN categorias AS c ON (p.fk_categoria=c.id) INNER JOIN atencion_empleados AS eat ON (eat.fk_item=ap.id) INNER JOIN usuarios AS e ON (e.id=eat.fk_usuario) INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN estado_items AS ep ON (ep.id=ap.fk_estado_item) WHERE (a.horaPago> (SELECT cc.fecha FROM cierre_caja cc order by fecha desc LIMIT 1) ) group by m.descripcion,a.id ORDER BY a.horaInicio DESC";
         $stmt = $pdo->prepare($query);
@@ -529,6 +558,65 @@ class Atencion {
         $result = $stmt->fetchAll();
         Database::disconnect();
         return $result;
+        
+    }
+    
+    function reporteCierre($id,$horaInicio){
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT m.descripcion as mesa,SUM(ap.valor) as total,a.id,a.fk_estado as estado,ea.descripcion ,a.descuento as descuento,a.horaInicio,a.horaPago FROM atenciones AS a INNER JOIN estados_atencion AS ea ON (a.fk_estado=ea.id) INNER JOIN items AS ap ON (ap.fk_atencion=a.id) INNER JOIN productos AS p ON (p.id=ap.fk_producto) INNER JOIN categorias AS c ON (p.fk_categoria=c.id) INNER JOIN atencion_empleados AS eat ON (eat.fk_item=ap.id) INNER JOIN usuarios AS e ON (e.id=eat.fk_usuario) INNER JOIN mesas AS m ON (m.id=a.fk_mesa) INNER JOIN estado_items AS ep ON (ep.id=ap.fk_estado_item) WHERE (a.horaPago>? and a.horaPago<=(SELECT fecha FROM cierre_caja WHERE id=?)) group by m.descripcion,a.id ORDER BY a.horaInicio DESC";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $horaInicio);
+        $stmt->bindParam(2, $id);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        Database::disconnect();
+        return $result;
+    }
+    
+     function datosCierre($id,$horaInicio){
+        
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT c.id,c.fecha fecha_fin,u.usuario,SUM(i.valor) subtotal FROM cierre_caja c INNER JOIN usuarios u on c.fk_usuario=u.id INNER JOIN atenciones a INNER JOIN items i on i.fk_atencion=a.id WHERE c.id=? and (a.fk_estado=2) and a.horaPago>? and a.horaPago<=c.fecha";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $id);
+        $stmt->bindParam(2, $horaInicio);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+        return $result;
+        
+    }
+    
+    function descuentosCierre($id,$horaInicio){
+        
+        require_once "database.php";
+        $pdo = Database::connect();
+        $query = "SELECT sum(a.descuento) descuento FROM cierre_caja c INNER JOIN usuarios u on c.fk_usuario=u.id INNER JOIN atenciones a WHERE c.id=? and (a.fk_estado=2) and a.horaPago>? and a.horaPago<=c.fecha";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $id);
+        $stmt->bindParam(2, $horaInicio);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();
+        return $result['descuento'];
+        
+    }
+    
+    
+    
+     function horaInicioCierre($id){
+        
+        require_once "database.php";
+        $pdo = Database::connect();        
+        $query = "SELECT c.fecha fecha FROM cierre_caja c WHERE c.fecha<(SELECT cierre_caja.fecha FROM cierre_caja WHERE cierre_caja.id=? ORDER BY cierre_caja.fecha DESC LIMIT 1) ORDER BY c.fecha DESC LIMIT 1";             
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(1, $id);     
+        $estado= $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        Database::disconnect();        
+        return $result['fecha'];
         
     }
     
@@ -581,6 +669,27 @@ class Atencion {
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(1, $inicio);
         $stmt->bindParam(2, $fin);
+     
+        $estado= $stmt->execute();
+
+        $result = $stmt->fetchAll();
+        Database::disconnect();
+        
+        return $result;
+    }
+    
+       /**
+     * retorna los cierres de los ultimos 2 meses
+     */
+    
+    function lista_cierres(){
+        
+        require_once "database.php";
+        $pdo = Database::connect();
+        
+        $query ="SELECT c.id,c.fecha,u.usuario FROM cierre_caja c INNER JOIN usuarios u on u.id=c.fk_usuario WHERE c.fecha >= date_sub(curdate(), interval 2 month) ORDER by fecha desc";
+                
+        $stmt = $pdo->prepare($query);
      
         $estado= $stmt->execute();
 

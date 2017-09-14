@@ -288,7 +288,7 @@
         $id=$a["id"];
         $estado=$a["descripcion"]; 
         $mesa=$a["mesa"]; 
-       // $total=number_format($total, 0, ",", ".");
+        //$total=number_format($total, 0, ",", ".");
         if ($estado=="pedido" || $estado=="aplazado" ) {
             $class="success";
             $accion="pagar";
@@ -298,6 +298,7 @@
         }
         
         echo '<tr> 
+                <td>'.$id.'</td> 
                 <td>'.$horaInicio.'</td> 
                 <td>'.$mesa.'</td>
                  <td>'.$subtotal.'</td>
@@ -373,6 +374,36 @@
                 <td>'.$total.'</td>        
 
                 <td><a href="detalle_pedido.php?atencion='.$idAtencion.'">
+                    <button type="button" class="btn btn-info btn-xs">Ver más</button></a>
+                  </td>
+                </tr>';
+     
+       }
+    }
+    
+    function lista_cierres(){
+
+        
+    require_once 'model/Atencion.php';    
+    $atencion=new Atencion();
+    $consulta=$atencion->lista_cierres();
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    foreach ($consulta as $a) {              
+        
+        $fecha= $a["fecha"];
+        $usuario= $a["usuario"];
+        $id= $a["id"];        
+
+        $fecha = date_create($fecha);
+        $fecha= date_format($fecha,'d')." ".$meses[date_format($fecha,'n')-1]. 
+            " ".date_format($fecha,'Y'). " , ". date_format($fecha,'g:i a');
+        
+        
+         echo '<tr> 
+                <td>'.$id.'</td>
+                <td>'.$fecha.'</td>
+                <td>'.$usuario.'</td>
+                <td><a href="cierres.php?id='.$id.'">
                     <button type="button" class="btn btn-info btn-xs">Ver más</button></a>
                   </td>
                 </tr>';

@@ -11,7 +11,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Mantil Sistema Pos | </title>
+  <title>Holly Sistema Pos | </title>
 
   <!-- Bootstrap core CSS -->
 
@@ -213,7 +213,7 @@
                               <li ><i class="fa fa-phone user-profile-icon"></i> <span id="telefonoUser"></span></li>   
                               <li class="m-top-xs">
                                 <i class="fa fa-external-link user-profile-icon"></i>
-                                <a href="http://www.kimlabs.com/profile/" target="_blank">www.mantil.com</a>
+                                <a href="http://www.kimlabs.com/profile/" target="_blank">www.HollyPos.com</a>
                               </li>
                             </ul>
 

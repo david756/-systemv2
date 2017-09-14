@@ -379,6 +379,8 @@ switch ($metodo) {
                            <a href="caja.php"><img src="images/caja.png" WIDTH=120 HEIGHT=120
                            class="img-responsive" alt="Responsive image"></a><br>
                   </div>';
+            
+           
             }
             if ($usuario->getPrivilegios()[2]==1) {
             echo '<div class="col-md-3 col-sm-6" align="center">
@@ -400,7 +402,16 @@ switch ($metodo) {
                            <a href="inventario.php"><img src="images/inventario.png" WIDTH=120 HEIGHT=120
                            class="img-responsive" alt="Responsive image"></a><br>
                   </div>';
-            }            
+            }
+            if ($usuario->getPrivilegios()[1]==1) {
+            echo '<div class="col-md-3 col-sm-6" align="center">
+                           <h5>Reportes</h5>
+                           <a href="reportes.php"><img src="images/reportes.png" WIDTH=120 HEIGHT=120
+                           class="img-responsive" alt="Responsive image"></a><br>
+                  </div>';
+            
+           
+            }
         }
         else {
             echo '301:Error no se pudo cargar el contenido ,intente nuevamente.';

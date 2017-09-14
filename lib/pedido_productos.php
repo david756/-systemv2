@@ -17,7 +17,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Mantil Sistema Pos | </title>
+  <title>Holly Sistema Pos | </title>
 
   <!-- Bootstrap core CSS -->
 
@@ -496,13 +496,16 @@
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Guarniciones</label><br><br>
                                         <label>
-                                           <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Vegetales.")' data-target="#ModalOrden">Casabe</button>
+                                           <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Casabe.")' data-target="#ModalOrden">Casabe</button>
                                         </label>
                                         <label>
                                            <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Papas fritas.")' >Papas Fritas</button>
                                         </label>
                                         <label>
-                                            <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Platanos fritos.")'>PLatanos Fritos</button>
+                                            <button type="button" class="btn btn-info btn-xs" onclick='agregarguarnicion("Platanos fritos.")'>Platanos Fritos</button>
+                                        </label>
+                                        <label>
+                                            <button type="button" class="btn btn-success btn-xs" onclick='agregarguarnicion("Para llevar.")'>Para llevar</button>
                                         </label><br><br>
                                       </div>
 

@@ -1,6 +1,6 @@
 <?php  
   include 'controller/Sesiones.php';
-  mesero();
+  caja();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -25,24 +25,13 @@
   <link href="css/icheck/flat/green.css" rel="stylesheet">
   <style type="text/css">
 
-  .mesa_ocupada {
-    background:#A1A1A1;
-    height:170px;
-    width:170px;
-    -moz-border-radius:22px;
-    -webkit-border-radius:22px;
-    padding:30px;
-    margin: 15px;
-    text-align:center;        
-    color:white;
-    }
-    .mesa_disponible {
+    .reporte_div {
     background:#2ABA9B;
-    height:170px;
-    width:170px;
+    height:50px;
+    width:150px;
     -moz-border-radius:30px;
     -webkit-border-radius:30px;
-    padding:30px;
+    padding:8px;
     margin: 15px;
     text-align:center;
     color:white;
@@ -53,16 +42,7 @@
   <script src="js/jquery.min.js"></script>
   <script src="https://code.jquery.com/jquery-1.10.2.js"></script>   
 
-    <script type="text/javascript">
-    $(document).ready(function() {                      
-                  $.post("controller/Mesa.php", 
-                  {metodo: "pedidoMesas"}
-                  ,function(mesa){
-                    $('#mesas').html(mesa);
-                  }
-               );
-     });      
-    </script>
+
 
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
@@ -89,19 +69,27 @@
         <div class="x_content">
           <div class="page-title">
             <div class="title_left">
-              <h3>Mesas</h3>
+              <h3>Reportes</h3>
             </div>
           </div>
-          <div class="clearfix"></div>
-          <div class="row">
-                <div style="display:none" id="resultado"><button class="close" data-dismiss="alert"></button></div>
-          </div>
+          <div class="clearfix"></div>          
           <div class="row">
             <div class="col-md-12">
               <div class="x_panel">
                 <!-- x_content-->                
-                <div class="x_content" id="mesas">
-                  
+                <div class="x_content" >
+                 
+                    <a onClick="location.href='reporte_atenciones.php'" class="btn btn-app" data-toggle="modal" data-target="#ModalPago">
+                      <i class="fa fa-line-chart"></i> Atenciones
+                    </a>
+
+                    <a onClick="location.href='reporte_pedidos.php'" class="btn btn-app" data-toggle="modal" data-target="#ModalPago">
+                      <i class="fa fa-line-chart"></i> Ordenes
+                    </a>
+                    <a onClick="location.href='reporte_cierres.php'" class="btn btn-app" data-toggle="modal" data-target="#ModalPago">
+                      <span class="badge bg-orange fa fa-check"></span>
+                      <i class="fa fa-line-chart"></i> Cierres de caja
+                    </a>
                 </div>
                 <!-- /x_content End dv -->
               </div>

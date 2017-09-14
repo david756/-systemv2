@@ -11,7 +11,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Mantil Sistema Pos | </title>
+  <title>Holly Sistema Pos | </title>
 
   <!-- Bootstrap core CSS -->
 
@@ -127,8 +127,8 @@
               <div class="clearfix"></div>
               <br />
               <div>
-                <h1><i class="glyphicon glyphicon-glass" style="font-size: 26px;"></i> Mantil Sistema Pos!</h1>
-                <p>©2016 Todods los derechos reservados. Mantil.com!. Sitio Protegido, terminos y privacidad</p>
+                <h1><i class="glyphicon glyphicon-glass" style="font-size: 26px;"></i> Holly Sistema Pos!</h1>
+                <p>©2017 Todods los derechos reservados. HollyPos.com!. Sitio Protegido, terminos y privacidad</p>
               </div>
             </div>
           </form>

@@ -11,14 +11,14 @@
  <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head><meta http-equiv="Content-Type" content="text/html; charset=gb18030">
+  
   <!-- Meta, title, CSS, favicons, etc. -->
-  <meta charset="utf-8">
+  
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Mantil Sistema Pos | </title>
+  <title>Holly Sistema Pos | </title>
 
   <!-- Bootstrap core CSS -->
 
@@ -194,9 +194,7 @@
 <?php include 'menu.php'; ?>
 <!-- /top Menu navigation -->
 
-
-
-      <!-- page content -->
+<!-- page content -->
       <div class="right_col" role="main">
 
         <div class="x_content">
@@ -247,9 +245,9 @@
                       </div>
 
 
-                      <div class="col-md-6">   
-                        <h4>Información de items</h4> 
-                        <h5><b>Seleccione un producto para ver más detalles</b></h5> </br>
+                       <div class="col-md-6">   
+                        <h4>Informacion de items</h4> 
+                        <h5><b>Seleccione un producto para ver mas detalles</b></h5> </br>
                         <div class="detalleItems"></div>
                         
                       </div>
@@ -316,22 +314,19 @@
                             </div>
                           </div>
                      <!-- /modal confirmar eliminar item-->
-
+                     
                     <!-- / informe de cuenta-->
                     <section id="informe" class="content invoice">
                               <!-- info row -->
                               <div class="row invoice-info">
                                     <div class="col-sm-12 invoice-col" align="center">
-                                        <h2>Nombre establecimiento</h2>
-                                        <address>
-                                            <br>Nit 7852145-8                                       
-                                            <br> Cra 13 Norte 12-35
-                                            <br>Armenia , Quindio
-                                            <br>(57) 7356985
-                                            <br>contacto@nombre.com <br><br>                                       
+                                        <h4>Restaurante Holly Tropical</h4>
+                                        <address>       <strong>Cuenta Detallada</strong>                              
+                                                        <br> Santiago
+                                                        <br> Santiago de los caballeros
+                                                        <br>8096124747                                      
                                          </address>
                                         <address>
-                                              <strong>Cuenta Detallada</strong>
                                               <br>Este ticket no remplaza la 
                                               factura de venta.                           
                                          </address>
@@ -355,7 +350,7 @@
                               <div class="row">
                                  <h4>Detalle de la orden</h4>
                                     <div class="detalleItems">
-                                        
+
                                     </div>                                   
                               </div>
                               <!-- /.row -->
@@ -372,7 +367,7 @@
 
                               <div class="col-sm-12 invoice-col" align="center">
                                 <hr>
-                                <strong>Sistema Manitl www.mantil.com</strong>
+                                <strong>Holly Tropical</strong>
                               </div>
                   </section>
                   <!-- /informe -->

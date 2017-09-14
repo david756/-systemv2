@@ -13,7 +13,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Mantil Sistema Pos | </title>
+  <title>Holly Sistema Pos | </title>
 
   <!-- Bootstrap core CSS -->
 
@@ -55,7 +55,7 @@
         <div class="left_col scroll-view">
 
           <div class="navbar nav_title" style="border: 0;">
-            <a href="menu_principal.php" class="site_title"><i class="fa fa-glass"></i> <span>Mantil System</span></a>
+            <a href="menu_principal.php" class="site_title"><i class="fa fa-glass"></i> <span>Holly System</span></a>
           </div>
           <div class="clearfix"></div>
 
@@ -100,17 +100,7 @@
                   <ul class="nav child_menu" style="display: none">
                     <li><a href="admin_productos.php">Administrar</a></li>            
                   </ul>
-                </li>
-                <li><a><i class="fa fa-edit"></i> Atenciones <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">
-                    <li><a href="admin_atenciones.php">Administrar</a></li>                  
-                  </ul>
-                </li>
-                <li><a><i class="fa fa-line-chart"></i> Reportes <span class="fa fa-chevron-down"></span></a>
-                  <ul class="nav child_menu" style="display: none">                  
-                    <li><a href="admin_reportes.php">Reporte pedidos</a></li>           
-                  </ul>
-                </li>               
+                </li>                        
               </ul>
             </div>
           </div>
@@ -150,8 +140,8 @@
                 </div>
                 <div class="count"><?php echo pedidosHoy(); ?></div>
 
-                <h3>Pedidos Hoy</h3>
-                <p>Ordenes facturadas el dia de hoy.</p>
+                <h3>Pedidos</h3>
+                <p>Ordenes facturadas.</p>
               </div>
             </div>
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">

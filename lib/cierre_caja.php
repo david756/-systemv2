@@ -11,7 +11,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Mantil Sistema Pos | </title>
+  <title>Holly Sistema Pos | </title>
 
   <!-- Bootstrap core CSS -->
 
@@ -59,14 +59,14 @@
             $.post("controller/Atencion.php", 
                     {metodo: "cierreCaja"},function(respuesta){
                       $('#ModalConfirmar').modal('hide');
-                      if (respuesta=="Exito") {
+                      if (respuesta!="Error") {
                         $('#resultado').html("Se realizo cierre de caja!");
                         $('#resultado').attr("class","alert alert-success");
                         $('#resultado').show("slow").delay(4000).hide("slow");
-                        setTimeout(function(){window.location.href = "menu_principal.php"}, 600);
+                        setTimeout(function(){window.location.href = 'cierres.php?id='+respuesta}, 600);
                       }
                       else{
-                        $('#resultado').html(respuesta);
+                        $('#resultado').html("Ocurrio un error al hacer cierre, por favor verifique.");
                         $('#resultado').attr("class","alert alert-danger");
                         $('#resultado').show("slow").delay(4000).hide("slow");
                       }                      
